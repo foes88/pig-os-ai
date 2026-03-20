@@ -426,8 +426,10 @@
     <a href="#s3">Tech Stack</a>
     <a href="#s4">Oracle MCP</a>
     <a href="#s5">MVP Check</a>
+    <a href="#s5b">기능 상세</a>
+    <a href="#s5c">6권역</a>
+    <a href="#s5d">개발 스펙</a>
     <a href="#s6">Q&amp;A</a>
-    <a href="#s7">Checklist</a>
     <a href="#s8">Summary</a>
   </div>
 </nav>
@@ -447,7 +449,7 @@
       </div>
       <div class="cover-meta-item">
         <div class="cover-meta-label">안건 수</div>
-        <div class="cover-meta-val">5</div>
+        <div class="cover-meta-val">8</div>
       </div>
       <div class="cover-meta-item">
         <div class="cover-meta-label">결정 사항</div>
@@ -478,6 +480,18 @@
     <a href="#s5" class="agenda-item" style="text-decoration:none;">
       <div class="agenda-num">05</div>
       <div class="agenda-text">MVP 현실성 체크</div>
+    </a>
+    <a href="#s5b" class="agenda-item" style="text-decoration:none;">
+      <div class="agenda-num">06</div>
+      <div class="agenda-text">경쟁사 기능 상세</div>
+    </a>
+    <a href="#s5c" class="agenda-item" style="text-decoration:none;">
+      <div class="agenda-num">07</div>
+      <div class="agenda-text">6권역 관리포인트</div>
+    </a>
+    <a href="#s5d" class="agenda-item" style="text-decoration:none;">
+      <div class="agenda-num">08</div>
+      <div class="agenda-text">개발 스펙 요약</div>
     </a>
   </div>
 
@@ -1137,22 +1151,248 @@
   </section>
 
 
+  <!-- ═══ SECTION 5B: 경쟁사 기능 상세 (신규) ═══ -->
+  <section id="s5b">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">06</div>
+        <div class="sec-title">경쟁사 기능 상세 분석 &mdash; 1차 이후 신규</div>
+      </div>
+      <div class="sec-message">9개 경쟁사 딥다이브 결과. 필수 12개 + 차별화 15개 + 공백 5개.</div>
+    </div>
+
+    <div class="key-msg">
+      <div class="key-msg-eyebrow">New Since Meeting 1</div>
+      <div class="key-msg-text">
+        1차 기획서에서 6개사 개요만 다뤘으나, 이후 <strong>9개사 기능 딥다이브</strong>를 완료.
+        경쟁사가 절대 못 따라오는 <strong>5개 시장 공백</strong>을 확인했다.
+      </div>
+    </div>
+
+    <div class="sub-head">필수 기능 12개 (Must-Have)</div>
+    <p style="color:var(--text-mid);margin-bottom:12px;">전 경쟁사가 보유. 이 중 하나라도 없으면 고객 이탈.</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>#</th><th>기능</th><th>이유</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><strong>교배/분만/이유 전 주기</strong></td><td>양돈 SW의 존재 이유</td></tr>
+        <tr><td>2</td><td><strong>모돈 개체 이력 전체 조회</strong></td><td>수의사 첫 요구사항</td></tr>
+        <tr><td>3</td><td><strong>PSY/NPD/분만율 대시보드</strong></td><td>농장주 매일 확인</td></tr>
+        <tr><td>4</td><td><strong>완전 오프라인 모바일</strong></td><td>현장 인터넷 없음</td></tr>
+        <tr><td>5</td><td><strong>산업 벤치마킹</strong></td><td>내 농장 수준 판단 유일 기준</td></tr>
+        <tr><td>6</td><td><strong>다중 농장 통합</strong></td><td>인테그레이터 필수</td></tr>
+        <tr><td>7</td><td><strong>사료빈 재고 + 두당 원가</strong></td><td>북미/EU 비용 관리 핵심</td></tr>
+        <tr><td>8</td><td><strong>역할별 권한</strong></td><td>위탁 농장 데이터 보안</td></tr>
+        <tr><td>9</td><td><strong>Android/iOS + RFID 스캔</strong></td><td>현장 = 모바일 전용</td></tr>
+        <tr><td>10</td><td><strong>커스텀 보고서</strong></td><td>농장마다 리포트 다름</td></tr>
+        <tr><td>11</td><td><strong>도체 등급 연동</strong></td><td>출하 피드백 없이 개선 불가</td></tr>
+        <tr><td>12</td><td><strong>감사 로그</strong></td><td>EU 규정 + Enterprise 기본</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="sub-head">5대 시장 공백 (White Space)</div>
+    <p style="color:var(--text-mid);margin-bottom:12px;"><strong>어떤 단일 경쟁사도 아래 5가지를 동시에 충족하지 못한다.</strong></p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>#</th><th>공백</th><th>현황</th><th>CORE 기회</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1</strong></td><td>아시아 특화 클라우드 SaaS</td><td>Cloudfarms 24개 언어지만 아시아어 없음</td><td>아시아 태평양 최초</td></tr>
+        <tr><td><strong>2</strong></td><td>ESG + 양돈 운영 통합</td><td>탄소/동물복지 자동 산출 솔루션 없음</td><td>바이어 ESG 대응</td></tr>
+        <tr><td><strong>3</strong></td><td>개체 IoT + 모돈 관리 통합</td><td>LeeO(IoT) vs PigCHAMP(모돈) 별도</td><td>단일 플랫폼 세계 최초</td></tr>
+        <tr><td><strong>4</strong></td><td>중소 농장 합리적 가격</td><td>MTech 대형 전용, 나머지 가격 비공개</td><td>무료 진입 + 투명 가격</td></tr>
+        <tr><td><strong>5</strong></td><td>AI 분석 민주화</td><td>MTech/LeeO AI 대형 전용</td><td>SaaS에 AI 포함 &mdash; 중소 농장용</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="sub-head">차별화 기능 Phase별 로드맵</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Phase</th><th>기능</th><th>경쟁사 현황</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tag-green">P1 출시</span></td><td>아시아어 (한/베/태)</td><td>전 경쟁사 미지원</td></tr>
+        <tr><td><span class="tag tag-green">P1 출시</span></td><td>완전 무료 제공</td><td>전 경쟁사 유료 ($500+)</td></tr>
+        <tr><td><span class="tag tag-green">P1 출시</span></td><td>단위계 자동 전환 (kg/lb)</td><td>전 경쟁사 미지원</td></tr>
+        <tr><td><span class="tag tag-green">P1 출시</span></td><td>아시아 규정 대응</td><td>전 경쟁사 미지원</td></tr>
+        <tr><td><span class="tag tag-green">P1 출시</span></td><td>가격 투명 공개</td><td>전 경쟁사 비공개</td></tr>
+        <tr><td><span class="tag tag-blue">P2 유료</span></td><td>Feed Mill 연동</td><td>2개사만 (PigKnows/MTech)</td></tr>
+        <tr><td><span class="tag tag-blue">P2 유료</span></td><td>ESF 다종 연동</td><td>Porcitec 최다 6종</td></tr>
+        <tr><td><span class="tag tag-blue">P2 유료</span></td><td>교배 최적화 AI</td><td>MTech만 부분 지원</td></tr>
+        <tr><td><span class="tag tag-dark">P3 장기</span></td><td>ESG 대시보드</td><td>전 경쟁사 미구현</td></tr>
+        <tr><td><span class="tag tag-dark">P3 장기</span></td><td>AI 질병 조기 경보</td><td>대형 전용만</td></tr>
+        <tr><td><span class="tag tag-dark">P3 장기</span></td><td>아시아 벤치마킹 DB</td><td>아시아 완전 공백</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="bottom-line">
+      <span class="bl-label">Bottom Line</span>
+      <span class="bl-text">Phase 1 출시 즉시 5개 차별화. 경쟁사가 단기간에 따라올 수 없는 구조적 공백이다.</span>
+    </div>
+  </section>
+
+
+  <!-- ═══ SECTION 5C: 6권역 관리포인트 (신규) ═══ -->
+  <section id="s5c">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">07</div>
+        <div class="sec-title">6개 권역 핵심 관리포인트 &mdash; 1차 이후 신규</div>
+      </div>
+      <div class="sec-message">PSY 격차 최대 26두. 단일 기준 관리 불가. 지역별 맞춤 설계 필수.</div>
+    </div>
+
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>항목</th><th>한국</th><th>EU(덴마크)</th><th>미국</th><th>브라질</th><th>동남아</th><th>중국</th></tr></thead>
+      <tbody>
+        <tr><td class="td-key">PSY</td><td>21.9</td><td><strong>35.6</strong></td><td>25.1</td><td>29~32</td><td>10~26</td><td>~24</td></tr>
+        <tr><td class="td-key">FCR</td><td>3.26</td><td><strong>2.38</strong></td><td>~3.0</td><td>2.3~2.6</td><td>2.4~4.5</td><td>2.63</td></tr>
+        <tr><td class="td-key">ASF</td><td><span class="tag tag-orange">야생확산</span></td><td><span class="tag tag-orange">일부국가</span></td><td><span class="tag tag-green">청정</span></td><td><span class="tag tag-green">청정</span></td><td><span class="tag tag-red">상재</span></td><td><span class="tag tag-red">상재</span></td></tr>
+        <tr><td class="td-key">PRRS</td><td>상재</td><td>SPF 관리</td><td>상재($6.6억)</td><td><span class="tag tag-green">청정</span></td><td>상재</td><td>상재</td></tr>
+        <tr><td class="td-key">핵심 규정</td><td>mtrace, 스톨금지2030</td><td>ESVAC, Beter Leven</td><td>VFD, PQA Plus, Prop12</td><td>GTA, SIF</td><td>오프라인 필수</td><td>MARA 보고</td></tr>
+        <tr><td class="td-key">SW 현황</td><td>한돈팜스 72%</td><td>PigVision 등</td><td>PigCHAMP</td><td>Agriness 90%</td><td><span class="tag tag-red">소농 미보급</span></td><td>IT기업 주도</td></tr>
+        <tr><td class="td-key">최대 과제</td><td>ASF + 군사전환</td><td>항생제 + 환경</td><td>PRRS + Prop12</td><td>수출규제</td><td>ASF변이 + 소농</td><td>돈가변동</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="sub-head">국가별 현지화 명세 (개발 반영 필수)</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>항목</th><th>한국</th><th>베트남</th><th>EU</th><th>미국</th><th>브라질</th><th>중국</th></tr></thead>
+      <tbody>
+        <tr><td class="td-key">무게</td><td>kg</td><td>kg</td><td>kg</td><td><strong>lbs</strong></td><td>kg</td><td>kg</td></tr>
+        <tr><td class="td-key">통화</td><td>KRW</td><td>VND</td><td>EUR</td><td>USD</td><td>BRL</td><td>CNY</td></tr>
+        <tr><td class="td-key">날짜</td><td>yyyy.MM.dd</td><td>dd/MM/yyyy</td><td>dd/MM/yyyy</td><td>MM/dd/yyyy</td><td>dd/MM/yyyy</td><td>yyyy-MM-dd</td></tr>
+        <tr><td class="td-key">알림</td><td>KakaoTalk</td><td>Zalo</td><td>Email</td><td>Email/SMS</td><td>WhatsApp</td><td>WeChat</td></tr>
+        <tr><td class="td-key">도체 등급</td><td>1+/1/2/등외</td><td>&mdash;</td><td>SEUROP</td><td>Carcass merit</td><td>SIF</td><td>국가기준</td></tr>
+        <tr><td class="td-key">사료 단위</td><td>kg/ton</td><td>kg/ton</td><td>kg/ton</td><td><strong>cwt</strong></td><td>kg/ton</td><td>kg/ton</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="bottom-line">
+      <span class="bl-label">Bottom Line</span>
+      <span class="bl-text">6개 권역 현지화 명세가 확정됐다. DB 스키마에 country_configs 테이블로 반영 완료.</span>
+    </div>
+  </section>
+
+
+  <!-- ═══ SECTION 5D: 개발 스펙 요약 (신규) ═══ -->
+  <section id="s5d">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">08</div>
+        <div class="sec-title">개발 스펙 요약 &mdash; 1차 이후 신규</div>
+      </div>
+      <div class="sec-message">상세는 개발 스펙 문서 별도 참조. 여기는 핵심 수치만.</div>
+    </div>
+
+    <div class="key-msg">
+      <div class="key-msg-eyebrow">Development Ready</div>
+      <div class="key-msg-text">
+        DB 스키마, API 엔드포인트, KPI 계산식, 마스터 데이터가 <strong>모두 완성</strong>됐다.<br>
+        개발자가 이 문서들만 보고 바로 코딩 시작할 수 있는 상태.
+      </div>
+    </div>
+
+    <div class="sub-head">DB 스키마 요약</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>모듈</th><th>테이블</th><th>Phase</th><th>핵심 내용</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Platform</strong></td><td>10</td><td><span class="tag tag-red">P1</span></td><td>멀티테넌시, 7단계 권한, 감사로그, 오프라인 동기화, 월마감 잠금, 코드마스터(i18n), 알림</td></tr>
+        <tr><td><strong>Sow</strong></td><td>8</td><td><span class="tag tag-red">P1</span></td><td>모돈/교배/임신확인/분만/이유/폐사 + 위탁모돈 + RFID</td></tr>
+        <tr><td><strong>Growing</strong></td><td>4</td><td><span class="tag tag-blue">P2</span></td><td>배치관리, 비육기록, 출하, 도체등급(KR/EU/US/BR 전부)</td></tr>
+        <tr><td><strong>Feed</strong></td><td>4</td><td><span class="tag tag-blue">P2</span></td><td>사료빈, 배합, Feed Mill, 급이(ESF 연동)</td></tr>
+        <tr><td><strong>Health</strong></td><td>3</td><td><span class="tag tag-red">P1~2</span></td><td>질병(ASF/PRRS), 백신(VN 3종), 항생제(DDDA/VFD)</td></tr>
+        <tr><td><strong>Compliance</strong></td><td>4</td><td><span class="tag tag-blue">P2</span></td><td>ESVAC/HIT/mtrace/GTA, 동물이동, 복지인증, 옐로카드</td></tr>
+        <tr><td><strong>기타</strong></td><td>7</td><td><span class="tag tag-dark">P3</span></td><td>유전, 환경(TimescaleDB), 탄소(GLEAM), AMR, 시세, 데이터 익명화</td></tr>
+        <tr><td colspan="2"><strong>합계: 49 테이블 + 2 뷰</strong></td><td colspan="2">11개 모듈 / 6개 권역 대응 / Schema-per-tenant</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="sub-head">API 엔드포인트 (MVP 30개)</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
+      <div class="card" style="padding:20px;">
+        <div style="font-weight:700;color:var(--brand-dark);margin-bottom:8px;">Core API</div>
+        <ul class="blist">
+          <li>Auth: 로그인/리프레시/로그아웃 (3)</li>
+          <li>Farms: 목록/상세/수정 (3)</li>
+          <li>Sows: CRUD + 타임라인 (5)</li>
+          <li>Events: 교배/임신/분만/이유/폐사/건강/백신/투약 (8)</li>
+        </ul>
+      </div>
+      <div class="card" style="padding:20px;">
+        <div style="font-weight:700;color:var(--brand-dark);margin-bottom:8px;">Support API</div>
+        <ul class="blist">
+          <li>KPI: 현재/추이/벤치마크 (3)</li>
+          <li>Alerts: 목록/읽음처리 (2)</li>
+          <li>Sync: 업로드/다운로드 (2)</li>
+          <li>Dashboard: 요약/모돈카드 (2)</li>
+          <li>Users: 프로필 (2)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sub-head">마스터 데이터 (시드)</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>데이터</th><th>건수</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr><td><strong>이벤트 정의</strong></td><td>48종</td><td>7개 카테고리, 한/영/베 3개국어, Phase별 분류</td></tr>
+        <tr><td><strong>질병 코드</strong></td><td>30종</td><td>WOAH 코드, 지역별 발생 현황, 치료법</td></tr>
+        <tr><td><strong>백신 카탈로그</strong></td><td>22종</td><td>PRRS 4종, ASF 3종(VN), PCV2 4종, FMD 2종 등</td></tr>
+        <tr><td><strong>항생제 카탈로그</strong></td><td>22종</td><td>DDDA값, ATCvet 코드, 출하제한일, VFD/EU 제한 플래그</td></tr>
+        <tr><td><strong>벤치마크</strong></td><td>13건</td><td>6개 권역 PSY/FCR/NPD/분만율 기준값</td></tr>
+        <tr><td><strong>단위 환산</strong></td><td>22건</td><td>무게/온도/면적/부피/길이</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="sub-head">KPI 계산 공식 (핵심만)</div>
+    <div class="code-block">
+      <span class="hl">PSY</span> = SUM(이유두수) [12개월] / AVG(활성모돈수)<br>
+      <span class="cm">&nbsp;&nbsp;// 위탁 자돈은 이유 모돈에 귀속, 연도 중간 입식은 pro-rata</span><br><br>
+      <span class="hl">NPD</span> = SUM(이유~재교배 간격) [12개월]<br>
+      <span class="cm">&nbsp;&nbsp;// 임신실패 재발정 = 전체 기간 NPD, 60일 초과 시 cap</span><br><br>
+      <span class="hl">FCR</span> = SUM(사료소비 kg) / SUM(체중증가 kg)<br>
+      <span class="cm">&nbsp;&nbsp;// 그룹 기반, 폐사두 사료 포함·체중 제외</span><br><br>
+      <span class="hl">분만율</span> = 분만 모돈수 / 교배 모돈수 &times; 100<br>
+      <span class="cm">&nbsp;&nbsp;// 코호트: 110~150일 전 교배 건 대상, 폐사 제외</span><br><br>
+      <span class="hl">ROI</span> = "FCR 0.1&darr; = 두당 3,300원 절감" &larr; 실시간 금액 환산<br>
+      <span class="cm">&nbsp;&nbsp;// Blue Ocean: 경쟁사 0/6 보유</span>
+    </div>
+
+    <div class="alert alert-green">
+      <strong>상세 스펙 문서 위치:</strong> GitHub foes88/PigplanCORE 레포<br>
+      <code>docs/specs/db-schema-v1.sql</code> &middot;
+      <code>docs/specs/kpi-calculation-specs.md</code> &middot;
+      <code>docs/specs/api-spec-v1.md</code> &middot;
+      <code>docs/master-data/seed-data.sql</code>
+    </div>
+
+    <div class="bottom-line">
+      <span class="bl-label">Bottom Line</span>
+      <span class="bl-text">49 테이블 + 30 API + 48종 이벤트 + KPI 공식. 개발 시작 준비 완료.</span>
+    </div>
+  </section>
+
+
   <!-- ═══ SECTION 8: EXECUTIVE SUMMARY ═══ -->
   <section id="s8">
     <div class="exec-summary">
-      <div class="exec-summary-title">Executive Summary &mdash; 핵심 3가지</div>
+      <div class="exec-summary-title">Executive Summary &mdash; 핵심 5가지</div>
 
       <div class="exec-point">
         <div class="exec-point-num">01</div>
-        <div class="exec-point-title">나라마다 원하는 게 다르다</div>
+        <div class="exec-point-title">나라마다 원하는 게 다르다 &mdash; 6개 권역 분석 완료</div>
         <div class="exec-point-desc">
           Phase 1: 공통 기능만 (교배/분만/이유 + 오프라인 + 다국어)<br>
-          지역 특화는 Phase 2부터 모듈 추가
+          지역 특화는 Phase 2부터 모듈 추가. 현지화 명세(단위/통화/알림) 확정.
         </div>
       </div>
 
       <div class="exec-point">
         <div class="exec-point-num">02</div>
+        <div class="exec-point-title">경쟁사가 못 따라오는 5개 공백 확인</div>
+        <div class="exec-point-desc">
+          9개사 딥다이브 완료. 아시아어/무료/단위전환/아시아규정/가격투명 &mdash;<br>
+          Phase 1 출시 즉시 5개 차별화. 구조적 공백이라 단기 추격 불가.
+        </div>
+      </div>
+
+      <div class="exec-point">
+        <div class="exec-point-num">03</div>
         <div class="exec-point-title">경쟁사는 $500~비공개. 우리는 무료.</div>
         <div class="exec-point-desc">
           무료가 전략이다. 단, Early Adopter에게는 첫날부터<br>
@@ -1161,7 +1401,16 @@
       </div>
 
       <div class="exec-point">
-        <div class="exec-point-num">03</div>
+        <div class="exec-point-num">04</div>
+        <div class="exec-point-title">개발 스펙 완성 &mdash; 바로 코딩 가능</div>
+        <div class="exec-point-desc">
+          DB 49T + API 30EP + KPI 공식 + 마스터데이터 전부 완성.<br>
+          이벤트 48종, 질병 30종, 백신 22종, 항생제 22종 시드 데이터 준비.
+        </div>
+      </div>
+
+      <div class="exec-point">
+        <div class="exec-point-num">05</div>
         <div class="exec-point-title">8주 MVP = 베트남 농장주 3명이 실제로 쓰는 것</div>
         <div class="exec-point-desc">
           완성 제품이 아니라 검증이 목적<br>
@@ -1177,11 +1426,15 @@
         </div>
         <div class="exec-decision">
           <div class="exec-checkbox"></div>
-          <span>Oracle 분석 결과에 따라 DB 설계 시나리오 확정</span>
+          <span>DB 스키마 v1 (49T, 11모듈) 승인</span>
         </div>
         <div class="exec-decision">
           <div class="exec-checkbox"></div>
           <span>파일럿 농장 모집 시작 승인</span>
+        </div>
+        <div class="exec-decision">
+          <div class="exec-checkbox"></div>
+          <span>MVP 스프린트 시작일 확정 (목표 4/1)</span>
         </div>
       </div>
     </div>
