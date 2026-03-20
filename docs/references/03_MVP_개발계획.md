@@ -1,0 +1,679 @@
+# PigPlanCORE MVP 개발 계획
+> 3/23 회의 대비 · 대표님 보고용 실행 계획
+> **핵심 질문: "기능의 일부라도 MVP 버전이라도 만들어봐라 (현실성 체크)"**
+
+---
+
+## 0. 먼저 이것부터 정해야 한다 (회의 전 체크리스트)
+
+대표님이 원하는 건 **"진짜 만들 수 있냐? 얼마나 걸리냐? 어떻게 생겼냐?"** 세 가지다.
+아래 순서로 준비하면 3/23 회의에서 명확하게 답할 수 있다.
+
+```
+STEP 1 (지금 당장): Oracle MCP로 기존 테이블 분석 → 재사용 가능한 엔티티 파악
+STEP 2 (이번 주):  MVP 범위 확정 → 화면 목록 + DB 설계 초안
+STEP 3 (3/23 전):  데모 or 목업 최소 1개 → "이렇게 생겼습니다" 보여주기
+```
+
+---
+
+## 1. Oracle MCP 분석이 먼저인 이유
+
+피그플랜 27년 데이터가 Oracle에 있다.
+이걸 분석하지 않고 PostgreSQL 설계를 시작하면 **나중에 전면 재설계**해야 한다.
+
+### Oracle MCP로 확인해야 할 것들
+
+```sql
+-- 1. 테이블 목록과 레코드 수 파악
+SELECT table_name, num_rows
+FROM all_tables
+WHERE owner = 'PIGPLAN'
+ORDER BY num_rows DESC;
+
+-- 2. 핵심 테이블 컬럼 구조 파악 (모돈, 교배, 분만 관련)
+SELECT column_name, data_type, nullable
+FROM all_tab_columns
+WHERE table_name IN ('SOW', 'MATING', 'FARROWING', 'WEANING', 'FARM')
+ORDER BY table_name, column_id;
+
+-- 3. 외래키 관계 파악
+SELECT a.constraint_name, a.table_name, b.column_name,
+       c.table_name r_table, d.column_name r_column
+FROM all_constraints a, all_cons_columns b,
+     all_constraints c, all_cons_columns d
+WHERE a.constraint_type = 'R' ...
+```
+
+### 찾아야 할 핵심 엔티티
+
+| 엔티티 | 확인 목적 | 재사용 가능성 |
+|--------|-----------|---------------|
+| 농장(FARM) | 멀티테넌시 설계 기반 | 높음 |
+| 모돈(SOW) | CORE 핵심 - 개체 관리 | 높음 |
+| 교배(MATING) | 번식 사이클 핵심 | 높음 |
+| 분만(FARROWING) | 번식 사이클 핵심 | 높음 |
+| 이유(WEANING) | 번식 사이클 핵심 | 높음 |
+| 사료(FEED) | Phase 1은 단순 버전으로 | 중간 |
+| 사용자(USER) | 권한 모델 참고 | 낮음 (재설계) |
+
+**Oracle 분석 결과가 PostgreSQL 설계의 80%를 결정한다.**
+
+---
+
+## 2. MVP 범위 — 딱 이것만 만든다
+
+### 포함 (8주 목표)
+
+```
+번식 관리 코어
+├── 모돈 등록 / 개체 정보 관리
+├── 교배 기록 (자연교배 / AI)
+├── 분만 기록 (산자수 / 사산 / 미라)
+├── 이유 기록 (이유일령 / 이유두수)
+└── 폐사 / 도태 원인 기록
+
+KPI 대시보드 (읽기 전용)
+├── PSY (모돈당 연간 자돈수)
+├── NPD (비생산일수)
+└── 분만율
+
+모바일 앱 (Android 우선)
+├── 오프라인 입력 → 자동 동기화
+└── 현장 작업자용 단순 입력 화면
+
+다국어 UI
+├── 영어 (기본)
+├── 한국어
+└── 베트남어 (SEA 1순위)
+
+계정 / 권한
+├── 농장주 계정 (전체 권한)
+└── 작업자 계정 (입력만 가능)
+```
+
+### 제외 (Phase 2 이후)
+
+```
+❌ Feed Mill 연동         → 북미용, 나중에
+❌ Multi-Site 대시보드    → DB 복잡도 높음, Phase 2
+❌ Genetics / EBV         → 종돈 농장 전용
+❌ ESF 연동               → 하드웨어 연동, Phase 2
+❌ iOS 앱                 → Android 검증 후
+❌ EU 규정 보고서          → Phase 2 유럽 진입 시
+❌ 벤치마킹 DB            → 데이터 쌓인 후
+```
+
+---
+
+## 3. 기술 스택 결정 (FastAPI vs Node)
+
+대표님 지시: **"FastAPI나 Node로 진행, 추후 트래픽 몰리면 Java 전환"**
+
+### 결론: FastAPI 선택이 맞다
+
+| 비교 항목 | FastAPI (Python) | Node.js | Java Spring Boot |
+|-----------|-----------------|---------|-----------------|
+| 개발 속도 | ★★★★★ 가장 빠름 | ★★★★ 빠름 | ★★★ 보통 |
+| AI/ML 연동 | ★★★★★ 완벽 | ★★★ 가능 | ★★ 별도 서버 필요 |
+| 데이터 처리 | ★★★★ 우수 | ★★★ 보통 | ★★★★★ 최강 |
+| 대용량 트래픽 | ★★★ 보통 | ★★★★ 좋음 | ★★★★★ 최강 |
+| Phase 전환 용이성 | API 계약 유지하면 전환 가능 | 동일 | 동일 |
+
+**FastAPI로 시작 → 사용자 수만 명 이상 시 Java 전환**
+API 설계(엔드포인트, 스키마)만 잘 잡아두면 내부 구현체 교체는 가능하다.
+
+### 전체 아키텍처
+
+```
+[모바일 앱 - React Native]
+        ↕ REST API / GraphQL
+[웹 대시보드 - Next.js + TypeScript]
+        ↕ REST API
+[FastAPI 백엔드]
+        ↕
+[PostgreSQL + TimescaleDB]  [Redis - 캐시/알림]
+        ↕
+[AWS RDS / 싱가포르 리전]  ← SEA 대응 레이턴시
+```
+
+---
+
+## 4. PostgreSQL 스키마 설계 초안
+
+Oracle 분석 후 확정해야 하지만, MVP 기준 핵심 테이블 구조다.
+
+### 멀티테넌시: Schema-per-tenant 방식
+
+```sql
+-- 테넌트(농장)마다 독립 스키마
+CREATE SCHEMA farm_001;  -- 농장 A
+CREATE SCHEMA farm_002;  -- 농장 B
+
+-- 각 스키마 안에 동일 테이블 구조
+```
+
+### 핵심 테이블 설계 (MVP 기준)
+
+```sql
+-- 1. 농장 (전역 테이블)
+CREATE TABLE farms (
+    id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    farm_code   VARCHAR(20) UNIQUE NOT NULL,  -- FARM-001
+    name        VARCHAR(100) NOT NULL,
+    country     CHAR(2) NOT NULL,             -- KR, VN, US, DE
+    timezone    VARCHAR(50) NOT NULL,
+    unit_system VARCHAR(10) DEFAULT 'METRIC', -- METRIC / IMPERIAL
+    language    VARCHAR(5) DEFAULT 'en',
+    created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 2. 모돈 (핵심 개체)
+CREATE TABLE sows (
+    id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    farm_id     UUID REFERENCES farms(id),
+    ear_tag     VARCHAR(30) NOT NULL,         -- 귀표 번호
+    parity      INT DEFAULT 0,               -- 산차
+    breed       VARCHAR(50),                 -- 품종
+    status      VARCHAR(20) DEFAULT 'ACTIVE', -- ACTIVE/CULLED/DEAD
+    entry_date  DATE NOT NULL,
+    entry_type  VARCHAR(20),                 -- GILT/TRANSFER/PURCHASE
+    created_at  TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(farm_id, ear_tag)
+);
+
+-- 3. 교배 이벤트
+CREATE TABLE matings (
+    id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    sow_id      UUID REFERENCES sows(id),
+    mating_date DATE NOT NULL,
+    mating_type VARCHAR(10) NOT NULL,        -- AI / NATURAL
+    boar_id     UUID,                        -- 씨수퇘지 (nullable)
+    technician  VARCHAR(50),
+    notes       TEXT,
+    created_by  UUID,
+    created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 4. 분만 이벤트
+CREATE TABLE farrowings (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    sow_id          UUID REFERENCES sows(id),
+    mating_id       UUID REFERENCES matings(id),
+    farrowing_date  DATE NOT NULL,
+    total_born      INT DEFAULT 0,           -- 총산자수
+    born_alive      INT DEFAULT 0,           -- 생존산자수
+    stillborn       INT DEFAULT 0,           -- 사산
+    mummified       INT DEFAULT 0,           -- 미라
+    parity_at_birth INT,                     -- 분만 산차
+    notes           TEXT,
+    created_by      UUID,
+    created_at      TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 5. 이유 이벤트
+CREATE TABLE weanings (
+    id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    sow_id        UUID REFERENCES sows(id),
+    farrowing_id  UUID REFERENCES farrowings(id),
+    weaning_date  DATE NOT NULL,
+    weaned_count  INT DEFAULT 0,             -- 이유두수
+    weaning_age   INT,                       -- 이유일령
+    weaning_weight DECIMAL(6,2),             -- 평균 이유체중 (kg)
+    notes         TEXT,
+    created_by    UUID,
+    created_at    TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 6. 폐사/도태 이벤트
+CREATE TABLE removals (
+    id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    sow_id        UUID REFERENCES sows(id),
+    removal_date  DATE NOT NULL,
+    removal_type  VARCHAR(10) NOT NULL,      -- CULL / DEAD
+    reason        VARCHAR(50),              -- REPRODUCTIVE/LAMENESS/DISEASE 등
+    parity        INT,
+    notes         TEXT,
+    created_by    UUID,
+    created_at    TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 7. KPI 뷰 (PSY 계산)
+CREATE VIEW v_farm_kpi AS
+SELECT
+    s.farm_id,
+    COUNT(DISTINCT s.id) as active_sows,
+    -- PSY = (연간 이유두수 합계) / 평균 모돈수
+    ROUND(
+        SUM(w.weaned_count) FILTER (WHERE w.weaning_date >= NOW() - INTERVAL '1 year')
+        / NULLIF(COUNT(DISTINCT s.id), 0)
+    , 2) as psy,
+    -- 분만율
+    ROUND(
+        COUNT(f.id) * 100.0
+        / NULLIF(COUNT(m.id) FILTER (WHERE m.mating_date >= NOW() - INTERVAL '1 year'), 0)
+    , 1) as farrowing_rate
+FROM sows s
+LEFT JOIN matings m ON m.sow_id = s.id
+LEFT JOIN farrowings f ON f.sow_id = s.id
+LEFT JOIN weanings w ON w.sow_id = s.id
+WHERE s.status = 'ACTIVE'
+GROUP BY s.farm_id;
+```
+
+---
+
+## 5. FastAPI 엔드포인트 구조 (MVP)
+
+```python
+# 핵심 API 목록
+
+# 인증
+POST   /api/v1/auth/login
+POST   /api/v1/auth/refresh
+POST   /api/v1/auth/logout
+
+# 농장
+GET    /api/v1/farms/{farm_id}
+PUT    /api/v1/farms/{farm_id}
+
+# 모돈
+GET    /api/v1/farms/{farm_id}/sows          # 목록
+POST   /api/v1/farms/{farm_id}/sows          # 등록
+GET    /api/v1/farms/{farm_id}/sows/{sow_id} # 개체 이력 전체
+PUT    /api/v1/farms/{farm_id}/sows/{sow_id}
+
+# 교배
+POST   /api/v1/sows/{sow_id}/matings
+GET    /api/v1/sows/{sow_id}/matings
+
+# 분만
+POST   /api/v1/sows/{sow_id}/farrowings
+GET    /api/v1/sows/{sow_id}/farrowings
+
+# 이유
+POST   /api/v1/sows/{sow_id}/weanings
+
+# 폐사/도태
+POST   /api/v1/sows/{sow_id}/removals
+
+# KPI 대시보드
+GET    /api/v1/farms/{farm_id}/kpi           # PSY, NPD, 분만율
+GET    /api/v1/farms/{farm_id}/kpi/trend     # 월별 추이
+
+# 오프라인 동기화
+POST   /api/v1/sync                          # 모바일 → 서버 일괄 업로드
+GET    /api/v1/sync/changes?since={timestamp} # 서버 → 모바일 변경분
+```
+
+---
+
+## 6. 오프라인 동기화 — 핵심 기술 결정
+
+SEA 농장은 인터넷이 불안정하다. 이게 MVP에서 가장 어려운 부분이다.
+
+### 추천: WatermelonDB + Custom Sync
+
+```
+[현장 작업자 Android 앱]
+        ↓ 오프라인 작업
+[WatermelonDB (로컬 SQLite)]
+        ↓ 인터넷 연결 시 자동
+[FastAPI /sync 엔드포인트]
+        ↓
+[PostgreSQL]
+```
+
+### 충돌 해결 전략 (MVP 기준 단순화)
+
+```
+규칙: "마지막 편집 시간 우선 (Last-Write-Wins)"
++ 충돌 발생 시 양쪽 버전 모두 audit_log에 저장
++ 농장주 앱에서 충돌 내역 확인 가능
+
+복잡한 CRDT는 Phase 2에서 검토
+```
+
+---
+
+## 7. 8주 개발 타임라인
+
+```
+Week 1 (지금):
+  ├── Oracle MCP 테이블 전체 분석
+  ├── PostgreSQL 스키마 초안 확정
+  └── 개발 환경 세팅 (FastAPI + PostgreSQL + Redis)
+
+Week 2:
+  ├── DB 마이그레이션 스크립트 작성
+  ├── 인증 API (JWT + Refresh Token)
+  └── 농장 / 사용자 CRUD API
+
+Week 3-4:
+  ├── 모돈 관리 API (등록/조회/수정)
+  ├── 교배 이벤트 API
+  ├── 분만 이벤트 API
+  └── 이유 / 폐사 이벤트 API
+
+Week 5:
+  ├── KPI 계산 로직 (PSY, NPD, 분만율)
+  ├── KPI 대시보드 API
+  └── React Native 앱 기본 화면
+
+Week 6:
+  ├── 오프라인 동기화 (WatermelonDB 연동)
+  ├── 한국어 / 영어 / 베트남어 i18n
+  └── 단위계 전환 (kg / lb)
+
+Week 7:
+  ├── 통합 테스트
+  ├── SEA 파일럿 농장 1개 데모
+  └── 버그 수정
+
+Week 8:
+  ├── 대표님 시연 준비
+  ├── 3/23 회의 후속 피드백 반영
+  └── v0.1 배포 (AWS 싱가포르)
+```
+
+---
+
+## 8. 3/23 대표님 보고 — 이렇게 준비하면 된다
+
+### 보고 구조 (45분 기준)
+
+```
+[5분]  WHY NOW
+  → Valstone이 PigKnows 인수했다. 글로벌 확장 선언했다.
+  → SEA는 경쟁이 없다. 지금 들어가야 한다.
+
+[10분] WHAT (경쟁사 vs PigPlanCORE)
+  → 경쟁사 9개사 기능 비교표 (이미 작성 완료)
+  → 전 경쟁사가 놓친 5개 공백 → 우리의 기회
+  → 경쟁사 가격 현황 → 우리는 무료로 시작
+
+[10분] HOW — 기술 결정
+  → Oracle MCP 분석 결과 브리핑
+  → FastAPI → Java 전환 전략
+  → PostgreSQL Schema-per-tenant 멀티테넌시
+  → 오프라인 동기화 기술 (WatermelonDB)
+
+[10분] MVP 데모 or 목업 ← 이게 핵심
+  → 화면 3개면 충분: 모돈 목록 / 이벤트 입력 / KPI 대시보드
+  → "이렇게 생겼고, 이게 8주 안에 나옵니다"
+
+[10분] 수익 시나리오 + 실행 계획
+  → 300농가 → 연 $450K ARR 기본 시나리오
+  → 다음 4주 실행 항목 3가지
+```
+
+### 대표님이 반드시 물어볼 질문 + 답변 준비
+
+| 예상 질문 | 준비할 답변 |
+|-----------|-------------|
+| "개발 몇 명이 필요해?" | 백엔드 1명 + 프론트 1명 + 모바일 1명 = 3명. 8주. |
+| "얼마나 걸려?" | MVP 8주. 파일럿 농장 테스트 4주. 총 3개월이면 첫 실사용자. |
+| "경쟁사가 이미 잘하고 있는데 왜 우리가?" | SEA는 아무도 없다. 한국어/베트남어 지원도 없다. 무료도 없다. |
+| "돈은 언제 벌어?" | 300농가 확보 후 유료 전환. 그때 Per Sow 과금. 지금은 침투가 목표. |
+| "피그플랜 데이터 가져올 수 있어?" | Oracle MCP로 분석 중. 재사용 가능한 엔티티 파악 후 설계 확정. |
+| "Java 아니고 왜 Python?" | MVP는 속도가 생명. 트래픽 쌓이면 Java로 전환. API 계약 유지하면 가능. |
+
+---
+
+## 9. 지금 당장 해야 할 것 (오늘~3/22)
+
+```
+오늘:
+  □ Oracle MCP 분석 시작
+  □ 핵심 테이블 10개 구조 파악
+
+이번 주 안에:
+  □ PostgreSQL 스키마 초안 완성
+  □ FastAPI 프로젝트 생성 + 기본 인증 API
+  □ MVP 목업 화면 3개 (Figma or 코드)
+
+3/22 (회의 하루 전):
+  □ 대표님 보고 자료 최종 정리
+  □ 데모 or 목업 시연 리허설
+  □ 경쟁사 가격 비교표 출력
+```
+
+---
+
+## 10. 지역별 양돈 프로그램 가격 & 중점 관리 포인트
+
+> 3개 지역 각각 — 어떤 프로그램이 얼마에 팔리고, 농장이 뭘 중요하게 보는지, CORE는 어떻게 대응해야 하는지
+
+---
+
+### 10-1. 미국 (North America)
+
+#### 사용 중인 주요 프로그램 & 가격
+
+| 프로그램 | 운영사 | 가격 | 확실성 | 특이사항 |
+|----------|--------|------|--------|---------|
+| **PigKnows** | Valstone (2025.6 인수) | 비공개, 영업 Quote | 미확인 | 북미 점유율 1위. Integrator 기준 계약 |
+| **MetaFarms** | 독립 (Pork Checkoff 공식) | $0.05~0.25/돼지/년 | 낮음 (2018년 자료) | 출하 돼지 수 기준 과금 + setup fee |
+| **PigCHAMP** | Farms.com (독립) | 비공개, Trial 무료 | 미확인 | 두당 라이선스 추정 |
+| **MTech Systems** | Munters 자회사 | 비공개, Enterprise only | 미확인 | 대형 Integrator 전용. 소농장 불가 |
+
+#### 미국 농장이 중점적으로 관리하는 것
+
+```
+1순위: 비용 (Cost per Pig Sold)
+   - 두당 생산비 = 양돈 농장 경영의 핵심 지표
+   - Feed Cost/Pig, Medicine Cost, Labor Cost 모두 추적
+   - MetaFarms는 이 데이터를 Pork Checkoff와 연결해서 전국 평균과 비교
+
+2순위: Feed Mill 연동
+   - 미국 농장 80%+ 가 Feed Mill을 직접 운영하거나 계약
+   - 사료빈(Feed Bin) 잔량 실시간 추적 → 자동 발주
+   - FCR(사료전환율) = 이익률 직결
+
+3순위: Multi-Site 통합 (Integrator 구조)
+   - 미국 대형 돈육회사(Smithfield, Tyson 등)는 계약 농장 수백~수천 개 운영
+   - 본사에서 전 농장 KPI 통합 모니터링
+   - 위탁 농장 vs 직영 농장 권한 구분 필수
+
+4순위: 벤치마킹
+   - Pork Checkoff 국가 DB: "내 PSY가 전국 상위 몇 %인가"
+   - ASSURANCE 감사: PQA Plus, CSIA 인증 의무화 추세
+```
+
+#### PigPlanCORE 대응 포인트 (미국)
+
+| 경쟁사 약점 | CORE 기회 |
+|-------------|-----------|
+| PigKnows API 없음 → Valstone 폐쇄형 강화 | 오픈 API → 어떤 Feed Mill SW와도 연동 |
+| MetaFarms 북미 전용, EU/SEA 없음 | 글로벌 확장 농장 (해외 진출 Integrator) 공략 |
+| MTech는 대형 전용, 중소 농장 진입 불가 | 중형 Integrator 500~5,000두 구간 무료 진입 |
+| 가격 전부 비공개 | Phase 2에서 투명한 Per Sow 공개 → 신뢰 자산 |
+
+**CORE Phase 2 미국 가격 방향:**
+```
+BASIC:       ~$0.03~0.05/sow/월  (소규모 단일 농장)
+PRO:         ~$0.08~0.15/sow/월  (중형 다사이트)
+ENTERPRISE:  Custom Quote        (1,000모돈+ Integrator)
+```
+
+---
+
+### 10-2. 유럽 (EU)
+
+#### 사용 중인 주요 프로그램 & 가격
+
+| 프로그램 | 운영사 | 가격 | 확실성 | 특이사항 |
+|----------|--------|------|--------|---------|
+| **AgroVision PigVision** | Kiwa/CoMore | 비공개, 두당/연 | 미확인 | EU 10,000+ 농장. 국가별 보고 자동화 |
+| **Cloudfarms** | BASF SE | $500/년 시작 (모듈 추가) | 중간 | 클라우드 네이티브. 모듈형 과금 복잡 |
+| **Porcitec/Agritec** | 독립 (스페인) | 비공개, 연간 구독 | 미확인 | 스페인/중남미 강세. IoT 동물복지 강함 |
+| **PigCHAMP (ADA 유럽판)** | 독립 | 비공개 | 미확인 | 스페인 ADA가 유럽 배포 |
+
+#### 유럽 농장이 중점적으로 관리하는 것
+
+```
+1순위: 규정 준수 보고 (Compliance Reporting) ← 미국과 가장 다른 점
+   - 독일 HIT: 가축 원산지 정보 시스템, 의무 신고
+   - TAM (독일): 항생제 사용량 반기별 의무 보고
+   - 덴마크 CHR: 축산물 이력 추적 시스템
+   - 네덜란드 I&R: 개체 등록 및 이동 신고
+   - EU 동물복지법: 사육밀도, 풍부화 환경 기록 의무
+
+2순위: 항생제 관리 (Antibiotic Stewardship)
+   - EU 전역 항생제 사용 규제 강화 (2022년 동물용 의약품 법 시행)
+   - DDDA(Defined Daily Dose Animal) 지표 추적
+   - 항생제 사용 → 출하 제한일 자동 계산 필수
+
+3순위: Farm-to-Fork 이력 추적
+   - EU Farm-to-Fork 전략 (2030년 목표)
+   - 소비자/바이어가 원산지·사육환경 확인 요구
+   - Pig Passport 개념 (Cloudfarms 구현 중)
+
+4순위: 동물복지 인증
+   - 네덜란드 Beter Leven 인증
+   - 독일 Haltungsform 표시
+   - 영국 RSPCA Assured
+   - 인증 = 프리미엄 가격 → 데이터 기록이 증거
+```
+
+#### EU 국가별 규정 차이 (DB 설계 영향)
+
+| 국가 | 주요 보고 시스템 | 필수 데이터 항목 |
+|------|----------------|----------------|
+| 독일 | HIT + TAM | 개체 이동, 항생제 종류·용량·치료일수 |
+| 네덜란드 | I&R (Identificatie & Registratie) | 귀표 번호, 농장 이동, 도축장 |
+| 덴마크 | CHR + Danish Pig Levy Fund | 모돈 수, PSY, 출하 데이터 |
+| 스페인 | REGA + SIRENTRA | 농장 등록, 약품 구매·사용 기록 |
+| 프랑스 | BDPORC | 개체 이력, 도체 등급 |
+
+> **DB 설계 핵심:** `country_report_format` 필드 + 국가별 보고서 템플릿 분리.  
+> 모든 나라에 동일한 화면을 보여주되, 보고서 출력 형식만 국가별로 다르게.
+
+#### PigPlanCORE 대응 포인트 (유럽)
+
+| 경쟁사 약점 | CORE 기회 |
+|-------------|-----------|
+| AgroVision 클라우드 전환 중 (레거시) | 처음부터 클라우드 네이티브로 설계 |
+| Cloudfarms BASF 의존 → 로드맵 불투명 | 독립적 개발 + 오픈 API |
+| 전부 가격 비공개 | 유료 전환 시 투명 공개 |
+| ESG 보고 기능 없음 | 탄소 배출 + 동물복지 점수 자동 산출 (Phase 3) |
+
+**CORE Phase 2 EU 가격 방향:**
+```
+기본 구독:   ~$0.04~0.10/sow/월
+규정 모듈:   국가별 Add-on (독일 HIT+TAM, 덴마크 CHR 등)
+             → 월 €20~50 추가 (규정 준수 ROI로 정당화)
+```
+
+---
+
+### 10-3. 동남아시아 (SEA)
+
+#### 현재 사용 중인 프로그램 & 가격
+
+| 프로그램 | 지역 내 상황 | 가격 | 문제점 |
+|----------|------------|------|--------|
+| **Cloudfarms** | 베트남 일부 진출 | $500/년 시작 | 베트남어 미지원. 현지화 없음 |
+| **PigCHAMP** | 태국·베트남 대형 농장 일부 | 비공개 | 영어 전용. 오프라인 불안정 |
+| **Excel / 수기장** | **대다수 농장** | 무료 | 데이터 분석 불가. 실시간 추적 불가 |
+| **자체 개발 SW** | CP Group, Betagro 등 대기업 | 내부 사용 | 계열사 전용. 외부 판매 없음 |
+
+> **핵심 인사이트:** SEA 중소 농장의 70%+ 가 아직 Excel 또는 수기로 관리한다.  
+> 경쟁은 다른 SW가 아니라 **Excel과의 경쟁**이다.
+
+#### 동남아 농장이 중점적으로 관리하는 것
+
+```
+1순위: ASF (African Swine Fever, 아프리카 돼지열병) 대응
+   - 2019년 이후 베트남·필리핀·태국·인도네시아 전역 타격
+   - 폐사 기록 + 원인 분류 + 농장 간 이동 차단 기록이 생존 핵심
+   - 방역일지 자동화 → 정부 보고 연결
+
+2순위: 생존율 (Survival Rate) 관리
+   - SEA 평균 PSY는 한국(22두)보다 낮은 15~18두 수준
+   - 이유 전후 폐사율이 높음 → 포유 관리, 보온 기록 중요
+   - 기본 번식 데이터 입력만으로도 즉각 개선 가능
+
+3순위: 모바일 오프라인 입력
+   - 농촌 지역 인터넷 불안정 (3G 간헐적)
+   - 현장 작업자 = 스마트폰 사용, PC 없음
+   - 단순한 UI가 필수 (고등교육 이하 작업자 기준)
+
+4순위: 다국어 지원
+   - 베트남어 (Vietnam - 최대 시장)
+   - 태국어 (Thailand - CP Group 본거지)
+   - 필리핀어/영어 (Philippines)
+   - 인도네시아어 (Indonesia - 빠른 성장)
+
+5순위: 저비용 / 무료 진입
+   - 월 $10도 부담스러운 농장 다수
+   - "무료로 써보고 좋으면 낸다" 방식만 통함
+```
+
+#### SEA 국가별 규정 & 특이사항
+
+| 국가 | 주요 규정 | 특이사항 | 진입 전략 |
+|------|---------|---------|---------|
+| **베트남** | 축산법 2018, PDPD 개인정보보호법 2023 | ASF 가장 심각. 한국계 기업 다수 진출 | 1순위. 피그플랜 네트워크 활용 |
+| **태국** | GFP(Good Farming Practice) 인증 | CP Group 자체 SW 사용. 중소 농장 공략 | 2순위. Betagro 파트너십 |
+| **필리핀** | BAI(Bureau of Animal Industry) 등록 | 섬 지역 오프라인 강점 | 3순위 |
+| **인도네시아** | SNI 표준, Halal 이슈 없음 (돼지) | 무슬림 다수지만 양돈 지역 따로 존재 | 장기 검토 |
+
+#### PigPlanCORE 핵심 경쟁력 (SEA)
+
+```
+경쟁 상대: Excel, 수기장, 아무것도 안 씀
+우리 무기: 무료 + 베트남어/태국어 + 오프라인 앱 + ASF 대응 기록
+
+이 조합은 현재 시장에 존재하지 않는다.
+```
+
+**CORE Phase 2 SEA 가격 방향:**
+```
+BASIC (무료 이후):   ~$0.01~0.02/sow/월  (300두 농장 기준 월 $3~6)
+PRO:                 ~$0.03~0.05/sow/월  (ASF 모듈, 정부 보고 포함)
+```
+
+---
+
+### 10-4. 3개 지역 한눈에 비교
+
+| 항목 | 미국 | 유럽 (EU) | 동남아 (SEA) |
+|------|------|-----------|------------|
+| **1순위 관심사** | 두당 생산비 절감 | 규정 준수 자동화 | ASF 대응 + 생존율 |
+| **2순위 관심사** | Feed Mill 연동 | 항생제 관리 | 오프라인 모바일 |
+| **3순위 관심사** | 벤치마킹 비교 | Farm-to-Fork 이력 | 저비용 진입 |
+| **주요 경쟁사** | PigKnows, MetaFarms | AgroVision, Cloudfarms | Excel, 수기장 |
+| **경쟁 강도** | 매우 높음 | 높음 | **낮음 (기회)** |
+| **가격 민감도** | 중간 | 낮음 | **매우 높음** |
+| **CORE 진입 순서** | 2순위 | 3순위 | **1순위** |
+| **Phase 2 ARPU** | $300~600/월 | $200~400/월 | $50~100/월 |
+| **MVP 핵심 기능** | FCR, 원가, Multi-Site | 규정 보고, 항생제 | ASF 기록, 오프라인, 다국어 |
+| **DB 설계 특이점** | feed_mill_id, cost_center | country_report_format, medicine_ddda | offline_sync, low_bandwidth_mode |
+
+---
+
+### 10-5. CORE 가격 대응 전략 — 3단계
+
+**1단계 — 지금 (Phase 1): 가격을 쓰지 않는다**
+- 전 기능 무료. 3개 지역 동시 진입.
+- "경쟁사 연 $500 vs 우리 무료" — 비교할 필요도 없다.
+
+**2단계 — 유료 전환 시: 지역별 차등 + 투명 공개**
+- 경쟁사는 전부 가격을 숨긴다. CORE는 공개한다.
+- PPP(구매력 평가) 기반 지역별 단가 차등.
+- 규정 모듈(EU)과 ASF 모듈(SEA)은 Add-on으로 별도 과금.
+
+**3단계 — 장기: Per Sow 기반 + Enterprise 계약**
+
+| 지역 | BASIC /sow/월 | PRO /sow/월 | Enterprise |
+|------|--------------|------------|------------|
+| SEA | $0.01~0.02 | $0.03~0.05 + ASF모듈 | 사료회사 파트너 계약 |
+| EU | $0.04~0.08 | $0.06~0.10 + 규정모듈 | Integrator 연간 계약 |
+| 미국 | $0.05~0.10 | $0.08~0.15 + Feed연동 | Custom Quote |
+
+---
+
+*작성일: 2026.03.19*
+*다음 업데이트: Oracle MCP 분석 완료 후*
+*3/23 CORE 회의 2차 대비용*

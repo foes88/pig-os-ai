@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PigPlanCORE — 2차 회의 준비 보고서</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand-dark:  #0F2B50;
+    --brand-blue:  #1E4D8C;
+    --brand-mid:   #2E6BC4;
+    --gold:        #C9A84C;
+    --accent-green:  #27AE60;
+    --accent-orange: #E67E22;
+    --accent-red:    #C0392B;
+    --bg:          #FAFAF8;
+    --surface:     #FFFFFF;
+    --text-dark:   #0F1923;
+    --text-mid:    #3A4A5C;
+    --text-light:  #7A8FA6;
+    --border:      #D8DDE4;
+    --tag-radius:  3px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text-dark);
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--brand-dark);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px; height: 52px;
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; letter-spacing: 2px; color: #fff;
+  }
+  .nav-logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 4px; }
+  .nav-links a {
+    color: #8EB8E8; font-size: 11px; font-weight: 500;
+    text-decoration: none; padding: 5px 8px; border-radius: 3px;
+    transition: background .15s, color .15s; white-space: nowrap;
+  }
+  .nav-links a:hover { background: rgba(255,255,255,.1); color: #fff; }
+
+  /* LAYOUT */
+  .wrapper { max-width: 1060px; margin: 0 auto; padding: 86px 24px 64px; }
+
+  /* COVER */
+  .cover {
+    background: linear-gradient(160deg, #0a1e3d 0%, var(--brand-dark) 100%);
+    border-radius: 8px; padding: 56px 64px; margin-bottom: 16px;
+  }
+  .cover-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; color: var(--gold);
+    text-transform: uppercase; margin-bottom: 16px;
+  }
+  .cover-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 5vw, 56px); letter-spacing: 2px;
+    color: #fff; line-height: 1; margin-bottom: 10px;
+  }
+  .cover-title em { font-style: normal; color: var(--gold); }
+  .cover-sub {
+    font-size: 15px; font-weight: 400; color: #9CC3F0; margin-bottom: 6px;
+  }
+  .cover-sub2 {
+    font-size: 12px; font-weight: 300; color: #6A8CAF; margin-bottom: 20px;
+  }
+  .cover-meta {
+    display: flex; gap: 24px; flex-wrap: wrap;
+  }
+  .cover-meta-item {
+    border-left: 3px solid var(--gold); padding: 6px 0 6px 16px;
+  }
+  .cover-meta-label { font-size: 10px; color: #6A8CAF; letter-spacing: .5px; }
+  .cover-meta-val { font-size: 14px; font-weight: 700; color: #fff; }
+  .cover-conf {
+    display: inline-block; margin-top: 16px;
+    border: 1px solid rgba(192,57,43,.5); border-radius: 3px;
+    padding: 4px 12px; font-size: 10px; font-weight: 700;
+    color: #E8A8A0; letter-spacing: 1px;
+  }
+
+  /* AGENDA BAR */
+  .agenda-bar {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
+    margin-bottom: 48px;
+  }
+  .agenda-item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 6px; padding: 14px 12px; text-align: center;
+    transition: all .15s; cursor: default;
+  }
+  .agenda-item:hover { border-color: var(--gold); }
+  .agenda-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px; color: var(--gold); line-height: 1;
+  }
+  .agenda-text { font-size: 11px; font-weight: 600; color: var(--text-mid); margin-top: 4px; }
+
+  /* SECTION HEADING */
+  .sec-head {
+    margin: 48px 0 24px; padding-bottom: 12px;
+    border-bottom: 2px solid var(--brand-dark);
+  }
+  .sec-head-top { display: flex; align-items: baseline; gap: 12px; }
+  .sec-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px; color: var(--brand-dark); line-height: 1;
+  }
+  .sec-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; color: var(--brand-dark); letter-spacing: 1px;
+  }
+  .sec-message { font-size: 13px; color: var(--text-light); margin-top: 4px; }
+
+  .sub-head {
+    font-size: 16px; font-weight: 700; color: var(--brand-dark);
+    padding-bottom: 6px; margin: 36px 0 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sub-sub-head {
+    font-size: 14px; font-weight: 700; color: var(--brand-dark);
+    margin: 28px 0 12px;
+  }
+
+  /* CARD */
+  .card {
+    background: var(--surface); border-radius: 6px;
+    border: 1px solid var(--border);
+    padding: 32px; margin-bottom: 20px;
+  }
+
+  /* TABLES */
+  .tbl-wrap { overflow-x: auto; margin-bottom: 24px; border-radius: 6px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; background: var(--surface); font-size: 12px; }
+  thead tr { background: var(--brand-dark); }
+  thead th {
+    color: #fff; font-weight: 600; font-size: 11px; letter-spacing: .5px;
+    padding: 12px 16px; text-align: left; white-space: nowrap;
+  }
+  tbody tr:nth-child(even) { background: #F8F9FA; }
+  tbody tr:hover { background: #F0F3F7; }
+  td { padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.6; }
+  td:first-child { font-weight: 600; }
+  .td-key { background: #F4F6F9; color: var(--brand-dark); font-weight: 700; width: 160px; white-space: nowrap; }
+
+  /* TAGS */
+  .tag {
+    display: inline-block; padding: 2px 8px; border-radius: var(--tag-radius);
+    font-size: 10px; font-weight: 700; letter-spacing: .5px; white-space: nowrap;
+  }
+  .tag-red    { background: #FADBD8; color: var(--accent-red);  border: 1px solid #EBADA8; }
+  .tag-blue   { background: #D6E4F7; color: var(--brand-blue);  border: 1px solid #AECCF0; }
+  .tag-green  { background: #D5F5E3; color: #1a7a40;            border: 1px solid #A8DFBC; }
+  .tag-orange { background: #FDEBD0; color: #a05000;            border: 1px solid #F0CCAA; }
+  .tag-dark   { background: var(--brand-dark); color: #fff; }
+  .tag-gray   { background: #E8ECF0; color: #556; border: 1px solid #CCC; }
+
+  /* ALERT */
+  .alert {
+    border-radius: 4px; padding: 16px 20px; margin-bottom: 20px;
+    font-size: 13px; line-height: 1.7;
+  }
+  .alert-red    { background: #FEF5F3; border-left: 4px solid var(--accent-red); }
+  .alert-blue   { background: #F3F7FE; border-left: 4px solid var(--brand-mid); }
+  .alert-orange { background: #FEF8F0; border-left: 4px solid var(--accent-orange); }
+  .alert-green  { background: #F3FBF6; border-left: 4px solid var(--accent-green); }
+
+  /* BOTTOM LINE */
+  .bottom-line {
+    background: var(--brand-dark);
+    border-left: 5px solid var(--gold);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 24px; margin: 32px 0 0;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .bl-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 2px;
+    color: var(--gold); text-transform: uppercase;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .bl-text { font-size: 14px; font-weight: 700; color: #fff; line-height: 1.5; }
+
+  /* KEY MESSAGE */
+  .key-msg {
+    background: var(--brand-dark); border-radius: 8px;
+    padding: 20px 24px; margin-bottom: 24px;
+    border-left: 5px solid var(--gold);
+  }
+  .key-msg-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; color: var(--gold);
+    text-transform: uppercase; margin-bottom: 6px;
+  }
+  .key-msg-text { font-size: 14px; color: #fff; line-height: 1.7; }
+  .key-msg-text strong { color: var(--gold); }
+
+  /* HEATMAP TABLE */
+  .heatmap td.h3 { background: #FADBD8; color: var(--accent-red); font-weight: 700; text-align: center; }
+  .heatmap td.h2 { background: #FDEBD0; color: #a05000; font-weight: 600; text-align: center; }
+  .heatmap td.h1 { background: #EBF0F5; color: var(--text-light); text-align: center; }
+  .heatmap td.h0 { background: #F8F9FA; color: #CCC; text-align: center; }
+  .heatmap td.phase { background: #D5F5E3; color: #1a7a40; font-weight: 700; font-size: 11px; text-align: center; }
+
+  /* CODE BLOCK */
+  .code-block {
+    background: #1a2332; border-radius: 6px; padding: 20px 24px;
+    margin-bottom: 20px; overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: #9CC3F0; line-height: 1.7;
+  }
+  .code-block .hl { color: var(--gold); font-weight: 600; }
+  .code-block .cm { color: #5C7A99; }
+  .code-block .warn { color: var(--accent-orange); }
+  .code-block .ok { color: var(--accent-green); }
+
+  /* VERSUS TABLE */
+  .vs-table td.good { background: #D5F5E3; }
+  .vs-table td.warn { background: #FDEBD0; }
+  .vs-table td.bad  { background: #FADBD8; }
+
+  /* BULLET LIST */
+  .blist { list-style: none; padding: 0; margin: 10px 0 16px; }
+  .blist li {
+    padding: 7px 0 7px 20px; position: relative;
+    font-size: 13px; color: var(--text-mid); border-bottom: 1px solid #EEF0F3;
+  }
+  .blist li:last-child { border-bottom: none; }
+  .blist li::before {
+    content: ''; position: absolute; left: 4px; top: 14px;
+    width: 5px; height: 5px; border-radius: 50%; background: var(--brand-dark);
+  }
+
+  /* POSITIONING CARDS */
+  .pos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+  .pos-card {
+    border-radius: 8px; padding: 20px;
+    background: var(--brand-dark); color: #fff;
+    border-left: 4px solid var(--gold);
+  }
+  .pos-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px; color: var(--gold); line-height: 1; margin-bottom: 6px;
+  }
+  .pos-title { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .pos-desc { font-size: 11px; color: #8EB8E8; line-height: 1.5; }
+
+  /* SCENARIO */
+  .scenario-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+  .scenario-card {
+    border-radius: 8px; overflow: hidden;
+    border: 1px solid var(--border); background: var(--surface);
+  }
+  .scenario-header {
+    padding: 14px 18px; display: flex; align-items: center; gap: 10px;
+  }
+  .scenario-card.best .scenario-header { background: var(--accent-green); }
+  .scenario-card.mid .scenario-header  { background: var(--accent-orange); }
+  .scenario-card.worst .scenario-header { background: var(--accent-red); }
+  .scenario-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px; letter-spacing: 2px; color: #fff; line-height: 1;
+  }
+  .scenario-sub { font-size: 11px; color: rgba(255,255,255,.8); }
+  .scenario-body { padding: 16px 18px; }
+  .scenario-body p { font-size: 12px; color: var(--text-mid); line-height: 1.6; margin-bottom: 8px; }
+  .scenario-body .duration {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--text-light);
+  }
+
+  /* TIMELINE STEPS */
+  .steps { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+  .step {
+    display: grid; grid-template-columns: 44px 80px 1fr 140px;
+    align-items: center; gap: 12px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 4px; padding: 14px 16px;
+  }
+  .step-num {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--brand-dark); color: #fff;
+    font-family: 'Bebas Neue', sans-serif; font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .step-desc { font-size: 13px; color: var(--text-mid); }
+  .step-owner { font-size: 11px; color: var(--text-light); text-align: right; }
+
+  /* QA CARDS */
+  .qa-grid { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; }
+  .qa-card {
+    border-radius: 8px; overflow: hidden;
+    border: 1px solid var(--border); background: var(--surface);
+  }
+  .qa-q {
+    padding: 14px 20px; background: #F4F6F9;
+    font-size: 14px; font-weight: 700; color: var(--brand-dark);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .qa-q-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 1px; color: var(--text-light);
+  }
+  .qa-a {
+    padding: 16px 20px;
+    font-size: 13px; color: var(--text-mid); line-height: 1.8;
+  }
+  .qa-a strong { color: var(--brand-dark); }
+
+  /* CHECKLIST */
+  .checklist { list-style: none; padding: 0; margin-bottom: 24px; }
+  .checklist li {
+    display: grid; grid-template-columns: 1fr 120px 100px;
+    gap: 12px; align-items: center;
+    padding: 12px 16px; border-bottom: 1px solid var(--border);
+    font-size: 12px; color: var(--text-mid);
+    background: var(--surface);
+  }
+  .checklist li:first-child { border-radius: 6px 6px 0 0; border: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .checklist li:last-child { border-radius: 0 0 6px 6px; border: 1px solid var(--border); border-top: none; }
+  .checklist li:not(:first-child):not(:last-child) { border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+  .checklist .owner { font-weight: 600; color: var(--brand-dark); }
+  .checklist .status { text-align: right; }
+
+  /* EXEC SUMMARY */
+  .exec-summary {
+    background: linear-gradient(160deg, #0a1e3d 0%, var(--brand-dark) 100%);
+    border-radius: 8px; padding: 40px; margin-top: 48px;
+    border: 2px solid var(--gold);
+  }
+  .exec-summary-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; color: var(--gold); letter-spacing: 2px;
+    margin-bottom: 24px;
+  }
+  .exec-point {
+    margin-bottom: 20px; padding-left: 20px;
+    border-left: 3px solid var(--gold);
+  }
+  .exec-point-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; color: var(--gold); line-height: 1;
+  }
+  .exec-point-title { font-size: 14px; font-weight: 700; color: #fff; margin-top: 4px; }
+  .exec-point-desc { font-size: 12px; color: #8EB8E8; line-height: 1.6; margin-top: 4px; }
+  .exec-decisions {
+    margin-top: 28px; padding: 20px 24px;
+    background: rgba(201,168,76,.1); border-radius: 6px;
+    border: 1px solid rgba(201,168,76,.3);
+  }
+  .exec-decisions-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 2px; color: var(--gold);
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  .exec-decision {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 0; font-size: 13px; color: #fff;
+  }
+  .exec-checkbox {
+    width: 18px; height: 18px; border: 2px solid var(--gold);
+    border-radius: 3px; flex-shrink: 0;
+  }
+
+  /* FOOTNOTE / DISCLAIMER */
+  .footnote {
+    font-size: 11px; color: var(--text-light); margin-top: 8px;
+    padding-left: 12px; border-left: 2px solid var(--border); line-height: 1.6;
+  }
+  .disclaimer {
+    background: #F8F4F4; border: 1px solid #E4D8D8;
+    border-left: 4px solid var(--accent-red);
+    border-radius: 4px; padding: 16px 20px;
+    font-size: 11px; color: #8B5555; line-height: 1.7; margin-top: 36px;
+  }
+  .disclaimer strong { color: var(--accent-red); }
+
+  /* FOOTER */
+  footer {
+    background: var(--brand-dark); color: #6A8CAF;
+    text-align: center; padding: 20px; font-size: 11px; margin-top: 56px;
+  }
+
+  /* PRINT */
+  @media print {
+    nav, footer { display: none; }
+    .wrapper { padding-top: 20px; }
+    body { font-size: 11px; }
+  }
+  @media (max-width: 768px) {
+    .agenda-bar { grid-template-columns: 1fr 1fr; }
+    .pos-grid, .scenario-grid { grid-template-columns: 1fr; }
+    .cover { padding: 40px 24px; }
+    .step { grid-template-columns: 44px 1fr; }
+    .step-owner { display: none; }
+    .checklist li { grid-template-columns: 1fr; }
+    nav { padding: 0 16px; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Pig<span>Plan</span>CORE</div>
+  <div class="nav-links">
+    <a href="#s1">Feature MAP</a>
+    <a href="#s2">Price Intel</a>
+    <a href="#s3">Tech Stack</a>
+    <a href="#s4">Oracle MCP</a>
+    <a href="#s5">MVP Check</a>
+    <a href="#s6">Q&amp;A</a>
+    <a href="#s7">Checklist</a>
+    <a href="#s8">Summary</a>
+  </div>
+</nav>
+
+<div class="wrapper">
+
+  <!-- COVER -->
+  <div class="cover">
+    <div class="cover-eyebrow">2nd Meeting Prep &middot; Confidential &middot; 2026.03.23</div>
+    <div class="cover-title"><em>2</em>nd Meeting Prep</div>
+    <div class="cover-sub">PigPlanCORE &mdash; 2차 회의 준비 보고서</div>
+    <div class="cover-sub2">대표님 보고 준비 &mdash; 결정이 필요한 사항 중심 정리</div>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">회의 일시</div>
+        <div class="cover-meta-val">2026.03.23 (월) 13:00</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">안건 수</div>
+        <div class="cover-meta-val">5</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">결정 사항</div>
+        <div class="cover-meta-val">3</div>
+      </div>
+    </div>
+    <div class="cover-conf">CONFIDENTIAL &mdash; 내부 보고 전용</div>
+  </div>
+
+  <!-- AGENDA BAR -->
+  <div class="agenda-bar">
+    <a href="#s1" class="agenda-item" style="text-decoration:none;">
+      <div class="agenda-num">01</div>
+      <div class="agenda-text">국가별 기능 우선순위</div>
+    </a>
+    <a href="#s2" class="agenda-item" style="text-decoration:none;">
+      <div class="agenda-num">02</div>
+      <div class="agenda-text">경쟁사 가격 대응</div>
+    </a>
+    <a href="#s3" class="agenda-item" style="text-decoration:none;">
+      <div class="agenda-num">03</div>
+      <div class="agenda-text">기술 스택 확정</div>
+    </a>
+    <a href="#s4" class="agenda-item" style="text-decoration:none;">
+      <div class="agenda-num">04</div>
+      <div class="agenda-text">Oracle MCP 분석</div>
+    </a>
+    <a href="#s5" class="agenda-item" style="text-decoration:none;">
+      <div class="agenda-num">05</div>
+      <div class="agenda-text">MVP 현실성 체크</div>
+    </a>
+  </div>
+
+
+  <!-- ═══ SECTION 1 ═══ -->
+  <section id="s1">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">01</div>
+        <div class="sec-title">국가별 기능 요구사항 MAP</div>
+      </div>
+      <div class="sec-message">지역마다 다른 요구사항 &mdash; 어디부터 어떻게 만들 것인가</div>
+    </div>
+
+    <div class="key-msg">
+      <div class="key-msg-eyebrow">Key Message</div>
+      <div class="key-msg-text">
+        양돈 소프트웨어는 "하나의 제품"이 아니다.
+        미국 농장과 베트남 농장이 원하는 것은 <strong>완전히 다르다.</strong>
+        이 차이를 설계 초기부터 반영하지 않으면, 나중에 전부 뜯어고쳐야 한다.
+      </div>
+    </div>
+
+    <div class="sub-head">1.1 지역별 핵심 요구사항 비교</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>기능 영역</th><th>미국</th><th>유럽</th><th>동남아 (SEA)</th><th>CORE 우선순위</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>모돈 관리</strong></td>
+            <td>PSY/NPD/MSY 벤치마킹 필수</td>
+            <td>동물복지 점수 연동</td>
+            <td>기본 교배/분만/이유</td>
+            <td><span class="tag tag-red">Phase 1 필수</span></td>
+          </tr>
+          <tr>
+            <td><strong>사료 관리</strong></td>
+            <td>Feed Mill 직접 발주/연동</td>
+            <td>사료 성분 추적 (규정)</td>
+            <td>사료빈 기본 재고만</td>
+            <td><span class="tag tag-blue">Phase 2 (US/EU)</span></td>
+          </tr>
+          <tr>
+            <td><strong>건강/방역</strong></td>
+            <td>PQA Plus 감사 워크플로우</td>
+            <td>항생제 사용 의무보고</td>
+            <td>ASF 발생 경보/격리</td>
+            <td><span class="tag tag-red">Phase 1 (SEA ASF)</span></td>
+          </tr>
+          <tr>
+            <td><strong>이력 추적</strong></td>
+            <td>USDA NAIS 이력</td>
+            <td>EU Farm-to-Fork</td>
+            <td>기본 입출하 기록</td>
+            <td><span class="tag tag-blue">Phase 2</span></td>
+          </tr>
+          <tr>
+            <td><strong>유전/종돈</strong></td>
+            <td>PIC, DNA Genetics 연동</td>
+            <td>DanBred, Topigs Norsvin</td>
+            <td>한국계 종돈사</td>
+            <td><span class="tag tag-blue">Phase 2</span></td>
+          </tr>
+          <tr>
+            <td><strong>오프라인</strong></td>
+            <td>필요하나 대체로 안정</td>
+            <td>필요 (농촌 지역)</td>
+            <td><strong>절대 필수</strong> (인터넷 없음)</td>
+            <td><span class="tag tag-red">Phase 1 필수</span></td>
+          </tr>
+          <tr>
+            <td><strong>언어</strong></td>
+            <td>영어/스페인어 (이민 노동자)</td>
+            <td>국가별 현지어</td>
+            <td>베트남어/태국어</td>
+            <td><span class="tag tag-red">Phase 1</span></td>
+          </tr>
+          <tr>
+            <td><strong>가격 민감도</strong></td>
+            <td>중간 (ROI 증명 시 지불)</td>
+            <td>낮음 (규정 준수 필수)</td>
+            <td><strong>매우 높음</strong> (무료 아니면 불가)</td>
+            <td><span class="tag tag-green">무료 전략 필수</span></td>
+          </tr>
+          <tr>
+            <td><strong>규정 보고</strong></td>
+            <td>주(州)별 상이 / 연방 기준</td>
+            <td>EU 공통 + 국가별 추가</td>
+            <td>국가별 초기 단계</td>
+            <td><span class="tag tag-blue">Phase 2 (EU 우선)</span></td>
+          </tr>
+          <tr>
+            <td><strong>다사이트</strong></td>
+            <td>대형 Integrator 필수</td>
+            <td>그룹사 필수</td>
+            <td>소규모 단일 농장 多</td>
+            <td><span class="tag tag-blue">Phase 2</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-head">1.2 국가별 기능 우선순위 히트맵</div>
+    <p class="footnote" style="margin-bottom:12px;">읽는 법: *** = 반드시 있어야 / ** = 있으면 좋음 / * = 나중에 / &mdash; = 불필요</p>
+    <div class="tbl-wrap">
+      <table class="heatmap">
+        <thead>
+          <tr><th>기능</th><th>미국</th><th>유럽</th><th>SEA</th><th>Phase 1 목표</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>교배/분만/이유 기록</strong></td><td class="h3">***</td><td class="h3">***</td><td class="h3">***</td><td class="phase">전 지역 동시</td></tr>
+          <tr><td><strong>오프라인 모바일</strong></td><td class="h2">**</td><td class="h2">**</td><td class="h3">***</td><td class="phase">전 지역 동시</td></tr>
+          <tr><td><strong>다국어 UI</strong></td><td class="h2">**</td><td class="h3">***</td><td class="h3">***</td><td class="phase">전 지역 동시</td></tr>
+          <tr><td><strong>PSY/NPD 대시보드</strong></td><td class="h3">***</td><td class="h2">**</td><td class="h2">**</td><td class="phase">전 지역 동시</td></tr>
+          <tr><td>ASF 발생 경보</td><td class="h0">&mdash;</td><td class="h0">&mdash;</td><td class="h3">***</td><td>SEA 전용 Phase 1</td></tr>
+          <tr><td>항생제 보고 자동화</td><td class="h0">&mdash;</td><td class="h3">***</td><td class="h0">&mdash;</td><td>EU Phase 2</td></tr>
+          <tr><td>Feed Mill 연동</td><td class="h3">***</td><td class="h2">**</td><td class="h0">&mdash;</td><td>US Phase 2</td></tr>
+          <tr><td>PQA Plus 감사 모듈</td><td class="h3">***</td><td class="h0">&mdash;</td><td class="h0">&mdash;</td><td>US Phase 2</td></tr>
+          <tr><td>동물복지 점수</td><td class="h0">&mdash;</td><td class="h3">***</td><td class="h0">&mdash;</td><td>EU Phase 2</td></tr>
+          <tr><td>다사이트 통합</td><td class="h3">***</td><td class="h3">***</td><td class="h1">*</td><td>Phase 2</td></tr>
+          <tr><td>Genetics/EBV</td><td class="h2">**</td><td class="h3">***</td><td class="h1">*</td><td>Phase 3</td></tr>
+          <tr><td>ESG 대시보드</td><td class="h1">*</td><td class="h3">***</td><td class="h0">&mdash;</td><td>Phase 3</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="bottom-line">
+      <span class="bl-label">Bottom Line</span>
+      <span class="bl-text">Phase 1에서 3개 지역 공통 기능(교배/분만/이유 + 오프라인 + 다국어)만 만들면 어디든 쓸 수 있다. 지역 특화는 Phase 2부터 모듈로 분리 개발한다.</span>
+    </div>
+  </section>
+
+
+  <!-- ═══ SECTION 2 ═══ -->
+  <section id="s2">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">02</div>
+        <div class="sec-title">미국 양돈 프로그램 가격 &amp; 중점 관리 포인트</div>
+      </div>
+      <div class="sec-message">경쟁사는 가격을 안 보여준다. 그게 우리의 기회다.</div>
+    </div>
+
+    <div class="key-msg">
+      <div class="key-msg-eyebrow">Key Message</div>
+      <div class="key-msg-text">
+        "무료"만으로는 안 된다 &mdash; 그들이 <strong>왜 돈을 받는지</strong> 이해해야 한다.
+      </div>
+    </div>
+
+    <div class="sub-head">2.1 미국 시장 주요 경쟁사 가격 현황</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>소프트웨어</th><th>확인된 가격</th><th>과금 방식</th><th>출처 신뢰도</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>PigKnows</strong> (Valstone)</td>
+            <td><strong>비공개</strong> &mdash; Custom Quote</td>
+            <td>모돈 수 기반 추정</td>
+            <td><span class="tag tag-red">공식 미확인</span></td>
+          </tr>
+          <tr>
+            <td><strong>PigCHAMP</strong></td>
+            <td><strong>비공개</strong> &mdash; 무료 체험 후 영업</td>
+            <td>Per Sow/년 추정</td>
+            <td><span class="tag tag-red">공식 미확인</span></td>
+          </tr>
+          <tr>
+            <td><strong>MetaFarms</strong></td>
+            <td><strong>$0.05~$0.25/출하돈</strong> + setup $0.30~$1.00/sow</td>
+            <td>출하 수 기반</td>
+            <td><span class="tag tag-orange">2018년 기사</span></td>
+          </tr>
+          <tr>
+            <td><strong>Cloudfarms</strong></td>
+            <td><strong>$500/년</strong> 시작 (리뷰 사이트)</td>
+            <td>모듈형 추가 과금</td>
+            <td><span class="tag tag-orange">SourceForge</span></td>
+          </tr>
+          <tr>
+            <td><strong>MTech Systems</strong></td>
+            <td><strong>비공개</strong> &mdash; Enterprise만</td>
+            <td>Integrator 연간 계약</td>
+            <td><span class="tag tag-red">영업 문의 필요</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert alert-orange">
+      <strong>위 가격은 모두 추정값.</strong> 실제 영업 문의 없이는 확인 불가.<br>
+      <strong>Action:</strong> MetaFarms, PigKnows에 "소규모 농장" 가장해서 견적 문의 권장
+    </div>
+
+    <div class="sub-head">2.2 미국 농장이 돈을 쓰는 이유 (중점 관리 포인트)</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>관리 포인트</th><th>설명</th><th>SW 없을 때 손실</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>PSY 1두 개선</strong></td>
+            <td>모돈 1두당 연 1마리 더 = 미국 평균 농장(1000모돈) 연 $50,000+ 추가 수익</td>
+            <td>ROI 계산 즉시 가능</td>
+          </tr>
+          <tr>
+            <td><strong>Feed Mill 발주 자동화</strong></td>
+            <td>수작업 사료 발주 오류 = 손실. 대형 농장 사료비 연 수억원</td>
+            <td>오발주 1건 = SW 1년치 비용</td>
+          </tr>
+          <tr>
+            <td><strong>질병 조기 탐지</strong></td>
+            <td>PRRS/PED/ASF 조기 경보 = 폐사율 차이</td>
+            <td>전염병 1회 = 수천만원 손실</td>
+          </tr>
+          <tr>
+            <td><strong>Pork Checkoff 규정 준수</strong></td>
+            <td>PQA Plus 인증 없으면 대형 유통사 계약 불가</td>
+            <td>계약 미체결 = 판로 없음</td>
+          </tr>
+          <tr>
+            <td><strong>도체 등급 피드백</strong></td>
+            <td>도축 성적을 역으로 교배 결정에 반영</td>
+            <td>데이터 없으면 개선 불가</td>
+          </tr>
+          <tr>
+            <td><strong>인력 효율화</strong></td>
+            <td>현장 작업자 1명이 모바일로 데이터 입력</td>
+            <td>데이터 담당 추가 인건비 절감</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-head">2.3 해외 경쟁사 가격 대응 전략</div>
+
+    <div class="alert alert-blue">
+      <strong>대표님 보고 핵심:</strong> "우리는 왜 무료인가?" &rarr; "무료가 전략이다. 단, 조건이 있다."
+    </div>
+
+    <div class="code-block">
+      <span class="cm">// 경쟁사가 $500~$3,000/년을 받는 이유:</span><br>
+      &nbsp;&nbsp;<span class="hl">데이터 마이그레이션 비용</span> (전환 비용 높아야 Lock-in)<br>
+      &nbsp;&nbsp;<span class="hl">영업 인력 운영비</span> 포함<br>
+      &nbsp;&nbsp;<span class="hl">27년 된 브랜드</span> 프리미엄<br><br>
+      <span class="cm">// 우리가 무료로 줄 수 있는 이유:</span><br>
+      &nbsp;&nbsp;<span class="ok">피그플랜 27년 개발 비용 이미 회수</span><br>
+      &nbsp;&nbsp;<span class="ok">글로벌 데이터 자산(Pigsignal) 확보가 진짜 목적</span><br>
+      &nbsp;&nbsp;<span class="ok">Phase 1에서 수익보다 시장 침투가 먼저</span>
+    </div>
+
+    <div class="sub-sub-head">대응 포지셔닝</div>
+    <div class="pos-grid">
+      <div class="pos-card">
+        <div class="pos-num">01</div>
+        <div class="pos-title">"경쟁사가 $500 받을 때 우리는 0원"</div>
+        <div class="pos-desc">SEA 시장 즉시 진입</div>
+      </div>
+      <div class="pos-card">
+        <div class="pos-num">02</div>
+        <div class="pos-title">"경쟁사가 API 없을 때 우리는 오픈"</div>
+        <div class="pos-desc">ESF/도축장/ERP 자유 연동</div>
+      </div>
+      <div class="pos-card">
+        <div class="pos-num">03</div>
+        <div class="pos-title">"경쟁사가 아시아어 없을 때 우리는 한/베/태"</div>
+        <div class="pos-desc">현지 농장 즉시 사용</div>
+      </div>
+    </div>
+
+    <div class="bottom-line">
+      <span class="bl-label">Bottom Line</span>
+      <span class="bl-text">경쟁사는 모두 가격을 숨기고 $500~$3,000을 받는다. 우리의 무기는 무료 + 오픈 + 아시아어다.</span>
+    </div>
+  </section>
+
+
+  <!-- ═══ SECTION 3 ═══ -->
+  <section id="s3">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">03</div>
+        <div class="sec-title">기술 스택 결정 사항</div>
+      </div>
+      <div class="sec-message">"지금 빠르게"와 "나중에 버티게" 사이의 균형. 잘못 고르면 6개월 후 전부 다시 짜야 한다.</div>
+    </div>
+
+    <div class="sub-head">3.1 백엔드 선택: FastAPI vs Node.js</div>
+    <div class="tbl-wrap">
+      <table class="vs-table">
+        <thead>
+          <tr><th>기준</th><th>FastAPI (Python)</th><th>Node.js (TypeScript)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>개발 속도</strong></td><td class="good">빠름 &mdash; Python 팀 역량 활용</td><td class="good">빠름 &mdash; JS 생태계</td></tr>
+          <tr><td><strong>AI/ML 연동</strong></td><td class="good">최강 &mdash; NumPy, pandas, 모델 직접 호출</td><td class="warn">별도 Python 서버 필요</td></tr>
+          <tr><td><strong>성능 (동시 처리)</strong></td><td class="good">Async 지원, 충분</td><td class="good">Event loop 기반 강점</td></tr>
+          <tr><td><strong>Java 전환 용이성</strong></td><td class="warn">비즈니스 로직 재작성 필요</td><td class="warn">비즈니스 로직 재작성 필요</td></tr>
+          <tr><td><strong>양돈 데이터 분석</strong></td><td class="good">피그플랜 기존 분석 로직 재사용</td><td class="bad">재구현 필요</td></tr>
+          <tr><td><strong>팀 역량</strong></td><td>기존 팀이 Python 쓴다면 유리</td><td>JS/TS 팀이라면 유리</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert alert-green">
+      <strong>권고: FastAPI 선택.</strong> AI 분석(질병 경보/최적 출하 예측) 기능이 Phase 2~3에 필수. Python 생태계 없이는 별도 ML 서버 구축 비용 2배. 피그플랜 기존 분석 로직 재사용 가능.
+    </div>
+
+    <div class="sub-head">3.2 Java 전환 시점 판단 기준</div>
+    <div class="code-block">
+      <span class="ok">Phase 1 (FastAPI):</span> 농장 수 ~300개, 동시 사용자 ~1,000명 이하<br>
+      <span class="ok">Phase 2 (FastAPI):</span> 농장 수 ~1,000개, 동시 사용자 ~5,000명 이하<br><br>
+      <span class="warn">전환 트리거 조건 (셋 중 하나라도 해당 시):</span><br>
+      &nbsp;&nbsp;- API 응답 P95 > 500ms 지속 (2주 이상)<br>
+      &nbsp;&nbsp;- 월간 활성 농장 2,000개 초과<br>
+      &nbsp;&nbsp;- Enterprise 계약 SLA 99.9% 보장 요구<br><br>
+      <span class="hl">&rarr; Java 전환은 "성능 문제 생기면"이 아니라</span><br>
+      <span class="hl">&nbsp;&nbsp;"성능 문제가 예측될 때" 미리 준비 시작</span>
+    </div>
+
+    <div class="sub-head">3.3 PostgreSQL 설계 핵심 원칙</div>
+    <div class="code-block">
+      <span class="hl">Schema-per-tenant</span> (테넌트별 스키마 분리)<br>
+      &nbsp;&nbsp;<span class="ok">장점:</span> 농장별 데이터 완전 격리, 규정 준수 용이, 백업 단위 명확<br>
+      &nbsp;&nbsp;<span class="warn">단점:</span> 농장 수 늘어날수록 관리 복잡 (&rarr; 자동화 필수)<br>
+      &nbsp;&nbsp;<span class="hl">결론:</span> Phase 1~2는 Schema-per-tenant. Phase 3(수만 농장)에서 재검토.<br><br>
+      <span class="hl">핵심 테이블 구조 (논리적):</span><br>
+      &nbsp;&nbsp;Farm (농장) &rarr; Sow (모돈) &rarr; Event (이벤트: 교배/분만/이유)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr; Health (건강 기록)<br>
+      &nbsp;&nbsp;Farm &rarr; FeedBin (사료빈) &rarr; FeedRecord (사료 기록)<br>
+      &nbsp;&nbsp;Farm &rarr; AnimalGroup (그룹) &rarr; GrowRecord (비육 기록)<br><br>
+      <span class="hl">TimescaleDB 사용 범위:</span><br>
+      &nbsp;&nbsp;IoT 센서 데이터 (환경 온도/습도, ESF 급이량) &mdash; 시계열 쿼리 최적화<br>
+      &nbsp;&nbsp;일반 농장 관리 데이터는 표준 PostgreSQL
+    </div>
+
+    <div class="bottom-line">
+      <span class="bl-label">Bottom Line</span>
+      <span class="bl-text">FastAPI + PostgreSQL (Schema-per-tenant) + TimescaleDB(IoT). Java 전환은 성능 문제가 예측될 때 시작한다.</span>
+    </div>
+  </section>
+
+
+  <!-- ═══ SECTION 4 ═══ -->
+  <section id="s4">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">04</div>
+        <div class="sec-title">Oracle MCP 분석</div>
+      </div>
+      <div class="sec-message">27년 Oracle DB에서 "쓸 수 있는 것"과 "버려야 하는 것"을 먼저 구분해야 한다.</div>
+    </div>
+
+    <div class="key-msg">
+      <div class="key-msg-eyebrow">Key Message</div>
+      <div class="key-msg-text">
+        이걸 모르고 개발 시작하면 <strong>중간에 전부 뜯어고치는 사태가 발생한다.</strong>
+      </div>
+    </div>
+
+    <div class="sub-head">4.1 Oracle MCP로 확인해야 할 항목</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>분석 항목</th><th>확인 내용</th><th>결과에 따른 결정</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>테이블 수/구조</strong></td><td>총 테이블 수, 핵심 엔티티 파악</td><td>PostgreSQL 설계 범위 결정</td></tr>
+          <tr><td><strong>모돈 관련 테이블</strong></td><td>SOW, MATING, FARROWING, WEANING 등</td><td>CORE 핵심 스키마 재사용 여부</td></tr>
+          <tr><td><strong>이벤트 로그 구조</strong></td><td>이벤트 타입 종류, 기록 방식</td><td>48종 이벤트 지원 설계 기반</td></tr>
+          <tr><td><strong>레거시 프로시저</strong></td><td>커스텀 저장 프로시저/트리거 수</td><td>재구현 공수 추정</td></tr>
+          <tr><td><strong>데이터 품질</strong></td><td>NULL 비율, 중복 레코드, 인코딩 문제</td><td>마이그레이션 정제 작업 범위</td></tr>
+          <tr><td><strong>관계 무결성</strong></td><td>FK 관계, 고아 레코드 존재 여부</td><td>PostgreSQL 전환 시 오류 위험</td></tr>
+          <tr><td><strong>PSY/NPD 계산 로직</strong></td><td>기존 KPI 계산 방식</td><td>CORE에서 동일하게 구현 가능한지</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-head">4.2 분석 결과에 따른 시나리오</div>
+    <div class="scenario-grid">
+      <div class="scenario-card best">
+        <div class="scenario-header">
+          <div class="scenario-label">SCENARIO A</div>
+          <div class="scenario-sub">이상적</div>
+        </div>
+        <div class="scenario-body">
+          <p><strong>구조가 재사용 가능</strong></p>
+          <p>Oracle 핵심 테이블 &rarr; PostgreSQL 직접 매핑</p>
+          <div class="duration">소요: 2주 분석 + 2주 마이그레이션 설계</div>
+          <p style="margin-top:8px;"><span class="tag tag-green">리스크: 낮음</span></p>
+        </div>
+      </div>
+      <div class="scenario-card mid">
+        <div class="scenario-header">
+          <div class="scenario-label">SCENARIO B</div>
+          <div class="scenario-sub">현실적</div>
+        </div>
+        <div class="scenario-body">
+          <p><strong>일부 재사용, 일부 재설계</strong></p>
+          <p>핵심 엔티티(모돈/이벤트)만 재사용, 국내 특화 로직 제거 후 글로벌 표준 재설계</p>
+          <div class="duration">소요: 2주 분석 + 4~6주 설계</div>
+          <p style="margin-top:8px;"><span class="tag tag-orange">리스크: 중간</span></p>
+        </div>
+      </div>
+      <div class="scenario-card worst">
+        <div class="scenario-header">
+          <div class="scenario-label">SCENARIO C</div>
+          <div class="scenario-sub">최악</div>
+        </div>
+        <div class="scenario-body">
+          <p><strong>처음부터 설계</strong></p>
+          <p>CORE = 완전 신규 설계. 국내 Oracle과 독립 운영</p>
+          <div class="duration">소요: 2주 분석 + 8주 신규 설계</div>
+          <p style="margin-top:8px;"><span class="tag tag-red">리스크: 높음 (일정 지연)</span></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-red">
+      <strong>이번 회의 전에 Oracle MCP 분석 2주차 결과 공유 필수.</strong> 어떤 시나리오인지 확정 못하면 개발 일정 전체가 불확실.
+    </div>
+
+    <div class="bottom-line">
+      <span class="bl-label">Bottom Line</span>
+      <span class="bl-text">Oracle 분석 결과가 전체 일정을 결정한다. 시나리오 확정이 이번 회의 최우선 과제.</span>
+    </div>
+  </section>
+
+
+  <!-- ═══ SECTION 5 ═══ -->
+  <section id="s5">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">05</div>
+        <div class="sec-title">MVP 현실성 체크</div>
+      </div>
+      <div class="sec-message">8주 안에 "완벽한 제품"은 불가능. "베트남 농장주 1명이 내일 쓸 수 있는 것"은 가능.</div>
+    </div>
+
+    <div class="key-msg">
+      <div class="key-msg-eyebrow">Key Message</div>
+      <div class="key-msg-text">
+        대표님께 이 두 가지를 <strong>명확히 구분해서 보고</strong>해야 한다.<br>
+        "가능한 것"과 "불가능한 것"을 미리 선 그어야 기대치를 관리할 수 있다.
+      </div>
+    </div>
+
+    <div class="sub-head">5.1 8주 MVP &mdash; 현실적으로 가능한 것</div>
+    <p class="footnote" style="margin-bottom:16px;">기준: 개발자 2~3명 기준. Oracle 분석 병행.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <span class="tag tag-red">1~2주</span>
+        <div class="step-desc"><strong>Oracle MCP 분석 + PostgreSQL 스키마 설계</strong></div>
+        <div class="step-owner">ERD 초안, 테이블 정의서</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <span class="tag tag-red">3~4주</span>
+        <div class="step-desc"><strong>FastAPI 기본 CRUD</strong> (모돈/이벤트/사용자)</div>
+        <div class="step-owner">API 엔드포인트 30개</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <span class="tag tag-orange">5~6주</span>
+        <div class="step-desc"><strong>React 웹 대시보드</strong> 기본 화면 + PSY/NPD</div>
+        <div class="step-owner">웹 데이터 입력/조회</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <span class="tag tag-blue">7~8주</span>
+        <div class="step-desc"><strong>Android 앱 오프라인</strong> 기본 기능</div>
+        <div class="step-owner">현장 교배/분만 기록</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
+      <div class="card" style="border-left:4px solid var(--accent-green);">
+        <div class="sub-sub-head" style="margin-top:0;color:var(--accent-green);">8주 후 가능한 것</div>
+        <ul class="blist">
+          <li>모돈 교배/분만/이유 기록 (웹 + Android)</li>
+          <li>PSY/NPD 기본 계산/표시</li>
+          <li>오프라인 입력 후 온라인 동기화 (기본)</li>
+          <li>한국어/영어/베트남어 UI</li>
+        </ul>
+      </div>
+      <div class="card" style="border-left:4px solid var(--accent-red);">
+        <div class="sub-sub-head" style="margin-top:0;color:var(--accent-red);">8주 후 불가능한 것 (솔직하게)</div>
+        <ul class="blist">
+          <li>Feed Mill 연동, Multi-Site, Genetics</li>
+          <li>ESG, ESF 연동</li>
+          <li>iOS 앱, 벤치마킹, 고급 리포트</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sub-head">5.2 MVP로 무엇을 검증할 것인가</div>
+
+    <div class="alert alert-blue">
+      <strong>MVP의 목적 = "이게 팔릴까?"가 아니라 "이게 실제로 쓰일까?"를 검증하는 것</strong>
+    </div>
+
+    <div class="card">
+      <div class="sub-sub-head" style="margin-top:0;">검증 질문 3가지</div>
+      <div class="tbl-wrap" style="margin-bottom:16px;">
+        <table>
+          <thead><tr><th>#</th><th>질문</th></tr></thead>
+          <tbody>
+            <tr><td><strong>1</strong></td><td>베트남 농장주가 앱을 스스로 설치하고 첫 데이터를 입력할 수 있는가?</td></tr>
+            <tr><td><strong>2</strong></td><td>인터넷 없는 환경에서 3일간 기록 후 동기화가 정상 작동하는가?</td></tr>
+            <tr><td><strong>3</strong></td><td>PSY 수치를 보고 "이게 맞네"라고 반응하는가?</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sub-sub-head">검증 방법</div>
+      <ul class="blist">
+        <li>파일럿 농장 3~5개 모집 (한국계 베트남 진출 농장 우선)</li>
+        <li>2주 실사용 후 인터뷰</li>
+        <li>결과에 따라 Phase 2 방향 결정</li>
+      </ul>
+    </div>
+
+    <div class="sub-head">5.3 대표님께 이렇게 보고한다</div>
+    <div class="key-msg" style="border-left-color:var(--accent-green);">
+      <div class="key-msg-text">
+        "8주 안에 완성 제품을 만드는 게 목표가 아닙니다.<br>
+        8주 안에 <strong>'실제로 쓰는 농장주 3명'</strong>을 확보하는 게 목표입니다.<br><br>
+        그 3명이 매일 데이터를 입력하고,<br>
+        'PSY가 올랐다'고 느끼면 &mdash;<br>
+        <strong>우리가 맞는 방향으로 가고 있다는 증거입니다.</strong><br><br>
+        그게 현실적인 MVP입니다."
+      </div>
+    </div>
+
+    <div class="bottom-line">
+      <span class="bl-label">Bottom Line</span>
+      <span class="bl-text">8주 MVP = 베트남 농장주 3명이 실제로 쓰는 것. 완성 제품이 아니라 검증이 목적이다.</span>
+    </div>
+  </section>
+
+
+  <!-- ═══ SECTION 6 ═══ -->
+  <section id="s6">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">06</div>
+        <div class="sec-title">회의 시나리오 &mdash; 예상 질문 &amp; 준비된 답변</div>
+      </div>
+      <div class="sec-message">미리 답변을 준비해두면 회의 흐름을 주도할 수 있다.</div>
+    </div>
+
+    <div class="qa-grid">
+
+      <div class="qa-card">
+        <div class="qa-q"><span class="qa-q-tag">Q1</span>"다 좋은데 돈은 언제 버나?"</div>
+        <div class="qa-a">
+          Phase 1의 목표는 수익이 아닙니다.<br>
+          <strong>활성 농장 300개 확보</strong>가 기준점입니다.<br>
+          그 시점에 유료 전환 방식을 결정합니다.<br>
+          보수적으로 300농장의 30% 전환 시 &rarr; <strong>연 $160K~$450K ARR</strong> 진입 가능합니다.
+        </div>
+      </div>
+
+      <div class="qa-card">
+        <div class="qa-q"><span class="qa-q-tag">Q2</span>"PigKnows는 이미 글로벌 확장한다는데 우리가 이길 수 있나?"</div>
+        <div class="qa-a">
+          PigKnows가 가지지 못한 것이 3가지 있습니다.<br>
+          <strong>1. 아시아어</strong> (한국어/베트남어/태국어) &mdash; 단기간에 추가 불가<br>
+          <strong>2. 무료 진입</strong> &mdash; Valstone 구조상 무료 불가<br>
+          <strong>3. 오픈 API</strong> &mdash; 폐쇄형 수직통합 전략과 모순<br>
+          이 3가지 공백에서 우리가 먼저 자리를 잡으면 됩니다.
+        </div>
+      </div>
+
+      <div class="qa-card">
+        <div class="qa-q"><span class="qa-q-tag">Q3</span>"FastAPI로 시작했다가 Java로 바꾸면 처음부터 다시 짜야 하는 거 아닌가?"</div>
+        <div class="qa-a">
+          비즈니스 로직 재작성은 필요합니다.<br>
+          그러나 <strong>DB 스키마, API 설계, 프론트엔드는 그대로</strong> 씁니다.<br>
+          Java 전환은 트래픽 문제가 예측될 때 시작합니다.<br>
+          그 시점이면 수익도 나고 있을 겁니다.<br>
+          <strong>지금 Java로 시작하면 개발 속도가 2~3배 느려집니다.</strong>
+        </div>
+      </div>
+
+      <div class="qa-card">
+        <div class="qa-q"><span class="qa-q-tag">Q4</span>"Oracle 분석이 생각보다 복잡하면 일정이 얼마나 밀리나?"</div>
+        <div class="qa-a">
+          최악 시나리오(완전 신규 설계)는 8주가 추가됩니다.<br>
+          그러나 <strong>CORE DB는 국내 레거시와 처음부터 독립 설계</strong>합니다.<br>
+          Oracle 분석은 "재사용 가능한 로직 찾기"가 목적이지, "반드시 쓰겠다"가 아닙니다.<br>
+          <strong>분석 결과와 무관하게 CORE 개발은 병행 가능합니다.</strong>
+        </div>
+      </div>
+
+      <div class="qa-card">
+        <div class="qa-q"><span class="qa-q-tag">Q5</span>"베트남 농장주가 앱을 실제로 쓸 수 있을까? 너무 어렵지 않을까?"</div>
+        <div class="qa-a">
+          이게 MVP에서 검증해야 할 핵심 질문입니다.<br>
+          피그플랜 앱 기준으로, 현장 작업자는 <strong>3개 화면</strong>만 씁니다:<br>
+          <strong>교배 기록 / 분만 기록 / 이유 기록</strong><br>
+          이 3개 화면을 최대한 단순하게 만드는 것이 MVP UX 목표입니다.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══ SECTION 7 ═══ -->
+  <section id="s7">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">07</div>
+        <div class="sec-title">회의 전 준비 자료 체크리스트</div>
+      </div>
+    </div>
+
+    <ul class="checklist">
+      <li>
+        <span>Oracle MCP 분석 결과 요약 (주요 테이블 목록)</span>
+        <span class="owner">개발팀</span>
+        <span class="status"><span class="tag tag-orange">준비 필요</span></span>
+      </li>
+      <li>
+        <span>PostgreSQL 스키마 초안 ERD</span>
+        <span class="owner">개발팀</span>
+        <span class="status"><span class="tag tag-orange">준비 필요</span></span>
+      </li>
+      <li>
+        <span>MVP 8주 개발 일정표 (주차별)</span>
+        <span class="owner">기획팀</span>
+        <span class="status"><span class="tag tag-orange">준비 필요</span></span>
+      </li>
+      <li>
+        <span>경쟁사 견적 문의 결과 (MetaFarms, PigKnows)</span>
+        <span class="owner">사업개발</span>
+        <span class="status"><span class="tag tag-orange">준비 필요</span></span>
+      </li>
+      <li>
+        <span>파일럿 농장 후보 리스트 3~5개</span>
+        <span class="owner">사업/기획</span>
+        <span class="status"><span class="tag tag-orange">준비 필요</span></span>
+      </li>
+      <li>
+        <span>기존 기획서 요약 1페이지 (대표님용)</span>
+        <span class="owner">기획팀</span>
+        <span class="status"><span class="tag tag-blue">이 문서 활용</span></span>
+      </li>
+    </ul>
+  </section>
+
+
+  <!-- ═══ SECTION 8: EXECUTIVE SUMMARY ═══ -->
+  <section id="s8">
+    <div class="exec-summary">
+      <div class="exec-summary-title">Executive Summary &mdash; 핵심 3가지</div>
+
+      <div class="exec-point">
+        <div class="exec-point-num">01</div>
+        <div class="exec-point-title">나라마다 원하는 게 다르다</div>
+        <div class="exec-point-desc">
+          Phase 1: 공통 기능만 (교배/분만/이유 + 오프라인 + 다국어)<br>
+          지역 특화는 Phase 2부터 모듈 추가
+        </div>
+      </div>
+
+      <div class="exec-point">
+        <div class="exec-point-num">02</div>
+        <div class="exec-point-title">경쟁사는 $500~비공개. 우리는 무료.</div>
+        <div class="exec-point-desc">
+          무료가 전략이다. 단, Early Adopter에게는 첫날부터<br>
+          "나중에 유료 전환 예정"임을 명시한다
+        </div>
+      </div>
+
+      <div class="exec-point">
+        <div class="exec-point-num">03</div>
+        <div class="exec-point-title">8주 MVP = 베트남 농장주 3명이 실제로 쓰는 것</div>
+        <div class="exec-point-desc">
+          완성 제품이 아니라 검증이 목적<br>
+          3명이 매일 쓰면 &rarr; 맞는 방향. 안 쓰면 &rarr; 피벗
+        </div>
+      </div>
+
+      <div class="exec-decisions">
+        <div class="exec-decisions-title">결정 사항</div>
+        <div class="exec-decision">
+          <div class="exec-checkbox"></div>
+          <span>FastAPI로 Phase 1 진행 확정</span>
+        </div>
+        <div class="exec-decision">
+          <div class="exec-checkbox"></div>
+          <span>Oracle 분석 결과에 따라 DB 설계 시나리오 확정</span>
+        </div>
+        <div class="exec-decision">
+          <div class="exec-checkbox"></div>
+          <span>파일럿 농장 모집 시작 승인</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  PigPlanCORE &nbsp;|&nbsp; 2차 회의 준비 보고서 &nbsp;|&nbsp; 2026.03.23 &nbsp;|&nbsp; Confidential &amp; Proprietary
+</footer>
+
+</body>
+</html>

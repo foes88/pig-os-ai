@@ -1,0 +1,2561 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PigPlanCORE — 글로벌 전략 기획서</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand-dark:  #0F2B50;
+    --brand-blue:  #1E4D8C;
+    --brand-mid:   #2E6BC4;
+    --gold:        #C9A84C;
+    --accent-green:  #27AE60;
+    --accent-orange: #E67E22;
+    --accent-red:    #C0392B;
+    --bg:          #FAFAF8;
+    --surface:     #FFFFFF;
+    --text-dark:   #0F1923;
+    --text-mid:    #3A4A5C;
+    --text-light:  #7A8FA6;
+    --border:      #D8DDE4;
+    --tag-radius:  3px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text-dark);
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--brand-dark);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px; height: 52px;
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; letter-spacing: 2px; color: #fff;
+  }
+  .nav-logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 4px; }
+  .nav-links a {
+    color: #8EB8E8; font-size: 11px; font-weight: 500;
+    text-decoration: none; padding: 5px 8px; border-radius: 3px;
+    transition: background .15s, color .15s;
+    white-space: nowrap;
+  }
+  .nav-links a:hover { background: rgba(255,255,255,.1); color: #fff; }
+
+  /* ── LAYOUT ── */
+  .wrapper { max-width: 1060px; margin: 0 auto; padding: 86px 24px 64px; }
+
+  /* ── COVER ── */
+  .cover {
+    background: linear-gradient(160deg, #0a1e3d 0%, var(--brand-dark) 100%);
+    border-radius: 8px; padding: 64px; margin-bottom: 16px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
+    align-items: center;
+  }
+  .cover-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; color: var(--gold);
+    text-transform: uppercase; margin-bottom: 20px;
+  }
+  .cover-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 6vw, 80px); letter-spacing: 3px;
+    color: #fff; line-height: .95; margin-bottom: 12px;
+  }
+  .cover-title span { color: var(--gold); }
+  .cover-sub {
+    font-size: 15px; font-weight: 400; color: #9CC3F0;
+    margin-bottom: 6px;
+  }
+  .cover-sub2 {
+    font-size: 12px; font-weight: 300; color: #6A8CAF;
+    margin-bottom: 24px;
+  }
+  .cover-conf {
+    display: inline-block;
+    border: 1px solid rgba(192,57,43,.5); border-radius: 3px;
+    padding: 4px 12px; font-size: 10px; font-weight: 700;
+    color: #E8A8A0; letter-spacing: 1px;
+  }
+  .cover-right { display: flex; flex-direction: column; gap: 16px; }
+  .cover-stat {
+    border-left: 3px solid var(--gold); padding: 12px 0 12px 20px;
+  }
+  .cover-stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px; color: #fff; line-height: 1;
+  }
+  .cover-stat-label { font-size: 11px; color: #8EB8E8; font-weight: 500; }
+
+  .story-bar {
+    display: flex; gap: 0; margin-bottom: 48px;
+    border-radius: 4px; overflow: hidden;
+  }
+  .story-step {
+    flex: 1; text-align: center; padding: 10px 4px;
+    font-size: 10px; font-weight: 500; letter-spacing: .5px;
+    background: var(--surface); color: var(--text-light);
+    border: 1px solid var(--border); border-left: none;
+  }
+  .story-step:first-child { border-left: 1px solid var(--border); }
+  .story-step.active { background: var(--brand-dark); color: var(--gold); border-color: var(--brand-dark); }
+
+  /* ── NARRATIVE DIVIDER ── */
+  .narrative-divider {
+    display: flex; align-items: center;
+    gap: 16px; margin: 48px 0 0;
+    padding: 12px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .narrative-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 3px;
+    color: var(--text-light); text-transform: uppercase;
+  }
+  .narrative-message {
+    font-size: 13px; font-weight: 600;
+    color: var(--text-mid);
+  }
+
+  /* ── SECTION HEADING ── */
+  .sec-head {
+    margin: 48px 0 24px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--brand-dark);
+  }
+  .sec-head-top { display: flex; align-items: baseline; gap: 12px; }
+  .sec-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px; color: var(--brand-dark); line-height: 1;
+  }
+  .sec-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; color: var(--brand-dark); letter-spacing: 1px;
+  }
+  .sec-message { font-size: 13px; color: var(--text-light); margin-top: 4px; }
+
+  .sub-head {
+    font-size: 16px; font-weight: 700; color: var(--brand-dark);
+    padding-bottom: 6px; margin: 36px 0 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sub-sub-head {
+    font-size: 14px; font-weight: 700; color: var(--brand-dark);
+    margin: 28px 0 12px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--surface); border-radius: 6px;
+    border: 1px solid var(--border);
+    padding: 32px; margin-bottom: 20px;
+  }
+
+  /* ── TABLES ── */
+  .tbl-wrap { overflow-x: auto; margin-bottom: 24px; border-radius: 6px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; background: var(--surface); font-size: 12px; }
+  thead tr { background: var(--brand-dark); }
+  thead th {
+    color: #fff; font-weight: 600; font-size: 11px; letter-spacing: .5px;
+    padding: 12px 16px; text-align: left; white-space: nowrap;
+  }
+  tbody tr:nth-child(even) { background: #F8F9FA; }
+  tbody tr:hover { background: #F0F3F7; }
+  td { padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.6; }
+  td:first-child { font-weight: 600; }
+  .td-key { background: #F4F6F9; color: var(--brand-dark); font-weight: 700; width: 160px; white-space: nowrap; }
+
+  /* ── TAGS ── */
+  .tag {
+    display: inline-block; padding: 2px 8px; border-radius: var(--tag-radius);
+    font-size: 10px; font-weight: 700; letter-spacing: .5px; white-space: nowrap;
+  }
+  .tag-red    { background: #FADBD8; color: var(--accent-red);    border: 1px solid #EBADA8; }
+  .tag-blue   { background: #D6E4F7; color: var(--brand-blue);   border: 1px solid #AECCF0; }
+  .tag-green  { background: #D5F5E3; color: #1a7a40;             border: 1px solid #A8DFBC; }
+  .tag-orange { background: #FDEBD0; color: #a05000;             border: 1px solid #F0CCAA; }
+  .tag-dark   { background: var(--brand-dark); color: #fff; }
+  .tag-gray   { background: #E8ECF0; color: #556; border: 1px solid #CCC; }
+
+  /* ── ALERT (no emoji) ── */
+  .alert {
+    border-radius: 4px; padding: 16px 20px; margin-bottom: 20px;
+    font-size: 13px; line-height: 1.7;
+  }
+  .alert-red    { background: #FEF5F3; border-left: 4px solid var(--accent-red); }
+  .alert-blue   { background: #F3F7FE; border-left: 4px solid var(--brand-mid); }
+  .alert-orange { background: #FEF8F0; border-left: 4px solid var(--accent-orange); }
+  .alert-green  { background: #F3FBF6; border-left: 4px solid var(--accent-green); }
+
+  /* ── BOTTOM LINE ── */
+  .bottom-line {
+    background: var(--brand-dark);
+    border-left: 5px solid var(--gold);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 24px;
+    margin: 32px 0 0;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .bl-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 2px;
+    color: var(--gold); text-transform: uppercase;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .bl-text { font-size: 14px; font-weight: 700; color: #fff; line-height: 1.5; }
+
+  /* ── FACT CARDS (flat) ── */
+  .fact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .fact-card {
+    background: var(--surface); border-radius: 6px; padding: 24px;
+    text-align: left; border: 1px solid var(--border);
+    border-left: 4px solid var(--gold);
+  }
+  .fact-num {
+    font-family: 'Bebas Neue', sans-serif; font-size: 36px;
+    line-height: 1; margin-bottom: 4px; color: var(--brand-dark);
+  }
+  .fact-label { font-size: 11px; font-weight: 600; color: var(--text-mid); }
+  .fact-note { font-size: 10px; color: var(--text-light); margin-top: 4px; }
+
+  /* ── TIER CARDS (flat) ── */
+  .tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+  .tier-card {
+    border-radius: 6px; padding: 28px 24px;
+    background: var(--surface); border: 1px solid var(--border);
+  }
+  .tier-card.basic  { border-left: 4px solid #1a7a40; }
+  .tier-card.pro    { border-left: 4px solid var(--brand-mid); }
+  .tier-card.ent    { border-left: 4px solid var(--brand-dark); }
+  .tier-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px; letter-spacing: 2px; margin-bottom: 4px; color: var(--brand-dark);
+  }
+  .tier-target { font-size: 11px; color: var(--text-light); margin-bottom: 16px; }
+  .tier-features { list-style: none; }
+  .tier-features li {
+    font-size: 12px; color: var(--text-mid); padding: 5px 0;
+    border-bottom: 1px solid #EEF0F3;
+    padding-left: 16px; position: relative;
+  }
+  .tier-features li::before {
+    content: ''; position: absolute; left: 0; top: 12px;
+    width: 6px; height: 6px; border-radius: 50%; background: var(--border);
+  }
+  .tier-card.basic .tier-features li::before { background: #1a7a40; }
+  .tier-card.pro   .tier-features li::before { background: var(--brand-mid); }
+  .tier-card.ent   .tier-features li::before { background: var(--brand-dark); }
+  .tier-price-tag {
+    display: inline-block; margin-top: 16px;
+    padding: 4px 12px; border-radius: 3px;
+    font-size: 11px; font-weight: 700; letter-spacing: .5px;
+  }
+  .tier-card.basic .tier-price-tag { background: #D5F5E3; color: #1a7a40; }
+  .tier-card.pro   .tier-price-tag { background: #D6E4F7; color: var(--brand-blue); }
+  .tier-card.ent   .tier-price-tag { background: var(--brand-dark); color: #fff; }
+
+  /* ── REGION CARDS (flat) ── */
+  .region-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+  .region-card {
+    border-radius: 6px; padding: 24px 20px;
+    background: var(--surface); border: 1px solid var(--border);
+  }
+  .region-card.sea { border-left: 4px solid #1a7a40; }
+  .region-card.eu  { border-left: 4px solid var(--brand-mid); }
+  .region-card.us  { border-left: 4px solid var(--accent-red); }
+  .region-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 1px; color: var(--text-light);
+    text-transform: uppercase; margin-bottom: 4px;
+  }
+  .region-name { font-weight: 700; font-size: 15px; margin-bottom: 16px; color: var(--brand-dark); }
+  .region-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 6px 0; border-bottom: 1px solid #EEF0F3; font-size: 12px;
+  }
+  .region-row:last-child { border-bottom: none; }
+  .region-key { color: var(--text-light); font-weight: 500; }
+  .region-val { color: var(--text-dark); font-weight: 600; text-align: right; max-width: 60%; }
+
+  /* ── STEPS ── */
+  .steps { display: flex; flex-direction: column; gap: 10px; }
+  .step {
+    display: grid; grid-template-columns: 44px 80px 1fr 120px;
+    align-items: center; gap: 12px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 4px; padding: 14px 16px;
+  }
+  .step-num {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--brand-dark); color: #fff;
+    font-family: 'Bebas Neue', sans-serif; font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .step-desc { font-size: 13px; color: var(--text-mid); }
+  .step-owner { font-size: 11px; color: var(--text-light); text-align: right; }
+
+  /* ── BULLET LIST ── */
+  .blist { list-style: none; padding: 0; margin: 10px 0 16px; }
+  .blist li {
+    padding: 7px 0 7px 20px; position: relative;
+    font-size: 13px; color: var(--text-mid); border-bottom: 1px solid #EEF0F3;
+  }
+  .blist li:last-child { border-bottom: none; }
+  .blist li::before {
+    content: ''; position: absolute; left: 4px; top: 14px;
+    width: 5px; height: 5px; border-radius: 50%; background: var(--brand-dark);
+  }
+
+  /* ── SVG ── */
+  .diagram-wrap {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 6px; padding: 32px; margin-bottom: 24px; overflow-x: auto;
+  }
+  .diagram-wrap svg { display: block; margin: 0 auto; }
+  .diagram-caption {
+    font-size: 10px; color: var(--text-light); text-align: center;
+    margin-top: 12px; font-style: italic;
+  }
+
+  /* ── FOOTNOTE ── */
+  .footnote {
+    font-size: 11px; color: var(--text-light); margin-top: 8px;
+    padding-left: 12px; border-left: 2px solid var(--border);
+    line-height: 1.6;
+  }
+
+  /* ── DISCLAIMER ── */
+  .disclaimer {
+    background: #F8F4F4; border: 1px solid #E4D8D8;
+    border-left: 4px solid var(--accent-red);
+    border-radius: 4px; padding: 16px 20px;
+    font-size: 11px; color: #8B5555; line-height: 1.7; margin-top: 36px;
+  }
+  .disclaimer strong { color: var(--accent-red); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--brand-dark); color: #6A8CAF;
+    text-align: center; padding: 20px; font-size: 11px; margin-top: 56px;
+  }
+
+  /* ── COMPETITOR SPEC CARDS (s3b) ── */
+  .comp-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 32px; }
+  .comp-card {
+    display: grid; grid-template-columns: 220px 1fr;
+    border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+    background: var(--surface); box-shadow: 0 2px 6px rgba(15,43,80,.05);
+    transition: box-shadow .15s;
+  }
+  .comp-card:hover { box-shadow: 0 4px 16px rgba(15,43,80,.12); }
+  .comp-card.threat { border-left: 4px solid var(--accent-red); }
+  .comp-card.major  { border-left: 4px solid var(--brand-blue); }
+  .comp-card.niche  { border-left: 4px solid #9B59B6; }
+  .comp-card.custom { border-left: 4px solid var(--text-light); }
+  .comp-info {
+    background: #F8FAFD; padding: 18px 20px;
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .comp-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; letter-spacing: 1px; color: var(--brand-dark); line-height: 1;
+  }
+  .comp-meta {
+    font-size: 11px; color: var(--text-light);
+    font-family: 'JetBrains Mono', monospace; letter-spacing: .3px;
+  }
+  .comp-parent {
+    font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 3px;
+    display: inline-block; margin-top: 2px;
+  }
+  .comp-parent.acquired { background: #FADBD8; color: var(--accent-red); }
+  .comp-parent.indie    { background: #D5F5E3; color: #1a7a40; }
+  .comp-parent.corp     { background: #D6E4F7; color: var(--brand-blue); }
+  .comp-body { padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; }
+  .comp-row { display: flex; align-items: flex-start; gap: 8px; }
+  .comp-row-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--text-light);
+    min-width: 44px; padding-top: 3px;
+  }
+  .comp-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .tag-str {
+    background: #EBF3FF; color: var(--brand-blue); border: 1px solid #AACCF5;
+    padding: 2px 9px; border-radius: 3px; font-size: 11px; font-weight: 600; white-space: nowrap;
+  }
+  .tag-weak {
+    background: #FEF0EE; color: var(--accent-red); border: 1px solid #EBADA8;
+    padding: 2px 9px; border-radius: 3px; font-size: 11px; font-weight: 600; white-space: nowrap;
+  }
+  .comp-note {
+    font-size: 12px; color: var(--text-mid);
+    border-top: 1px dashed var(--border); padding-top: 8px; line-height: 1.5;
+  }
+
+  /* ── FEATURE MATRIX (s3b) ── */
+  .matrix-wrap {
+    overflow-x: auto; margin-bottom: 32px; border-radius: 10px;
+    border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(15,43,80,.06);
+  }
+  .matrix-wrap table { min-width: 900px; font-size: 12px; }
+  .matrix-wrap th.our-col, .matrix-wrap td.our-col {
+    background: #EBF3FF !important; border-left: 2px solid var(--brand-blue); font-weight: 700;
+  }
+  .matrix-wrap tr.cat-row td {
+    background: var(--brand-dark); color: #fff; font-weight: 700;
+    font-size: 11px; letter-spacing: 1px; text-transform: uppercase; padding: 7px 14px;
+  }
+  .ic-yes  { color: #27AE60; font-weight: 700; text-align: center; }
+  .ic-part { color: #E67E22; font-weight: 700; text-align: center; }
+  .ic-no   { color: #C0392B; font-weight: 700; text-align: center; }
+  .ic-unk  { color: #AAA; text-align: center; }
+  .matrix-legend {
+    display: flex; gap: 20px; align-items: center;
+    padding: 8px 14px; background: #F8FAFD;
+    border: 1px solid var(--border); border-bottom: none;
+    border-radius: 10px 10px 0 0; font-size: 11px; color: var(--text-mid);
+  }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .highlight-cell { background: #D5F5E3 !important; }
+
+  /* ── FEATURE BANNER (s3b) ── */
+  .feature-banner {
+    padding: 18px 24px; border-radius: 10px; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .feature-banner.must { background: var(--brand-dark); border-left: 5px solid #E74C3C; }
+  .feature-banner.diff { background: var(--brand-dark); border-left: 5px solid #C9A84C; }
+  .feature-banner-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; color: #E74C3C; text-transform: uppercase;
+  }
+  .feature-banner.diff .feature-banner-label { color: #C9A84C; }
+  .feature-banner-title { font-size: 16px; font-weight: 700; color: #fff; }
+  .feature-banner-sub { font-size: 12px; color: #8EB8E8; margin-top: 2px; }
+
+  /* ── MUST-HAVE GRID (s3b) ── */
+  .must-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 32px; }
+  .must-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-top: 3px solid var(--accent-red); border-radius: 8px;
+    padding: 16px; display: flex; flex-direction: column; gap: 6px;
+  }
+  .must-num {
+    font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: #EEE; line-height: 1;
+  }
+  .must-title { font-size: 13px; font-weight: 700; color: var(--brand-dark); }
+  .must-reason {
+    font-size: 11px; color: var(--text-light); line-height: 1.5;
+    border-top: 1px dashed var(--border); padding-top: 6px; margin-top: 2px;
+  }
+
+  /* ── DIFFERENTIATOR PHASES (s3b) ── */
+  .diff-phases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 32px; }
+  .diff-phase { border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
+  .diff-phase-header { padding: 14px 18px; display: flex; align-items: center; gap: 10px; }
+  .diff-phase.p1 .diff-phase-header { background: #1a7a40; }
+  .diff-phase.p2 .diff-phase-header { background: var(--brand-blue); }
+  .diff-phase.p3 .diff-phase-header { background: #7D3C98; }
+  .diff-phase-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; letter-spacing: 2px; color: #fff; line-height: 1;
+  }
+  .diff-phase-sub { font-size: 11px; color: rgba(255,255,255,.7); }
+  .diff-items { padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .diff-item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 6px; padding: 12px 14px;
+  }
+  .diff-item-title { font-size: 12px; font-weight: 700; color: var(--brand-dark); margin-bottom: 4px; }
+  .diff-item-why { font-size: 11px; color: var(--text-light); line-height: 1.5; }
+  .diff-item-badge {
+    display: inline-block; margin-bottom: 6px;
+    padding: 1px 7px; border-radius: 3px;
+    font-size: 10px; font-weight: 700; letter-spacing: .5px;
+  }
+  .diff-item.first-mover .diff-item-badge { background: #FADBD8; color: var(--accent-red); }
+  .diff-item.only-us .diff-item-badge     { background: #D5F5E3; color: #1a7a40; }
+  .diff-item.few-have .diff-item-badge     { background: #D6E4F7; color: var(--brand-blue); }
+
+  /* ── WHITESPACE MAP (s3b) ── */
+  .whitespace-intro {
+    background: var(--brand-dark); border-radius: 10px;
+    padding: 24px 28px; margin-bottom: 20px; border-left: 6px solid #C9A84C;
+  }
+  .whitespace-intro-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; color: #C9A84C;
+    text-transform: uppercase; margin-bottom: 6px;
+  }
+  .whitespace-intro-title { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+  .whitespace-intro-sub { font-size: 13px; color: #8EB8E8; }
+  .ws-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .ws-card {
+    border-radius: 10px; border: 1px solid var(--border);
+    background: var(--surface); overflow: hidden;
+  }
+  .ws-card-head {
+    padding: 14px 18px; display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid var(--border); background: #F8FAFD;
+  }
+  .ws-num {
+    font-family: 'Bebas Neue', sans-serif; font-size: 40px; line-height: 1; color: #DDD;
+  }
+  .ws-title { font-size: 14px; font-weight: 700; color: var(--brand-dark); }
+  .ws-body { padding: 14px 18px; }
+  .ws-now { font-size: 12px; color: var(--text-light); line-height: 1.6; margin-bottom: 10px; }
+  .ws-opportunity {
+    font-size: 13px; font-weight: 700; color: var(--brand-blue);
+    background: #EBF3FF; padding: 8px 12px; border-radius: 6px;
+    border-left: 3px solid var(--brand-blue);
+  }
+  .ws-card.featured { border: 2px solid #C9A84C; }
+  .ws-card.featured .ws-card-head {
+    background: linear-gradient(135deg, var(--brand-dark), #1a3f73);
+  }
+  .ws-card.featured .ws-num { color: #C9A84C; }
+  .ws-card.featured .ws-title { color: #fff; }
+
+  /* ── PRINT ── */
+  @media print {
+    nav, footer { display: none; }
+    .wrapper { padding-top: 20px; }
+    .narrative-divider { break-before: page; }
+    body { font-size: 11px; }
+  }
+  @media (max-width: 768px) {
+    .tier-grid, .region-grid, .must-grid, .diff-phases, .ws-grid { grid-template-columns: 1fr; }
+    .comp-card { grid-template-columns: 1fr; }
+    .cover { grid-template-columns: 1fr; padding: 40px 24px; }
+    .cover-title { font-size: 48px; }
+    .step { grid-template-columns: 44px 1fr; }
+    .step-owner { display: none; }
+    nav { padding: 0 16px; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Pig<span>Plan</span>CORE</div>
+  <div class="nav-links">
+    <a href="#s1">WHY NOW</a>
+    <a href="#s1b">역량</a>
+    <a href="#s2">시장</a>
+    <a href="#s3">경쟁사</a>
+    <a href="#s3b">기능</a>
+    <a href="#s3c">Blue Ocean</a>
+    <a href="#s4">가격</a>
+    <a href="#s5">모델</a>
+    <a href="#s6">국가별</a>
+    <a href="#s7">프라이싱</a>
+    <a href="#s7b">데이터</a>
+    <a href="#s8">실행</a>
+    <a href="#s9">아키텍처</a>
+    <a href="#s10">확장</a>
+    <a href="#s11">로드맵</a>
+    <a href="#s12">리스크</a>
+  </div>
+</nav>
+
+<div class="wrapper">
+
+  <!-- ═══ COVER ═══ -->
+  <div class="cover">
+    <div>
+      <div class="cover-eyebrow">Internal Report &middot; Draft v1.0 &middot; 2026.03</div>
+      <div class="cover-title">Pig<span>Plan</span>CORE</div>
+      <div class="cover-sub">글로벌 양돈 Farm Management SaaS</div>
+      <div class="cover-sub2">피그플랜 27년 양돈 운영 노하우 &mdash; 글로벌 버전</div>
+      <div class="cover-conf">CONFIDENTIAL &mdash; 내부 보고 전용</div>
+    </div>
+    <div class="cover-right">
+      <div class="cover-stat">
+        <div class="cover-stat-num">$3.34B</div>
+        <div class="cover-stat-label">글로벌 양돈 SW 시장 규모 (2023)</div>
+      </div>
+      <div class="cover-stat">
+        <div class="cover-stat-num">CAGR ~12%</div>
+        <div class="cover-stat-label">연평균 성장률 (2023&rarr;2030)</div>
+      </div>
+      <div class="cover-stat">
+        <div class="cover-stat-num">12</div>
+        <div class="cover-stat-label">글로벌 경쟁사 분석 완료</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Story flow bar -->
+  <div class="story-bar">
+    <div class="story-step active">WHY NOW</div>
+    <div class="story-step">시장 분석</div>
+    <div class="story-step">전략</div>
+    <div class="story-step">실행</div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       섹션 1 — 서비스 개요
+       ═══════════════════════════════════════════════ -->
+  <section id="s1">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">01</div>
+        <div class="sec-title">서비스 개요</div>
+      </div>
+      <div class="sec-message">PigPlanCORE가 무엇이고, 왜 지금 만들어야 하는가.</div>
+    </div>
+
+    <div class="sub-head">1.1 제품 정의</div>
+    <div class="card">
+      <p style="margin-bottom:16px;color:var(--text-mid);">
+        <strong>PigPlanCORE</strong>는 해외 양돈 농장을 위한 <strong>글로벌 Farm Management SaaS</strong>다.
+        피그플랜(국내)의 27년 양돈 운영 노하우를 기반으로, 해외 농장주·현장 작업자·수의사에게
+        번식 관리, 사료 관리, 출하 관리, KPI 대시보드, 오프라인 모바일을 단일 플랫폼에서 제공한다.
+      </p>
+      <div class="tbl-wrap" style="margin-bottom:0;">
+        <table>
+          <thead><tr><th>항목</th><th>내용</th></tr></thead>
+          <tbody>
+            <tr><td class="td-key">제품명</td><td>PigPlanCORE &mdash; Global Swine Farm Management SaaS</td></tr>
+            <tr><td class="td-key">포지셔닝</td><td>해외 양돈 농장주·현장 작업자·수의사를 위한 통합 농장 관리 플랫폼</td></tr>
+            <tr><td class="td-key">타겟 시장</td><td>미국/캐나다, 유럽(EU), 동남아시아(베트남/태국/필리핀)</td></tr>
+            <tr><td class="td-key">핵심 기능</td><td>번식 사이클 관리, 사료·공급망, 출하 관리, KPI 대시보드, 오프라인 모바일</td></tr>
+            <tr><td class="td-key">데이터 역할</td><td>농장 데이터를 <strong>수신</strong>하는 허브 (IoT·ESF·ERP 연동) &mdash; 데이터 판매 사업이 아님</td></tr>
+            <tr><td class="td-key">기술 스택</td><td>FastAPI(Phase 1) &rarr; Spring Boot(Phase 2) / React+TS / React Native / PostgreSQL</td></tr>
+            <tr><td class="td-key">개발 전략</td><td>Oracle 기존 시스템 분석 &rarr; PostgreSQL 재설계 / Schema-per-tenant</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="footnote" style="margin-top:16px;">
+        Pigsignal(B2B 데이터 판매)은 별도 사업이다. CORE가 축적한 글로벌 데이터는 익명화·집계 후 Pigsignal에 공급되지만, 이 기획서는 CORE 자체의 Farm Management 전략만 다룬다.
+      </p>
+    </div>
+
+    <!-- ── 1.2 전략적 배경 ── -->
+    <div class="sub-head">1.2 전략적 배경 &mdash; Valstone의 PigKnows 인수와 시장 재편</div>
+
+    <div class="alert alert-red">
+      <strong>2025년 6월 4일, Valstone이 북미 양돈 관리 솔루션 1위 PigKnows 인수를 공식 발표.</strong>
+      Valstone은 이 인수를 "farm-to-fork 포트폴리오 확장의 논리적 단계"라고 직접 표현했다.
+      Valstone은 전통적 PE와 달리 <strong>'영구 보유(permanent home)' 전략</strong>을 취한다 &mdash; 장기 독점 플랫폼화 예고.
+      <span style="font-size:10px;display:block;margin-top:4px;color:var(--text-light);">출처: valstonecorp.com, 2025.06.04</span>
+    </div>
+
+    <div class="alert alert-red">
+      <strong>PigKnows GM 공식 발언: "북미를 넘어 글로벌 시장으로 확장할 것."</strong>
+      PigPlanCORE가 공략하는 동남아·유럽 시장도 직접 위협 범위에 포함된다.
+    </div>
+
+    <div class="alert alert-orange">
+      <strong>AgTech M&amp;A 가속:</strong> 2025 Q1 AgTech M&amp;A 거래량 전년비 <strong>+19% (25건)</strong>.
+      "데이터·효율성·공급망 인텔리전스 확보"가 인수 논리로 수렴 중.
+      <span style="font-size:10px;display:block;margin-top:4px;color:var(--text-light);">출처: Capstone Partners, 2025.06</span>
+    </div>
+
+    <!-- SVG: Valstone 수직통합 구조도 -->
+    <div class="sub-sub-head">Valstone "Farm-to-Fork" 수직통합 구조</div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 800 320" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans KR', sans-serif">
+        <rect x="20" y="20" width="170" height="70" rx="4" fill="#E8ECF0" stroke="#AAB4C0" stroke-width="1"/>
+        <text x="105" y="45" text-anchor="middle" font-size="11" font-weight="700" fill="#3A4A5C">사료공장 SW</text>
+        <text x="105" y="62" text-anchor="middle" font-size="9" fill="#7A8FA6">WEM Automation</text>
+
+        <rect x="215" y="20" width="170" height="70" rx="4" fill="#FADBD8" stroke="#EBADA8" stroke-width="1"/>
+        <text x="300" y="45" text-anchor="middle" font-size="11" font-weight="700" fill="#C0392B">양돈관리 SW</text>
+        <text x="300" y="62" text-anchor="middle" font-size="9" fill="#C0392B">PigKnows</text>
+
+        <rect x="410" y="20" width="170" height="70" rx="4" fill="#E8ECF0" stroke="#AAB4C0" stroke-width="1"/>
+        <text x="495" y="45" text-anchor="middle" font-size="11" font-weight="700" fill="#3A4A5C">식품가공 SW</text>
+        <text x="495" y="62" text-anchor="middle" font-size="9" fill="#7A8FA6">Matrix Controls</text>
+
+        <rect x="605" y="20" width="170" height="70" rx="4" fill="#E8ECF0" stroke="#AAB4C0" stroke-width="1"/>
+        <text x="690" y="45" text-anchor="middle" font-size="11" font-weight="700" fill="#3A4A5C">농업회계 SW</text>
+        <text x="690" y="62" text-anchor="middle" font-size="9" fill="#7A8FA6">Red Wing Software</text>
+
+        <line x1="105" y1="90" x2="105" y2="120" stroke="#AAB4C0" stroke-width="1.5" marker-end="url(#ag)"/>
+        <line x1="300" y1="90" x2="300" y2="120" stroke="#C0392B" stroke-width="1.5" marker-end="url(#ar)"/>
+        <line x1="495" y1="90" x2="495" y2="120" stroke="#AAB4C0" stroke-width="1.5" marker-end="url(#ag)"/>
+        <line x1="690" y1="90" x2="690" y2="120" stroke="#AAB4C0" stroke-width="1.5" marker-end="url(#ag)"/>
+
+        <rect x="20" y="120" width="755" height="50" rx="4" fill="#3A4A5C" stroke="#0F2B50" stroke-width="1"/>
+        <text x="398" y="150" text-anchor="middle" font-size="13" font-weight="700" fill="#fff" letter-spacing="1">Valstone "Farm-to-Fork" 수직통합 플랫폼 &mdash; 폐쇄형</text>
+
+        <line x1="398" y1="170" x2="398" y2="210" stroke="#0F2B50" stroke-width="2" stroke-dasharray="6,4"/>
+        <text x="398" y="200" text-anchor="middle" font-size="10" fill="#7A8FA6">vs</text>
+
+        <rect x="120" y="220" width="560" height="60" rx="4" fill="#0F2B50" stroke="#C9A84C" stroke-width="2"/>
+        <text x="400" y="247" text-anchor="middle" font-size="13" font-weight="700" fill="#C9A84C" letter-spacing="1">PigPlanCORE : 오픈 연동 생태계</text>
+        <text x="400" y="266" text-anchor="middle" font-size="10" fill="#8EB8E8">어떤 IoT 기기 / ESF / ERP / 도축장 시스템과도 자유롭게 연동</text>
+
+        <defs>
+          <marker id="ag" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#AAB4C0"/></marker>
+          <marker id="ar" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#C0392B"/></marker>
+        </defs>
+      </svg>
+      <div class="diagram-caption">Valstone은 사료&rarr;생산&rarr;가공&rarr;정산 SW를 묶는 폐쇄형 통합을 추진 중. PigPlanCORE는 어떤 기기·ERP와도 연동 가능한 개방형으로 대응한다.</div>
+    </div>
+
+    <div class="alert alert-blue">
+      <strong>PigPlanCORE 대응 전략:</strong> 폐쇄형 수직통합(Valstone)에 맞서는 <strong>오픈 연동 생태계</strong>.
+      어떤 IoT 기기·ESF·ERP·도축장 시스템과도 자유롭게 연동 가능한 개방형 플랫폼.
+      농장이 원하는 도구를 선택할 자유를 제공한다. 데이터를 파는 허브가 아니라, 농장 생태계와 연결되는 허브다.
+    </div>
+
+    <div class="bottom-line">
+      <span class="bl-label">Bottom Line</span>
+      <span class="bl-text">PigPlanCORE는 해외 양돈 농장을 위한 글로벌 Farm Management SaaS다. 데이터를 파는 사업이 아니라, 농장을 운영하는 도구다.</span>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════
+       섹션 1B — 피그플랜 역량 (Why Us)
+       ═══════════════════════════════════════════════ -->
+  <section id="s1b">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">1B</div>
+        <div class="sec-title">피그플랜 역량 (Why Us)</div>
+      </div>
+      <div class="sec-message">14억건 데이터, 20년 도메인, 3개 언어 &mdash; 글로벌 출발점은 이미 존재한다.</div>
+    </div>
+
+    <div class="fact-grid">
+      <div class="fact-card"><div class="fact-num">14억+</div><div class="fact-label">누적 데이터</div><div class="fact-note">20년+ 축적</div></div>
+      <div class="fact-card"><div class="fact-num">5대</div><div class="fact-label">운영 영역</div><div class="fact-note">모돈 / 비육돈 / 판매 / 경영 / 검정</div></div>
+      <div class="fact-card"><div class="fact-num">3개</div><div class="fact-label">언어</div><div class="fact-note">한 / 영 / 베</div></div>
+      <div class="fact-card"><div class="fact-num">AWS</div><div class="fact-label">클라우드 인프라</div><div class="fact-note">운영 중</div></div>
+    </div>
+
+    <div class="sub-head">1B.1 현재 시스템 (As-Is) &mdash; 5대 영역</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>영역</th><th>주요 기능</th><th>현황</th></tr></thead>
+      <tbody>
+        <tr><td class="td-key">모돈 관리</td><td>모돈 라이프사이클 기록, 산차/교배/분만 관리, 도태 이력</td><td><span class="tag tag-green">기록 중</span></td></tr>
+        <tr><td class="td-key">비육돈 관리</td><td>급이/출하 관리, 두수/체중 추적, 돈방 현황</td><td><span class="tag tag-green">기록 중</span></td></tr>
+        <tr><td class="td-key">판매/종돈 유통</td><td>종돈/자돈 판매, 유통 이력, 거래 추적</td><td><span class="tag tag-green">기록 중</span></td></tr>
+        <tr><td class="td-key">경영 정보</td><td>수입 정보, 사료 정보(일부), 기본 KPI</td><td><span class="tag tag-orange">부분 기록</span></td></tr>
+        <tr><td class="td-key">검정돈</td><td>검정 성적 관리, 능력 검정 기록, 종부돈 평가</td><td><span class="tag tag-green">기록 중</span></td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="sub-head">1B.2 데이터 수집 현황 &amp; 글로벌 고도화 과제</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>데이터 항목</th><th>현재 상태</th><th>글로벌 고도화 과제</th></tr></thead>
+      <tbody>
+        <tr><td class="td-key">번식 성적</td><td><span class="tag tag-green">기록 중</span></td><td>글로벌 표준 KPI 매핑 (PSY, Born Alive 등)</td></tr>
+        <tr><td class="td-key">사료</td><td><span class="tag tag-orange">부분 기록</span></td><td>FCR/급이량/사료비 수집 체계 구축</td></tr>
+        <tr><td class="td-key">질병/백신</td><td><span class="tag tag-orange">부분 기록</span></td><td>발생 패턴/접종 이력/치료 효과 추적 강화</td></tr>
+        <tr><td class="td-key">유전 정보</td><td><span class="tag tag-red">미기록</span></td><td>유전형/EBV 수집 체계 신규 구축</td></tr>
+        <tr><td class="td-key">종돈 정보</td><td><span class="tag tag-orange">국내 전용</span></td><td>글로벌 표준(NSIF) 전환, 국제 종부돈 평가 연동</td></tr>
+        <tr><td class="td-key">농장 위치 GPS</td><td><span class="tag tag-orange">부분 국내</span></td><td>전 농장 GPS 좌표 수집 &rarr; 역학/물류/보험 리스크</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="sub-head">1B.3 현재 &rarr; 글로벌 전환</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>항목</th><th>현재 (As-Is)</th><th>글로벌 (To-Be)</th></tr></thead>
+      <tbody>
+        <tr><td class="td-key">아키텍처</td><td>JSP/Java 모놀리식</td><td>마이크로서비스</td></tr>
+        <tr><td class="td-key">제공 방식</td><td>전체 유상 일괄</td><td>모돈 무료 &rarr; 순차 확장</td></tr>
+        <tr><td class="td-key">수익 모델</td><td>두수 기반 구독</td><td>데이터 판매 + 농가 배분</td></tr>
+        <tr><td class="td-key">다국어</td><td>한/영/베 하드코딩</td><td>i18n 프레임워크 + Country Pack</td></tr>
+        <tr><td class="td-key">인프라</td><td>AWS (불완전 SaaS)</td><td>완전 SaaS / Cloud-Native / Multi-Region</td></tr>
+        <tr><td class="td-key">데이터</td><td>개별 농장 관리</td><td>익명화/표준화 &rarr; 기관 판매</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="bottom-line">
+      <span class="bl-label">Bottom Line</span>
+      <span class="bl-text">14억건 데이터 + 20년 도메인 경험 + 3개 언어 + 모바일 &mdash; 글로벌 데이터 플랫폼의 출발점으로 충분하다.</span>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════
+       기→승 전환
+       ═══════════════════════════════════════════════ -->
+  <div class="narrative-divider">
+    <span class="narrative-tag">시장을 어떻게 읽었나</span>
+    <span class="narrative-message">$3.34B 시장이 $5.67B으로 성장한다. 문제는 누가 그 파이를 가져가느냐다.</span>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       섹션 2 — 시장 분석
+       ═══════════════════════════════════════════════ -->
+  <section id="s2">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">02</div>
+        <div class="sec-title">시장 분석</div>
+      </div>
+      <div class="sec-message">양돈 관리 SW 시장의 규모, 지역별 특성, 성장 동력.</div>
+    </div>
+
+    <div class="sub-head">2.1 글로벌 시장 규모</div>
+    <div class="fact-grid">
+      <div class="fact-card">
+        <div class="fact-num">$3.34B</div>
+        <div class="fact-label">2023 시장 규모 추정</div>
+        <div class="fact-note">Verified Market Reports</div>
+      </div>
+      <div class="fact-card">
+        <div class="fact-num">$5.67B</div>
+        <div class="fact-label">2030 예상 시장 규모</div>
+        <div class="fact-note">CAGR ~11.8%</div>
+      </div>
+      <div class="fact-card">
+        <div class="fact-num">~14%</div>
+        <div class="fact-label">일부 기관 CAGR 추정</div>
+        <div class="fact-note">Market Research Intellect 2024</div>
+      </div>
+      <div class="fact-card">
+        <div class="fact-num">25건</div>
+        <div class="fact-label">2025 Q1 AgTech M&amp;A</div>
+        <div class="fact-note">전년비 +19% (Capstone Partners)</div>
+      </div>
+    </div>
+    <div class="alert alert-orange">
+      시장 규모 수치는 리서치 기관마다 편차 존재. 절대 수치보다 <strong>성장률(CAGR 10~14%) 추세</strong>에 주목 권장. 내부 검증 필요.
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>지역</th><th>시장 특성</th><th>성장 동력</th><th>리스크</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>북미 (미국/캐나다)</strong></td>
+            <td>최대 시장 / Integrator 중심</td>
+            <td>데이터 분석 수요, 비용 최적화</td>
+            <td><span class="tag tag-red">PigKnows 독점화 심화</span></td>
+          </tr>
+          <tr>
+            <td><strong>유럽 (EU)</strong></td>
+            <td>규제 주도 / 프리미엄 SW 수용</td>
+            <td>동물복지법, 항생제 규제 강화</td>
+            <td><span class="tag tag-orange">복잡한 국가별 법규 대응</span></td>
+          </tr>
+          <tr>
+            <td><strong>동남아 (SEA)</strong></td>
+            <td>신흥 고성장 / 가격 민감</td>
+            <td>ASF 대응 수요, 모바일 보급률</td>
+            <td><span class="tag tag-orange">낮은 SW 지불 의향</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-head">2.2 주요 성장 드라이버</div>
+    <ul class="blist">
+      <li>글로벌 돈육 소비 증가 (특히 아시아 신흥국)</li>
+      <li>규정 강화: EU 동물복지법, 항생제 사용 보고 의무화, ASF 이력 추적 요구</li>
+      <li>농장 디지털화 가속: IoT 센서, 전자식 급이기(ESF), 스마트팜 투자 확대</li>
+      <li>노동력 부족: 북미·유럽 현장 인력 감소 &rarr; 자동화·데이터 입력 효율화 수요</li>
+      <li>M&amp;A·플랫폼화 트렌드: Valstone-PigKnows, BASF-Cloudfarms 등 대형 자본 유입</li>
+    </ul>
+
+    <div class="bottom-line">
+      <span class="bl-label">Bottom Line</span>
+      <span class="bl-text">CAGR 10~14% 성장 시장에서 Valstone의 수직통합이 가속 중이다. 지금이 진입 적기다.</span>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════
+       섹션 3 — 경쟁사 분석
+       ═══════════════════════════════════════════════ -->
+  <section id="s3">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">03</div>
+        <div class="sec-title">경쟁사 분석</div>
+      </div>
+      <div class="sec-message">공개 정보 기반. 비공개 기업 수익 정보 미포함.</div>
+    </div>
+
+    <!-- SVG: 2x2 매트릭스 -->
+    <div class="sub-head">3.1 포지셔닝 매트릭스</div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 640 440" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans KR', sans-serif">
+        <line x1="80" y1="40" x2="80" y2="380" stroke="#D8DDE4" stroke-width="1.5"/>
+        <line x1="80" y1="380" x2="600" y2="380" stroke="#D8DDE4" stroke-width="1.5"/>
+        <text x="30" y="210" text-anchor="middle" font-size="11" fill="#7A8FA6" transform="rotate(-90 30 210)">가격대</text>
+        <text x="20" y="60" font-size="9" fill="#7A8FA6">고가</text>
+        <text x="20" y="370" font-size="9" fill="#7A8FA6">저가</text>
+        <text x="100" y="410" font-size="9" fill="#7A8FA6">단일 농장</text>
+        <text x="520" y="410" font-size="9" fill="#7A8FA6">멀티사이트</text>
+        <text x="340" y="430" font-size="11" fill="#7A8FA6">규모 범위</text>
+        <line x1="340" y1="40" x2="340" y2="380" stroke="#EEF0F3" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="80" y1="210" x2="600" y2="210" stroke="#EEF0F3" stroke-width="1" stroke-dasharray="4,4"/>
+
+        <circle cx="470" cy="90" r="20" fill="#FADBD8" stroke="#C0392B" stroke-width="2"/>
+        <text x="470" y="94" text-anchor="middle" font-size="8" font-weight="700" fill="#C0392B">PigKnows</text>
+        <text x="470" y="70" text-anchor="middle" font-size="8" fill="#C0392B">(Valstone)</text>
+
+        <circle cx="380" cy="110" r="18" fill="#D6E4F7" stroke="#1E4D8C" stroke-width="1.5"/>
+        <text x="380" y="114" text-anchor="middle" font-size="8" font-weight="600" fill="#1E4D8C">Cloudfarms</text>
+        <text x="380" y="94" text-anchor="middle" font-size="7" fill="#1E4D8C">(BASF)</text>
+
+        <circle cx="260" cy="130" r="16" fill="#D6E4F7" stroke="#1E4D8C" stroke-width="1.5"/>
+        <text x="260" y="134" text-anchor="middle" font-size="8" font-weight="600" fill="#1E4D8C">PigCHAMP</text>
+
+        <circle cx="480" cy="180" r="16" fill="#D6E4F7" stroke="#1E4D8C" stroke-width="1.5"/>
+        <text x="480" y="184" text-anchor="middle" font-size="8" font-weight="600" fill="#1E4D8C">MetaFarms</text>
+
+        <circle cx="280" cy="240" r="14" fill="#D5F5E3" stroke="#1a7a40" stroke-width="1.5"/>
+        <text x="280" y="244" text-anchor="middle" font-size="8" font-weight="600" fill="#1a7a40">Porcitec</text>
+
+        <circle cx="420" cy="260" r="14" fill="#D5F5E3" stroke="#1a7a40" stroke-width="1.5"/>
+        <text x="420" y="264" text-anchor="middle" font-size="8" font-weight="600" fill="#1a7a40">MTech</text>
+
+        <circle cx="170" cy="300" r="12" fill="#E8ECF0" stroke="#AAB4C0" stroke-width="1"/>
+        <text x="170" y="303" text-anchor="middle" font-size="7" fill="#7A8FA6">EasyPig</text>
+        <circle cx="220" cy="320" r="12" fill="#E8ECF0" stroke="#AAB4C0" stroke-width="1"/>
+        <text x="220" y="323" text-anchor="middle" font-size="7" fill="#7A8FA6">HerdPro</text>
+
+        <rect x="415" y="300" width="120" height="50" rx="4" fill="#0F2B50" stroke="#C9A84C" stroke-width="2"/>
+        <text x="475" y="322" text-anchor="middle" font-size="9" font-weight="700" fill="#C9A84C">PigPlanCORE</text>
+        <text x="475" y="338" text-anchor="middle" font-size="8" fill="#8EB8E8">무료 진입 + 멀티사이트</text>
+      </svg>
+      <div class="diagram-caption">PigPlanCORE는 멀티사이트 역량 + 무료 진입(저가)으로 기존 경쟁사가 비어둔 영역을 공략한다.</div>
+    </div>
+
+    <div class="sub-head">3.2 주요 경쟁사 상세</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>업체</th><th>본사</th><th>주요 지역</th><th>강점</th><th>소유 구조</th><th>포지션</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>PigKnows</strong></td><td>미국</td><td>북미</td>
+            <td>Multi-Site, Feed Mill 연동</td>
+            <td style="color:var(--accent-red);">Valstone 인수 (2025.6)</td>
+            <td><span class="tag tag-red">최강 위협</span></td>
+          </tr>
+          <tr>
+            <td><strong>PigCHAMP</strong></td><td>미국</td><td>글로벌 40+국</td>
+            <td>40년 브랜드, 400개 필터 분석</td>
+            <td>독립 운영</td>
+            <td><span class="tag tag-blue">1차 경쟁</span></td>
+          </tr>
+          <tr>
+            <td><strong>Cloudfarms</strong></td><td>슬로바키아</td><td>유럽/북미</td>
+            <td>완전 클라우드, 오프라인 앱</td>
+            <td style="color:var(--accent-orange);">BASF 인수 (2020)</td>
+            <td><span class="tag tag-blue">1차 경쟁</span></td>
+          </tr>
+          <tr>
+            <td><strong>MetaFarms</strong></td><td>미국 (MN)</td><td>북미</td>
+            <td>미국 돼지 40% 데이터, 벤치마킹</td>
+            <td>독립 운영</td>
+            <td><span class="tag tag-blue">1차 경쟁</span></td>
+          </tr>
+          <tr>
+            <td><strong>Porcitec</strong></td><td>스페인</td><td>유럽/중남미</td>
+            <td>유럽 규정 특화</td><td>독립</td>
+            <td><span class="tag tag-green">지역 경쟁</span></td>
+          </tr>
+          <tr>
+            <td><strong>MTech Systems</strong></td><td>미국</td><td>북미</td>
+            <td>Grow-Finish 특화</td><td>독립</td>
+            <td><span class="tag tag-green">지역 경쟁</span></td>
+          </tr>
+          <tr>
+            <td><strong>Agrivi / HerdPro / EasyPig</strong></td><td>다양</td><td>중소형</td>
+            <td>저가, 접근성</td><td>다양</td>
+            <td><span class="tag tag-gray">간접 경쟁</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- SVG: 4대 격차 좌우 대비 -->
+    <div class="sub-head">3.3 PigKnows vs PigPlanCORE &mdash; 위협을 기회로</div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 800 220" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans KR', sans-serif">
+        <rect x="20" y="10" width="300" height="200" rx="4" fill="#FEF5F3" stroke="#EBADA8" stroke-width="1"/>
+        <text x="170" y="35" text-anchor="middle" font-size="11" font-weight="700" fill="#C0392B">PigKnows 강점 (위협)</text>
+        <text x="40" y="65" font-size="11" fill="#3A4A5C">Multi-Site 관리</text>
+        <text x="40" y="100" font-size="11" fill="#3A4A5C">Feed Mill 연동</text>
+        <text x="40" y="135" font-size="11" fill="#3A4A5C">오프라인 모바일</text>
+        <text x="40" y="170" font-size="11" fill="#3A4A5C">Genetics / Pedigree</text>
+        <line x1="35" y1="78" x2="290" y2="78" stroke="#EBADA8" stroke-width=".5"/>
+        <line x1="35" y1="113" x2="290" y2="113" stroke="#EBADA8" stroke-width=".5"/>
+        <line x1="35" y1="148" x2="290" y2="148" stroke="#EBADA8" stroke-width=".5"/>
+
+        <text x="400" y="95" text-anchor="middle" font-size="12" font-weight="700" fill="#C9A84C">위협을</text>
+        <text x="400" y="115" text-anchor="middle" font-size="12" font-weight="700" fill="#C9A84C">기회로 전환</text>
+        <polygon points="355,105 370,95 370,115" fill="#C9A84C"/>
+        <polygon points="445,105 430,95 430,115" fill="#C9A84C"/>
+
+        <rect x="480" y="10" width="300" height="200" rx="4" fill="#0F2B50" stroke="#C9A84C" stroke-width="2"/>
+        <text x="630" y="35" text-anchor="middle" font-size="11" font-weight="700" fill="#C9A84C">PigPlanCORE 기회 (전략)</text>
+        <text x="500" y="65" font-size="11" fill="#8EB8E8">오픈 생태계 + Multi-Site</text>
+        <text x="500" y="100" font-size="11" fill="#8EB8E8">외부 시스템 연동 허브</text>
+        <text x="500" y="135" font-size="11" fill="#8EB8E8">SEA 특화 오프라인 우선</text>
+        <text x="500" y="170" font-size="11" fill="#8EB8E8">데이터 기반 교배 추천</text>
+        <line x1="495" y1="78" x2="750" y2="78" stroke="rgba(255,255,255,.1)" stroke-width=".5"/>
+        <line x1="495" y1="113" x2="750" y2="113" stroke="rgba(255,255,255,.1)" stroke-width=".5"/>
+        <line x1="495" y1="148" x2="750" y2="148" stroke="rgba(255,255,255,.1)" stroke-width=".5"/>
+      </svg>
+    </div>
+
+    <div class="sub-head">3.4 4대 핵심 격차 상세</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>기능 영역</th><th>PigKnows 강점</th><th>PigPlanCORE 현황</th><th>우선순위</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Multi-Site 관리</strong></td>
+            <td>본사-직영-위탁 복합 권한 제어 및 통합 KPI</td>
+            <td>단일 농장 중심 &rarr; 재설계 필요</td>
+            <td><span class="tag tag-red">1순위</span></td>
+          </tr>
+          <tr>
+            <td><strong>사료 공급망</strong></td>
+            <td>Feed Mill API, 사료빈 잔량 실시간, 두당 비용 분석</td>
+            <td>급여 기록 수준 &rarr; 고도화 필요</td>
+            <td><span class="tag tag-red">1순위</span></td>
+          </tr>
+          <tr>
+            <td><strong>오프라인 모바일</strong></td>
+            <td>완전 오프라인 입력 후 자동 동기화</td>
+            <td>동기화 안정성 강화 필요 (SEA 필수)</td>
+            <td><span class="tag tag-red">1순위</span></td>
+          </tr>
+          <tr>
+            <td><strong>유전학/Pedigree</strong></td>
+            <td>종돈 가계도, 유전능력 평가(EBV), 교배 프로그램</td>
+            <td>기본 모돈 관리 &rarr; Genetics 모듈 신규</td>
+            <td><span class="tag tag-orange">2순위</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="bottom-line">
+      <span class="bl-label">Bottom Line</span>
+      <span class="bl-text">PigKnows가 가진 4개 강점이 곧 우리가 공략할 4개 기회다.</span>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════
+       섹션 3-B — 경쟁사 기능 상세 분석
+       ═══════════════════════════════════════════════ -->
+  <div id="s3b">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">3B</div>
+        <div class="sec-title">경쟁사 기능 상세 분석</div>
+      </div>
+    </div>
+    <p class="sec-message" style="margin-bottom:24px;">9개 실제 양돈 SW 딥다이브 &mdash; 필수 기능 / 차별화 기능 / 시장 공백 지도</p>
+
+
+    <!-- ── PART A: 경쟁사 스펙 카드 ── -->
+    <div class="sub-head">3B.1 경쟁사 스펙 카드</div>
+
+    <div class="comp-grid">
+
+      <!-- 카드 1: PigCHAMP -->
+      <div class="comp-card major">
+        <div class="comp-info">
+          <div class="comp-name">PigCHAMP</div>
+          <div class="comp-meta">USA / Spain &middot; 1980년 &middot; ~15명 &middot; 48개국 &middot; 10개 언어</div>
+          <span class="comp-parent indie">독립 (Farms.com Ltd)</span>
+        </div>
+        <div class="comp-body">
+          <div class="comp-row">
+            <span class="comp-row-label">강점</span>
+            <div class="comp-tags">
+              <span class="tag-str">400개+ 분석필터</span>
+              <span class="tag-str">48개 이벤트유형</span>
+              <span class="tag-str">유전사 4개 연동</span>
+              <span class="tag-str">ESF 6종+</span>
+              <span class="tag-str">10개 언어</span>
+            </div>
+          </div>
+          <div class="comp-row">
+            <span class="comp-row-label">약점</span>
+            <div class="comp-tags">
+              <span class="tag-weak">Windows+RDP 레거시</span>
+              <span class="tag-weak">API 없음</span>
+              <span class="tag-weak">Multi-Site 취약</span>
+            </div>
+          </div>
+          <div class="comp-note">업계 최강 분석 엔진. 1980년대 미네소타대 양돈 그룹 기원. 개발 역량 정체 우려.</div>
+        </div>
+      </div>
+
+      <!-- 카드 2: Cloudfarms -->
+      <div class="comp-card major">
+        <div class="comp-info">
+          <div class="comp-name">Cloudfarms</div>
+          <div class="comp-meta">Slovakia &middot; 2013년 &middot; ~34명 &middot; 40개국+ &middot; 24개 언어</div>
+          <span class="comp-parent acquired">BASF SE 인수 (2020)</span>
+        </div>
+        <div class="comp-body">
+          <div class="comp-row">
+            <span class="comp-row-label">강점</span>
+            <div class="comp-tags">
+              <span class="tag-str">클라우드 네이티브 최초</span>
+              <span class="tag-str">24개 언어 최다</span>
+              <span class="tag-str">Pig Passport</span>
+              <span class="tag-str">완전 오프라인</span>
+            </div>
+          </div>
+          <div class="comp-row">
+            <span class="comp-row-label">약점</span>
+            <div class="comp-tags">
+              <span class="tag-weak">BASF 로드맵 의존</span>
+              <span class="tag-weak">Feed Mill 연동 불명확</span>
+              <span class="tag-weak">가격 모듈형 복잡</span>
+            </div>
+          </div>
+          <div class="comp-note">JBS Live Pork 175,000두 사례. Farm-to-Fork 이력 추적. BASF 화학사업 부진으로 매각 가능성 존재.</div>
+        </div>
+      </div>
+
+      <!-- 카드 3: MetaFarms -->
+      <div class="comp-card major">
+        <div class="comp-info">
+          <div class="comp-name">MetaFarms</div>
+          <div class="comp-meta">USA (MN) &middot; 2000년 &middot; ~27명 &middot; 북미+호주 &middot; 2개 언어</div>
+          <span class="comp-parent indie">독립 &mdash; Pork Checkoff 공식 파트너</span>
+        </div>
+        <div class="comp-body">
+          <div class="comp-row">
+            <span class="comp-row-label">강점</span>
+            <div class="comp-tags">
+              <span class="tag-str">미국 돼지 40% 데이터</span>
+              <span class="tag-str">Pork Checkoff 공식</span>
+              <span class="tag-str">ASSURANCE 감사모듈</span>
+              <span class="tag-str">Feed 전용모듈</span>
+            </div>
+          </div>
+          <div class="comp-row">
+            <span class="comp-row-label">약점</span>
+            <div class="comp-tags">
+              <span class="tag-weak">북미+호주 한정</span>
+              <span class="tag-weak">Genetics 미비</span>
+              <span class="tag-weak">EU 규정 없음</span>
+            </div>
+          </div>
+          <div class="comp-note">SMS 인수 후 국가 수준 벤치마킹 표준 독점. 북미 외 확장 의지 없음 &mdash; 공백 확실.</div>
+        </div>
+      </div>
+
+      <!-- 카드 4: Porcitec / Agritec -->
+      <div class="comp-card niche">
+        <div class="comp-info">
+          <div class="comp-name">Porcitec / Agritec</div>
+          <div class="comp-meta">Spain &middot; 2000년 &middot; ~10명 &middot; 글로벌 &middot; 2개 언어+</div>
+          <span class="comp-parent indie">독립</span>
+        </div>
+        <div class="comp-body">
+          <div class="comp-row">
+            <span class="comp-row-label">강점</span>
+            <div class="comp-tags">
+              <span class="tag-str">130개+ 표준리포트</span>
+              <span class="tag-str">ESF 6종+ 최다</span>
+              <span class="tag-str">유전사 5개 연동 최강</span>
+              <span class="tag-str">IoT 동물복지</span>
+            </div>
+          </div>
+          <div class="comp-row">
+            <span class="comp-row-label">약점</span>
+            <div class="comp-tags">
+              <span class="tag-weak">개발팀 ~4명 소규모</span>
+              <span class="tag-weak">Enterprise 모바일 미호환</span>
+              <span class="tag-weak">가격 비공개</span>
+            </div>
+          </div>
+          <div class="comp-note">PICTraq 세계 최초 연동. SPC 통계적 공정관리. 소규모지만 기능 깊이는 최강.</div>
+        </div>
+      </div>
+
+      <!-- 카드 5: PigKnows (최우선 위협) -->
+      <div class="comp-card threat">
+        <div class="comp-info">
+          <div class="comp-name">PigKnows</div>
+          <div class="comp-meta">USA (CO) &middot; ~2010년 &middot; 미공개 &middot; 23개국 &middot; 2개 언어</div>
+          <span class="comp-parent acquired">Valstone PE 인수 (2025.6)</span>
+        </div>
+        <div class="comp-body">
+          <div class="comp-row">
+            <span class="comp-row-label">강점</span>
+            <div class="comp-tags">
+              <span class="tag-str">북미 모돈 수백만두</span>
+              <span class="tag-str">Feed Mill 발주</span>
+              <span class="tag-str">Multi-Site 강함</span>
+              <span class="tag-str">영/스페인어</span>
+            </div>
+          </div>
+          <div class="comp-row">
+            <span class="comp-row-label">약점</span>
+            <div class="comp-tags">
+              <span class="tag-weak">API 없음</span>
+              <span class="tag-weak">폐쇄형 수직통합 예고</span>
+              <span class="tag-weak">EU 규정 미비</span>
+            </div>
+          </div>
+          <div class="comp-note">Valstone 포트폴리오(WEM/Matrix/Red Wing)와 Farm-to-Fork 통합 가속. 글로벌 확장 선언.</div>
+        </div>
+      </div>
+
+      <!-- 카드 6: AgroVision -->
+      <div class="comp-card major">
+        <div class="comp-info">
+          <div class="comp-name">AgroVision</div>
+          <div class="comp-meta">Netherlands &middot; 1986년 &middot; 175~200명 &middot; 40개국+ &middot; 8개 언어+</div>
+          <span class="comp-parent corp">Kiwa / CoMore</span>
+        </div>
+        <div class="comp-body">
+          <div class="comp-row">
+            <span class="comp-row-label">강점</span>
+            <div class="comp-tags">
+              <span class="tag-str">EU 최대 10,000+농장</span>
+              <span class="tag-str">HIT/TAM 독일 자동보고</span>
+              <span class="tag-str">오픈 API</span>
+              <span class="tag-str">AgriSyst 합병 2024</span>
+            </div>
+          </div>
+          <div class="comp-row">
+            <span class="comp-row-label">약점</span>
+            <div class="comp-tags">
+              <span class="tag-weak">클라우드 전환 중</span>
+              <span class="tag-weak">ESG 보고 미비</span>
+              <span class="tag-weak">아시아 미진출</span>
+            </div>
+          </div>
+          <div class="comp-note">유럽 양돈 SW 시장 리더. 2025년 Next Farming(AGCO) 고객 흡수. 아시아는 완전 공백.</div>
+        </div>
+      </div>
+
+      <!-- 카드 7: MTech Systems -->
+      <div class="comp-card major">
+        <div class="comp-info">
+          <div class="comp-name">MTech Systems</div>
+          <div class="comp-meta">USA (GA) &middot; ~1980s &middot; 150명+ &middot; 30개국+ &middot; 3개 언어</div>
+          <span class="comp-parent corp">Munters Group AB (2017 인수)</span>
+        </div>
+        <div class="comp-body">
+          <div class="comp-row">
+            <span class="comp-row-label">강점</span>
+            <div class="comp-tags">
+              <span class="tag-str">E2E 엔터프라이즈 유일</span>
+              <span class="tag-str">FMIM 사료공장 완전관리</span>
+              <span class="tag-str">Munters IoT</span>
+              <span class="tag-str">원가 완전통합</span>
+            </div>
+          </div>
+          <div class="comp-row">
+            <span class="comp-row-label">약점</span>
+            <div class="comp-tags">
+              <span class="tag-weak">대형 인테그레이터 전용</span>
+              <span class="tag-weak">중소농가 진입 불가</span>
+              <span class="tag-weak">가격 엔터프라이즈만</span>
+            </div>
+          </div>
+          <div class="comp-note">125개+ 세계 최대 단백질 인테그레이터 사용. JBS/San Fernando. 중소 농장은 타겟 아님 &mdash; 공백.</div>
+        </div>
+      </div>
+
+      <!-- 카드 8: LeeO -->
+      <div class="comp-card niche">
+        <div class="comp-info">
+          <div class="comp-name">LeeO</div>
+          <div class="comp-meta">Netherlands &middot; 2017년 &middot; ~9명 &middot; EU+미국 &middot; 4개 언어</div>
+          <span class="comp-parent acquired">MSD Animal Health 소수지분 (2022)</span>
+        </div>
+        <div class="comp-body">
+          <div class="comp-row">
+            <span class="comp-row-label">강점</span>
+            <div class="comp-tags">
+              <span class="tag-str">개체 UHF RFID 이어태그</span>
+              <span class="tag-str">Birth-to-Slaughter 추적</span>
+              <span class="tag-str">Royal GD 성장예측</span>
+            </div>
+          </div>
+          <div class="comp-row">
+            <span class="comp-row-label">약점</span>
+            <div class="comp-tags">
+              <span class="tag-weak">전통 모돈관리 취약</span>
+              <span class="tag-weak">HW 의존</span>
+              <span class="tag-weak">벤치마킹 없음</span>
+              <span class="tag-weak">학습곡선 가파름</span>
+            </div>
+          </div>
+          <div class="comp-note">출생~도축 개별 돼지 완전 추적 유일. 모돈 관리 SW와의 통합 부재가 결정적 약점.</div>
+        </div>
+      </div>
+
+      <!-- 카드 9: Chetu -->
+      <div class="comp-card custom">
+        <div class="comp-info">
+          <div class="comp-name">Chetu</div>
+          <div class="comp-meta">USA (FL) &middot; 2000년 &middot; 2,800~3,200명 &middot; 글로벌 &middot; 맞춤</div>
+          <span class="comp-parent corp">독립 (맞춤 개발사)</span>
+        </div>
+        <div class="comp-body">
+          <div class="comp-row">
+            <span class="comp-row-label">강점</span>
+            <div class="comp-tags">
+              <span class="tag-str">완전 맞춤 구현</span>
+              <span class="tag-str">ERP/CRM 통합 전문</span>
+              <span class="tag-str">광범위 기술스택</span>
+            </div>
+          </div>
+          <div class="comp-row">
+            <span class="comp-row-label">약점</span>
+            <div class="comp-tags">
+              <span class="tag-weak">패키지 제품 없음</span>
+              <span class="tag-weak">양돈 도메인 전문성 없음</span>
+              <span class="tag-weak">고비용 장기개발</span>
+            </div>
+          </div>
+          <div class="comp-note">양돈 소프트웨어가 아님. 구축 파트너로만 활용 가능. 직접 경쟁 대상 아님.</div>
+        </div>
+      </div>
+
+    </div><!-- /comp-grid -->
+
+
+    <!-- ── PART B: 기능 비교 매트릭스 ── -->
+    <div class="sub-head">3B.2 기능 비교 매트릭스</div>
+
+    <div class="matrix-legend">
+      <div class="legend-item"><span class="ic-yes">&#10003;</span> 확인</div>
+      <div class="legend-item"><span class="ic-part">&#9651;</span> 부분지원</div>
+      <div class="legend-item"><span class="ic-no">&#10007;</span> 없음</div>
+      <div class="legend-item"><span class="ic-unk">?</span> 미공개</div>
+    </div>
+
+    <div class="matrix-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>기능</th>
+            <th>PigCHAMP</th>
+            <th>Cloudfarms</th>
+            <th>MetaFarms</th>
+            <th>Porcitec</th>
+            <th>PigKnows</th>
+            <th>AgroVision</th>
+            <th>MTech</th>
+            <th>LeeO</th>
+            <th class="our-col">PigPlanCORE</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 모돈 관리 -->
+          <tr class="cat-row"><td colspan="10">모돈 관리</td></tr>
+          <tr><td>교배/분만/이유 기록</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-part">&#9651;</td><td class="our-col ic-yes">&#10003;</td></tr>
+          <tr><td>발정/교배 예정 알림</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-unk">?</td><td class="our-col ic-yes">&#10003;</td></tr>
+          <tr><td>모돈 개체 이력 전체조회</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="our-col ic-yes">&#10003;</td></tr>
+          <tr><td>48종+ 이벤트 기록</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-unk">?</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-no">&#10007;</td><td class="our-col ic-yes">&#10003;</td></tr>
+          <tr><td>산차별 성적 분석</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-no">&#10007;</td><td class="our-col ic-yes">&#10003;</td></tr>
+
+          <!-- 비육돈 -->
+          <tr class="cat-row"><td colspan="10">비육돈 (Grow-Finish)</td></tr>
+          <tr><td>ADG 추적</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-unk">?</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="our-col ic-yes">&#10003;</td></tr>
+          <tr><td>그룹/배치 관리</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="our-col ic-yes">&#10003;</td></tr>
+          <tr><td>도체 등급 연동</td><td class="ic-yes">&#10003;</td><td class="ic-part">&#9651;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="our-col ic-yes">&#10003;</td></tr>
+
+          <!-- 유전/종돈 -->
+          <tr class="cat-row"><td colspan="10">유전 / 종돈</td></tr>
+          <tr><td>Pedigree 가계도</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-unk">?</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="our-col ic-yes">&#10003;</td></tr>
+          <tr><td>EBV 유전능력 평가</td><td class="ic-part">&#9651;</td><td class="ic-unk">?</td><td class="ic-unk">?</td><td class="ic-part">&#9651;</td><td class="ic-unk">?</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-unk">?</td><td class="our-col ic-yes">&#10003;</td></tr>
+          <tr><td>유전사 연동 수</td><td class="ic-yes">4사</td><td class="ic-yes">1사</td><td class="ic-part">&#9651;</td><td class="ic-yes">5사</td><td class="ic-unk">?</td><td class="ic-yes">1사</td><td class="ic-part">&#9651;</td><td class="ic-unk">?</td><td class="our-col ic-yes">목표5사+</td></tr>
+          <tr><td>교배 최적화 AI</td><td class="ic-unk">?</td><td class="ic-part">&#9651;</td><td class="ic-unk">?</td><td class="ic-unk">?</td><td class="ic-unk">?</td><td class="ic-part">&#9651;</td><td class="ic-yes">&#10003;</td><td class="ic-unk">?</td><td class="our-col ic-yes">&#10003;</td></tr>
+
+          <!-- 사료/공급망 -->
+          <tr class="cat-row"><td colspan="10">사료 / 공급망</td></tr>
+          <tr><td>사료빈 재고 실시간 추적</td><td class="ic-yes">&#10003;</td><td class="ic-unk">?</td><td class="ic-part">&#9651;</td><td class="ic-part">&#9651;</td><td class="ic-yes">&#10003;</td><td class="ic-unk">?</td><td class="ic-yes">&#10003;</td><td class="ic-unk">?</td><td class="our-col ic-yes">&#10003;</td></tr>
+          <tr><td>Feed Mill 발주/입고</td><td class="ic-part">&#9651;</td><td class="ic-unk">?</td><td class="ic-yes">&#10003;</td><td class="ic-part">&#9651;</td><td class="ic-yes">&#10003;</td><td class="ic-unk">?</td><td class="ic-yes">&#10003;</td><td class="ic-unk">?</td><td class="our-col ic-yes">&#10003;</td></tr>
+          <tr><td>사료 배합 설계</td><td class="ic-part">&#9651;</td><td class="ic-unk">?</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-unk">?</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-unk">?</td><td class="our-col ic-yes">&#10003;</td></tr>
+          <tr><td>두당 사료비 원가</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-part">&#9651;</td><td class="our-col ic-yes">&#10003;</td></tr>
+
+          <!-- KPI/분석 -->
+          <tr class="cat-row"><td colspan="10">KPI / 분석</td></tr>
+          <tr><td>PSY / NPD / 분만율</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-part">&#9651;</td><td class="our-col ic-yes">&#10003;</td></tr>
+          <tr><td>산업 벤치마킹 비교</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-unk">?</td><td class="our-col ic-yes">&#10003;</td></tr>
+          <tr><td>다중 농장 통합 KPI</td><td class="ic-part">&#9651;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-unk">?</td><td class="our-col ic-yes">&#10003;</td></tr>
+          <tr><td>비용 분석 리포트</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-unk">?</td><td class="our-col ic-yes">&#10003;</td></tr>
+          <tr><td>커스텀 리포트</td><td class="ic-yes">400필터</td><td class="ic-unk">?</td><td class="ic-unk">?</td><td class="ic-yes">130+</td><td class="ic-unk">?</td><td class="ic-unk">?</td><td class="ic-unk">?</td><td class="ic-unk">?</td><td class="our-col ic-yes">목표130+</td></tr>
+
+          <!-- 기술/인프라 -->
+          <tr class="cat-row"><td colspan="10">기술 / 인프라</td></tr>
+          <tr><td>완전 클라우드 네이티브</td><td class="ic-part">&#9651;RDP</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-part">&#9651;</td><td class="ic-yes">&#10003;</td><td class="ic-part">&#9651;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="our-col ic-yes">&#10003;</td></tr>
+          <tr><td>완전 오프라인 모바일</td><td class="ic-part">&#9651;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="our-col ic-yes">&#10003;</td></tr>
+          <tr><td>오픈 API</td><td class="ic-no">&#10007;</td><td class="ic-part">&#9651;</td><td class="ic-yes">&#10003;</td><td class="ic-part">&#9651;</td><td class="ic-no">&#10007;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-part">&#9651;</td><td class="our-col ic-yes">&#10003;</td></tr>
+          <tr><td>ESF 연동 수</td><td class="ic-yes">6종+</td><td class="ic-unk">?</td><td class="ic-yes">3종</td><td class="ic-yes">6종+</td><td class="ic-unk">?</td><td class="ic-unk">?</td><td class="ic-yes">자체</td><td class="ic-unk">?</td><td class="our-col ic-yes">목표5종+</td></tr>
+          <tr><td>ERP 연동</td><td class="ic-no">&#10007;</td><td class="ic-part">&#9651;</td><td class="ic-part">&#9651;</td><td class="ic-part">&#9651;</td><td class="ic-part">&#9651;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-unk">?</td><td class="our-col ic-yes">&#10003;</td></tr>
+
+          <!-- 다국어 -->
+          <tr class="cat-row"><td colspan="10">다국어 / 현지화</td></tr>
+          <tr><td>지원 언어 수</td><td class="ic-yes">10</td><td class="ic-yes">24</td><td class="ic-yes">2</td><td class="ic-yes">2</td><td class="ic-yes">2</td><td class="ic-yes">8+</td><td class="ic-yes">3</td><td class="ic-yes">4</td><td class="our-col ic-yes">목표10+</td></tr>
+          <tr><td>한국어/아시아어 지원</td><td class="ic-no">&#10007;</td><td class="ic-no">&#10007;</td><td class="ic-no">&#10007;</td><td class="ic-no">&#10007;</td><td class="ic-no">&#10007;</td><td class="ic-no">&#10007;</td><td class="ic-no">&#10007;</td><td class="ic-no">&#10007;</td><td class="our-col highlight-cell ic-yes"><strong>&#10003;</strong></td></tr>
+          <tr><td>kg / lb 단위 전환</td><td class="ic-unk">?</td><td class="ic-unk">?</td><td class="ic-unk">?</td><td class="ic-unk">?</td><td class="ic-unk">?</td><td class="ic-unk">?</td><td class="ic-unk">?</td><td class="ic-unk">?</td><td class="our-col highlight-cell ic-yes"><strong>&#10003;</strong></td></tr>
+
+          <!-- 규정 대응 -->
+          <tr class="cat-row"><td colspan="10">규정 대응</td></tr>
+          <tr><td>EU 동물복지 자동 보고</td><td class="ic-part">&#9651;</td><td class="ic-part">&#9651;</td><td class="ic-no">&#10007;</td><td class="ic-yes">&#10003;</td><td class="ic-no">&#10007;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="our-col ic-yes">&#10003;</td></tr>
+          <tr><td>항생제 의무 보고</td><td class="ic-part">&#9651;</td><td class="ic-part">&#9651;</td><td class="ic-no">&#10007;</td><td class="ic-yes">&#10003;</td><td class="ic-part">&#9651;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="our-col ic-yes">&#10003;</td></tr>
+          <tr><td>이력 추적 Farm-to-Fork</td><td class="ic-part">&#9651;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="ic-yes">&#10003;</td><td class="our-col ic-yes">&#10003;</td></tr>
+          <tr><td>아시아 국가 규정 대응</td><td class="ic-no">&#10007;</td><td class="ic-no">&#10007;</td><td class="ic-no">&#10007;</td><td class="ic-no">&#10007;</td><td class="ic-no">&#10007;</td><td class="ic-no">&#10007;</td><td class="ic-no">&#10007;</td><td class="ic-no">&#10007;</td><td class="our-col highlight-cell ic-yes"><strong>&#10003;</strong></td></tr>
+
+          <!-- 수익 모델 -->
+          <tr class="cat-row"><td colspan="10">수익 모델</td></tr>
+          <tr><td>완전 무료 제공</td><td class="ic-no">&#10007;</td><td class="ic-no">&#10007;</td><td class="ic-no">&#10007;</td><td class="ic-no">&#10007;</td><td class="ic-no">&#10007;</td><td class="ic-no">&#10007;</td><td class="ic-no">&#10007;</td><td class="ic-no">&#10007;</td><td class="our-col highlight-cell ic-yes"><strong>Phase 1</strong></td></tr>
+          <tr><td>가격 공개 여부</td><td class="ic-no">&#10007;</td><td class="ic-part">&#9651;</td><td class="ic-no">&#10007;</td><td class="ic-no">&#10007;</td><td class="ic-no">&#10007;</td><td class="ic-part">&#9651;</td><td class="ic-no">&#10007;</td><td class="ic-no">&#10007;</td><td class="our-col highlight-cell ic-yes"><strong>&#10003; 예정</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+
+    <!-- ── PART C: 필수 기능 (Must-Have) ── -->
+    <div class="sub-head">3B.3 필수 기능 (Must-Have)</div>
+
+    <div class="feature-banner must">
+      <div>
+        <div class="feature-banner-label">MUST-HAVE</div>
+        <div class="feature-banner-title">없으면 시장 진입 불가 &mdash; 12가지 기본 요건</div>
+        <div class="feature-banner-sub">전 경쟁사가 공통 보유. 이 중 하나라도 없으면 고객은 이탈한다.</div>
+      </div>
+    </div>
+
+    <div class="must-grid">
+      <div class="must-card">
+        <div class="must-num">01</div>
+        <div class="must-title">교배/분만/이유 전 주기 기록</div>
+        <div class="must-reason">양돈 SW의 존재 이유. 없으면 제품이 아님</div>
+      </div>
+      <div class="must-card">
+        <div class="must-num">02</div>
+        <div class="must-title">모돈 개체 이력 전체 조회</div>
+        <div class="must-reason">수의사/컨설턴트의 첫 번째 요구사항</div>
+      </div>
+      <div class="must-card">
+        <div class="must-num">03</div>
+        <div class="must-title">PSY/NPD/분만율 KPI 대시보드</div>
+        <div class="must-reason">농장주가 매일 확인하는 3가지 지표</div>
+      </div>
+      <div class="must-card">
+        <div class="must-num">04</div>
+        <div class="must-title">완전 오프라인 모바일 (자동 동기화)</div>
+        <div class="must-reason">현장은 인터넷이 없다. 선택이 아닌 필수</div>
+      </div>
+      <div class="must-card">
+        <div class="must-num">05</div>
+        <div class="must-title">산업 벤치마킹 (전국 평균 비교)</div>
+        <div class="must-reason">내 농장이 잘하고 있는지 알려주는 유일한 기준</div>
+      </div>
+      <div class="must-card">
+        <div class="must-num">06</div>
+        <div class="must-title">다중 농장 통합 관리</div>
+        <div class="must-reason">대형 인테그레이터는 단일 농장 SW를 사지 않음</div>
+      </div>
+      <div class="must-card">
+        <div class="must-num">07</div>
+        <div class="must-title">사료빈 재고 추적 + 두당 원가 계산</div>
+        <div class="must-reason">북미/유럽 농장 비용 관리의 핵심</div>
+      </div>
+      <div class="must-card">
+        <div class="must-num">08</div>
+        <div class="must-title">역할별 권한 관리 (농장주/수의사/작업자)</div>
+        <div class="must-reason">위탁 농장 구조에서 데이터 보안은 필수</div>
+      </div>
+      <div class="must-card">
+        <div class="must-num">09</div>
+        <div class="must-title">Android/iOS 앱 + RFID/바코드 스캔</div>
+        <div class="must-reason">현장 작업자 = 모바일 전용 사용자</div>
+      </div>
+      <div class="must-card">
+        <div class="must-num">10</div>
+        <div class="must-title">커스터마이즈 보고서</div>
+        <div class="must-reason">농장마다 필요한 리포트가 다르다</div>
+      </div>
+      <div class="must-card">
+        <div class="must-num">11</div>
+        <div class="must-title">도체 등급 데이터 연동</div>
+        <div class="must-reason">출하 성과 피드백 없이 개선은 불가능</div>
+      </div>
+      <div class="must-card">
+        <div class="must-num">12</div>
+        <div class="must-title">감사 로그 (Audit Log)</div>
+        <div class="must-reason">EU 규정 + Enterprise 계약 기본 요건</div>
+      </div>
+    </div>
+
+
+    <!-- ── PART D: 차별화 기능 (Differentiators) ── -->
+    <div class="sub-head">3B.4 차별화 기능 (Differentiators)</div>
+
+    <div class="feature-banner diff">
+      <div>
+        <div class="feature-banner-label">DIFFERENTIATORS</div>
+        <div class="feature-banner-title">없어도 팔리지만, 있으면 이긴다</div>
+        <div class="feature-banner-sub">일부 경쟁사만 보유하거나 아직 아무도 구현하지 않은 기능. Phase별 로드맵 배치.</div>
+      </div>
+    </div>
+
+    <div class="diff-phases">
+      <!-- Phase 1 -->
+      <div class="diff-phase p1">
+        <div class="diff-phase-header">
+          <div class="diff-phase-label">PHASE 1</div>
+          <div class="diff-phase-sub">출시 즉시 &mdash; 경쟁사 대비 즉각 차별화</div>
+        </div>
+        <div class="diff-items">
+          <div class="diff-item first-mover">
+            <div class="diff-item-badge">전 경쟁사 미지원</div>
+            <div class="diff-item-title">아시아 언어 지원 (한/베/태국어)</div>
+            <div class="diff-item-why">동남아 공략의 전제 조건. 어떤 경쟁사도 없음.</div>
+          </div>
+          <div class="diff-item first-mover">
+            <div class="diff-item-badge">전 경쟁사 유료</div>
+            <div class="diff-item-title">완전 무료 제공 (Phase 1)</div>
+            <div class="diff-item-why">시장 침투의 핵심 무기. 경쟁사 최저가도 연 $500.</div>
+          </div>
+          <div class="diff-item first-mover">
+            <div class="diff-item-badge">전 경쟁사 미지원</div>
+            <div class="diff-item-title">단위계 자동 전환 (kg / lb)</div>
+            <div class="diff-item-why">아시아/북미 동시 사용자 필수. 경쟁사 미구현.</div>
+          </div>
+          <div class="diff-item first-mover">
+            <div class="diff-item-badge">전 경쟁사 미지원</div>
+            <div class="diff-item-title">아시아 국가 규정 대응 (한국 축산물이력제/베트남 축산법)</div>
+            <div class="diff-item-why">진입 장벽 자체가 기회. 현지 고객의 법적 의무 요건.</div>
+          </div>
+          <div class="diff-item first-mover">
+            <div class="diff-item-badge">전 경쟁사 비공개</div>
+            <div class="diff-item-title">가격 투명성 (Per Sow 공개 &mdash; 유료 전환 시)</div>
+            <div class="diff-item-why">신뢰 자산. Self-serve 전환율 향상.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 2 -->
+      <div class="diff-phase p2">
+        <div class="diff-phase-header">
+          <div class="diff-phase-label">PHASE 2</div>
+          <div class="diff-phase-sub">유료 전환 후 &mdash; 고객 잔류율 향상</div>
+        </div>
+        <div class="diff-items">
+          <div class="diff-item few-have">
+            <div class="diff-item-badge">2개사만 보유</div>
+            <div class="diff-item-title">Feed Mill 발주/입고 완전 통합</div>
+            <div class="diff-item-why">PigKnows/MTech만 지원. 북미 인테그레이터 필수 요건.</div>
+          </div>
+          <div class="diff-item few-have">
+            <div class="diff-item-badge">Porcitec 최다 6종</div>
+            <div class="diff-item-title">ESF 다종 연동 (Nedap/Schauer/GESTAL/Big Dutchman)</div>
+            <div class="diff-item-why">연동 범위가 도입 결정 요인. 목표 5종+.</div>
+          </div>
+          <div class="diff-item only-us">
+            <div class="diff-item-badge">아시아 종축사 유일</div>
+            <div class="diff-item-title">유전사 데이터 자동 연동 (PIC/Topigs/DanBred + 한국 종축)</div>
+            <div class="diff-item-why">Porcitec(5사) 글로벌 최강. 아시아 종돈사 추가로 유일.</div>
+          </div>
+          <div class="diff-item few-have">
+            <div class="diff-item-badge">MTech만 부분 지원</div>
+            <div class="diff-item-title">교배 최적화 AI (근교계수 최소화)</div>
+            <div class="diff-item-why">종돈 농장 고부가가치. 중소 농장에는 민주화 기회.</div>
+          </div>
+          <div class="diff-item few-have">
+            <div class="diff-item-badge">MetaFarms만 보유</div>
+            <div class="diff-item-title">ASSURANCE 감사 모듈 (PQA Plus 인증 워크플로우)</div>
+            <div class="diff-item-why">북미 인테그레이터 표준 요건. 계약 수주의 전제 조건.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 3 -->
+      <div class="diff-phase p3">
+        <div class="diff-phase-header">
+          <div class="diff-phase-label">PHASE 3</div>
+          <div class="diff-phase-sub">장기 차별화 &mdash; 플랫폼 해자 구축</div>
+        </div>
+        <div class="diff-items">
+          <div class="diff-item first-mover">
+            <div class="diff-item-badge">전 경쟁사 미구현</div>
+            <div class="diff-item-title">ESG 대시보드 (탄소/항생제/동물복지 자동 산출)</div>
+            <div class="diff-item-why">EU/대형 유통사 의무화 추세. 이마트/코스트코 바이어 요건.</div>
+          </div>
+          <div class="diff-item only-us">
+            <div class="diff-item-badge">중소 농장용 최초</div>
+            <div class="diff-item-title">AI 기반 질병 조기 경보 (폐사율 이상 탐지)</div>
+            <div class="diff-item-why">LeeO/MTech는 대형 고객 전용. 중소 농장 AI 민주화.</div>
+          </div>
+          <div class="diff-item first-mover">
+            <div class="diff-item-badge">아시아 최초</div>
+            <div class="diff-item-title">아시아 태평양 벤치마킹 DB</div>
+            <div class="diff-item-why">북미=MetaFarms, 유럽=AgroVision. 아시아는 완전 공백.</div>
+          </div>
+          <div class="diff-item few-have">
+            <div class="diff-item-badge">Cloudfarms만 보유</div>
+            <div class="diff-item-title">Pig Passport (개체 Farm-to-Fork 디지털 이력서)</div>
+            <div class="diff-item-why">식품 안전/수출 시장 트렌드. 바이어 추적 요구 증가.</div>
+          </div>
+          <div class="diff-item only-us">
+            <div class="diff-item-badge">통합 솔루션 전무</div>
+            <div class="diff-item-title">개체 IoT 추적 + 모돈 관리 통합</div>
+            <div class="diff-item-why">LeeO(IoT) + PigCHAMP(모돈) 기능을 하나로. 세계 최초.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── PART E: 5대 시장 공백 ── -->
+    <div class="sub-head">3B.5 시장 공백 지도 (White Space Map)</div>
+
+    <div class="whitespace-intro">
+      <div class="whitespace-intro-eyebrow">WHITE SPACE MAP</div>
+      <div class="whitespace-intro-title">전 경쟁사가 놓친 5개 공백 &mdash; PigPlanCORE의 진입 지점</div>
+      <div class="whitespace-intro-sub">13개사 분석 결과. 어떤 단일 솔루션도 아래 5가지를 동시에 충족하지 못한다.</div>
+    </div>
+
+    <div class="ws-grid">
+      <!-- 공백 1 -->
+      <div class="ws-card">
+        <div class="ws-card-head">
+          <div class="ws-num">1</div>
+          <div class="ws-title">아시아 특화 클라우드 네이티브 SaaS</div>
+        </div>
+        <div class="ws-body">
+          <div class="ws-now">Cloudfarms 24개 언어 지원하지만 한국어/베트남어/아시아 규정 없음. MetaFarms/PigKnows는 북미 전용. AgroVision은 유럽 중심.</div>
+          <div class="ws-opportunity">아시아 태평양 최초의 클라우드 네이티브 양돈 SaaS</div>
+        </div>
+      </div>
+
+      <!-- 공백 2 -->
+      <div class="ws-card">
+        <div class="ws-card-head">
+          <div class="ws-num">2</div>
+          <div class="ws-title">ESG 보고 + 양돈 운영 데이터 통합</div>
+        </div>
+        <div class="ws-body">
+          <div class="ws-now">EU 규정 대응(AgroVision HIT/TAM, Porcitec IoT)은 존재하나 탄소 배출/동물복지 점수/항생제를 운영 데이터에서 자동 산출하는 솔루션 없음.</div>
+          <div class="ws-opportunity">이마트/코스트코/월마트 바이어의 ESG 요구에 즉시 대응</div>
+        </div>
+      </div>
+
+      <!-- 공백 3 -->
+      <div class="ws-card">
+        <div class="ws-card-head">
+          <div class="ws-num">3</div>
+          <div class="ws-title">개체 IoT 추적 + 완전한 모돈 관리 통합</div>
+        </div>
+        <div class="ws-body">
+          <div class="ws-now">LeeO(개체 IoT 최강) vs PigCHAMP(모돈 관리 최강) &mdash; 둘 다 통합 못함.</div>
+          <div class="ws-opportunity">모돈 관리 전 기능 + 개체 수준 IoT + AI 이상 탐지 &mdash; 단일 플랫폼</div>
+        </div>
+      </div>
+
+      <!-- 공백 4 -->
+      <div class="ws-card">
+        <div class="ws-card-head">
+          <div class="ws-num">4</div>
+          <div class="ws-title">중소 농장을 위한 합리적 가격의 완전 기능 SaaS</div>
+        </div>
+        <div class="ws-body">
+          <div class="ws-now">MTech(대형 전용), PigCHAMP/Porcitec(가격 비공개), Cloudfarms($500+/년). 100~1,000두 농가가 합리적 가격으로 쓸 선택지 부재.</div>
+          <div class="ws-opportunity">무료 진입 &rarr; 투명한 Per Sow 가격 &mdash; 전 경쟁사 미실현</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 공백 5: 전폭 featured -->
+    <div class="ws-card featured" style="margin-bottom:32px;">
+      <div class="ws-card-head">
+        <div class="ws-num">5</div>
+        <div class="ws-title">AI 분석의 민주화 (대형 인테그레이터 전용 &rarr; 중소 농장)</div>
+      </div>
+      <div class="ws-body">
+        <div class="ws-now">MTech ML 예측/LeeO 성장 알고리즘 &mdash; 모두 대형 고객 전용. 중소 농장이 접근 가능한 AI 예측(질병 경보/최적 출하/사료 효율)은 전무.</div>
+        <div class="ws-opportunity">SaaS 기본 가격에 AI 분석 포함 &mdash; 중소 농장 시장에서 압도적 가치 제안</div>
+      </div>
+    </div>
+
+
+    <div class="bottom-line">
+      <span class="bl-label">Bottom Line</span>
+      <span class="bl-text">전 경쟁사가 놓친 5개 공백이 PigPlanCORE의 진입 지점이다.</span>
+    </div>
+  </div><!-- /s3b -->
+
+
+  <!-- ═══════════════════════════════════════════════
+       섹션 3C — 데이터 생태계 & Blue Ocean
+       ═══════════════════════════════════════════════ -->
+  <div id="s3c">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">3C</div>
+        <div class="sec-title">데이터 생태계 &amp; Blue Ocean</div>
+      </div>
+      <div class="sec-message">벤더 종속 생태계의 한계, M&amp;A 가속, 그리고 경쟁사 0/6이 보유하지 않은 기능.</div>
+    </div>
+
+    <div class="sub-head">3C.1 기존 데이터 생태계 &mdash; 벤더 종속 한계</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>벤더</th><th>플랫폼</th><th>데이터 범위</th><th>한계</th></tr></thead>
+      <tbody>
+        <tr><td class="td-key">Zoetis</td><td>PigWise</td><td>자사 백신/약품 연동 데이터</td><td>Zoetis 제품 사용 농장만</td></tr>
+        <tr><td class="td-key">Boehringer Ingelheim</td><td>FARMERA</td><td>자사 백신 효과 추적</td><td>BI 고객 한정</td></tr>
+        <tr><td class="td-key">Topigs Norsvin</td><td>Pigbase</td><td>유전 기록 5,000만건</td><td>자사 종돈만</td></tr>
+        <tr><td class="td-key">PigCHAMP</td><td>분기별 벤치마킹 리포트</td><td>번식 KPI 벤치마킹</td><td>실시간 아님, 번식 KPI만</td></tr>
+      </tbody>
+    </table></div>
+    <p class="footnote">PigCHAMP 벤치마킹은 분기별 집계 리포트 형태로만 제공. 사료/질병/경영 데이터 미포함.</p>
+
+    <div class="alert alert-blue" style="margin-top:20px;">
+      <strong>독립 중립 데이터 플랫폼 포지셔닝 기회:</strong> 모든 기존 데이터 플랫폼은 자사 제품 판매를 위한 종속 도구다. 벤더에 묶이지 않는 독립 중립 데이터 플랫폼은 시장에 존재하지 않는다.
+    </div>
+
+    <div class="sub-head">3C.2 M&amp;A 트렌드 &mdash; 독립 플랫폼의 소멸</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>연도</th><th>인수자</th><th>피인수</th><th>의미</th></tr></thead>
+      <tbody>
+        <tr><td class="td-key">2017</td><td>Munters</td><td>MTech</td><td>환기 HW+SW 통합</td></tr>
+        <tr><td class="td-key">2020</td><td>BASF</td><td>Cloudfarms</td><td>사료 메이저 자회사화</td></tr>
+        <tr><td class="td-key">2022</td><td>MSD/Merck</td><td>LeeO 소수지분</td><td>MSD 생태계 통합</td></tr>
+        <tr><td class="td-key">2024</td><td>AgroVision + AgriSyst</td><td>합병</td><td>EU 시장 통합</td></tr>
+        <tr><td class="td-key">2025</td><td>Valstone PE</td><td>PigKnows</td><td>PE 진입</td></tr>
+      </tbody>
+    </table></div>
+    <div class="alert alert-red">
+      <strong>6대 경쟁사 중 4개가 인수되었다.</strong> 독립 양돈 SW 플랫폼은 빠르게 소멸 중. 벤더 종속 가속 = 독립 중립 플랫폼의 희소 가치 상승.
+    </div>
+
+    <div class="sub-head">3C.3 Blue Ocean &mdash; 경쟁사 0/6 보유 기능</div>
+    <div class="tier-grid">
+      <div class="card" style="border-top:4px solid var(--gold);padding:24px;">
+        <div style="font-size:15px;font-weight:700;color:var(--brand-dark);margin-bottom:8px;">국제 표준 준수 엔진</div>
+        <ul class="blist"><li>WOAH / ISO / Codex 매핑</li><li>컴플라이언스 게이지</li><li>감사 PDF 자동 생성</li></ul>
+        <span class="tag tag-red">경쟁사 0/6 보유</span>
+      </div>
+      <div class="card" style="border-top:4px solid var(--gold);padding:24px;">
+        <div style="font-size:15px;font-weight:700;color:var(--brand-dark);margin-bottom:8px;">ROI 대시보드 (금액 환산)</div>
+        <ul class="blist"><li>KPI &rarr; 실시간 금액 환산</li><li>"FCR 0.1 하락 = 두당 3,300원 절감"</li><li>농장주 의사결정 직결</li></ul>
+        <span class="tag tag-red">경쟁사 0/6 보유</span>
+      </div>
+      <div class="card" style="border-top:4px solid var(--gold);padding:24px;">
+        <div style="font-size:15px;font-weight:700;color:var(--brand-dark);margin-bottom:8px;">탄소 보고 (FAO GLEAM)</div>
+        <ul class="blist"><li>Scope 1 + 2 + 3</li><li>사료 68.8% / 분뇨 22.9% / 에너지 7.5%</li><li>EU IED 2.0(2030) 대응</li></ul>
+        <span class="tag tag-red">경쟁사 0/6 보유</span>
+      </div>
+    </div>
+
+    <div class="bottom-line">
+      <span class="bl-label">Bottom Line</span>
+      <span class="bl-text">경쟁사는 벤더 종속, 인수 통합 가속 중. 독립 중립 데이터 플랫폼 + Blue Ocean 3기능이 PigPlanCORE의 차별화 해자다.</span>
+    </div>
+  </div><!-- /s3c -->
+
+
+  <!-- ═══════════════════════════════════════════════
+       섹션 4 — 경쟁사 가격 구조
+       ═══════════════════════════════════════════════ -->
+  <section id="s4">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">04</div>
+        <div class="sec-title">경쟁사 가격 구조 분석</div>
+      </div>
+      <div class="sec-message">팩트 기반. 확인 불가 항목은 '확인되지 않음' 명시.</div>
+    </div>
+
+    <div class="alert alert-red">
+      <strong>원칙:</strong> 사실 확인된 정보만 수록. 확인 불가 항목은 '확인되지 않음' 명시. 출처 유형 기재.
+    </div>
+
+    <div class="sub-sub-head">4.1 PigKnows</div>
+    <div class="tbl-wrap"><table><tbody>
+      <tr><td class="td-key">핵심 답변</td><td>가격 정보 공개 없음. 영업 팀 통한 Quote 방식 추정.</td></tr>
+      <tr><td class="td-key">근거</td><td>공식 사이트 가격 페이지 없음. Capterra, G2, SoftwareSuggest 모두 비공개.</td></tr>
+      <tr><td class="td-key">확실성</td><td><span class="tag tag-red">낮음</span> &mdash; 영업 채널 직접 확인 필요</td></tr>
+    </tbody></table></div>
+
+    <div class="sub-sub-head">4.2 Cloudfarms</div>
+    <div class="tbl-wrap"><table><tbody>
+      <tr><td class="td-key">핵심 답변</td><td>연간 구독. 진입 가격 <strong>$500/year</strong> 수준 리뷰 사이트 확인.</td></tr>
+      <tr><td class="td-key">근거</td><td>SourceForge: "Pricing starts at $500.00/year" <span style="font-size:10px;color:var(--text-light);">(리뷰 사이트 &mdash; 벤더 미확인)</span></td></tr>
+      <tr><td class="td-key">확실성</td><td><span class="tag tag-orange">중간</span> &mdash; 벤더 공식 확인 필요</td></tr>
+    </tbody></table></div>
+
+    <div class="sub-sub-head">4.3 MetaFarms</div>
+    <div class="tbl-wrap"><table><tbody>
+      <tr><td class="td-key">핵심 답변</td><td>출하 돼지 수 기반 과금. 구 업계 기사 참고값.</td></tr>
+      <tr><td class="td-key">근거</td><td>Farm Progress: "$0.05~$0.25/pig + setup $0.30~$1.00/sow" <span style="font-size:10px;color:var(--text-light);">(구 자료)</span></td></tr>
+      <tr><td class="td-key">확실성</td><td><span class="tag tag-red">낮음</span> &mdash; 2018년 이후 변경 가능성</td></tr>
+    </tbody></table></div>
+
+    <div class="sub-sub-head">4.4 PigCHAMP</div>
+    <div class="tbl-wrap"><table><tbody>
+      <tr><td class="td-key">핵심 답변</td><td>가격 공개 없음. 무료 체험판 제공, 신용카드 불필요.</td></tr>
+      <tr><td class="td-key">확실성</td><td><span class="tag tag-red">낮음</span> &mdash; Trial 정책만 확인</td></tr>
+    </tbody></table></div>
+
+    <div class="alert alert-orange">
+      Porcitec, HerdPro, EasyPig 등 나머지 경쟁사 가격은 공개 채널 확인 불가. 대부분 Custom Quote 방식.
+    </div>
+
+    <div class="bottom-line">
+      <span class="bl-label">Bottom Line</span>
+      <span class="bl-text">경쟁사는 모두 가격을 숨긴다. 투명한 가격(유료 전환 시)이 신뢰 자산이 된다.</span>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════
+       전환: 무엇을 만드나
+       ═══════════════════════════════════════════════ -->
+  <div class="narrative-divider">
+    <span class="narrative-tag">무엇을 만드나</span>
+    <span class="narrative-message">오픈 연동 생태계로 폐쇄형 플랫폼에 맞선다</span>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       섹션 5 — 가격 모델 패턴
+       ═══════════════════════════════════════════════ -->
+  <section id="s5">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">05</div>
+        <div class="sec-title">가격 모델 패턴 분석</div>
+      </div>
+      <div class="sec-message">양돈 SW 시장에서 검증된 과금 모델 5가지 비교.</div>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>모델 유형</th><th>특징</th><th>한계</th><th>대표 사례</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="tag tag-blue">SaaS / Per Sow</span></td>
+            <td>모돈 수 기반 월/연 구독. 규모 비례.</td>
+            <td>소형 농장 ARPU 낮을 수 있음</td>
+            <td>Cloudfarms ($500+/yr)</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-gray">SaaS / Per User</span></td>
+            <td>사용자 계정 수 기반 과금</td>
+            <td>현장 작업자 많아 불만 가능</td>
+            <td>양돈 전문에선 비주류</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-dark">Enterprise Quote</span></td>
+            <td>대형 Integrator 연간 계약</td>
+            <td>영업 사이클 길고 복잡</td>
+            <td>PigKnows, MetaFarms 추정</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-green">HW 결합형</span></td>
+            <td>IoT·ESF와 SW 번들. Lock-in.</td>
+            <td>초기 비용 높음</td>
+            <td>MetaFarms+Jyga GESTAL</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-orange">무료 제공 후 유료 전환</span></td>
+            <td>기본 무료 &rarr; 임계점 후 과금</td>
+            <td>전환율 관리 어려움</td>
+            <td>양돈 전문은 드물지만 SEA 진입 시 유효</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-head">양돈 SW 시장의 가격 투명성 문제</div>
+    <div class="card">
+      <p style="color:var(--text-mid);margin-bottom:12px;">양돈 관리 SW 업체의 <strong>대다수가 가격을 공개하지 않는다</strong>.</p>
+      <ul class="blist">
+        <li>모돈 수, 사이트 수, 필요 모듈이 천차만별 &rarr; 단일 가격 제시 어려움</li>
+        <li>가격 비교를 어렵게 만들어 영업 협상력 확보</li>
+        <li>Enterprise 고객은 관계 기반 계약 선호</li>
+      </ul>
+      <div class="alert alert-blue" style="margin-top:12px;margin-bottom:0;">
+        <strong>PigPlanCORE 기회:</strong> 유료 전환 시 진입 Tier의 <strong>가격 투명성을 차별화 포인트</strong>로 활용. 기본 구독 가격 공개는 신뢰 제고와 Self-serve 전환을 동시에 달성.
+      </div>
+    </div>
+
+    <div class="bottom-line">
+      <span class="bl-label">Bottom Line</span>
+      <span class="bl-text">Per Sow 구독 + 오픈 연동 + 무료 진입이 시장을 여는 조합이다.</span>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════
+       섹션 6 — 국가별 가격 전략
+       ═══════════════════════════════════════════════ -->
+  <section id="s6">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">06</div>
+        <div class="sec-title">국가별 가격 전략 설계</div>
+      </div>
+      <div class="sec-message">가격표가 아닌 가격 설계 원칙. 절대 수치 금지.</div>
+    </div>
+
+    <!-- SVG: 3단계 로드맵 타임라인 -->
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 800 260" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans KR', sans-serif">
+        <text x="180" y="25" text-anchor="middle" font-size="11" font-weight="700" fill="#0F2B50">Phase 1 (현재)</text>
+        <text x="420" y="25" text-anchor="middle" font-size="11" font-weight="700" fill="#0F2B50">Phase 2 (임계점 후)</text>
+        <text x="660" y="25" text-anchor="middle" font-size="11" font-weight="700" fill="#0F2B50">Phase 3 (확장기)</text>
+        <line x1="300" y1="35" x2="300" y2="240" stroke="#EEF0F3" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="540" y1="35" x2="540" y2="240" stroke="#EEF0F3" stroke-width="1" stroke-dasharray="4,4"/>
+
+        <text x="40" y="75" font-size="11" font-weight="700" fill="#1a7a40">SEA</text>
+        <line x1="80" y1="72" x2="750" y2="72" stroke="#D5F5E3" stroke-width="3"/>
+        <circle cx="80" cy="72" r="6" fill="#1a7a40"/><circle cx="300" cy="72" r="6" fill="#1a7a40"/><circle cx="540" cy="72" r="6" fill="#1a7a40"/>
+        <text x="180" y="93" text-anchor="middle" font-size="9" fill="#7A8FA6">전면 무료</text>
+        <text x="420" y="93" text-anchor="middle" font-size="9" fill="#7A8FA6">유료 전환 + ASF 모듈</text>
+        <text x="660" y="93" text-anchor="middle" font-size="9" fill="#7A8FA6">Enterprise 계약</text>
+
+        <text x="40" y="145" font-size="11" font-weight="700" fill="#C0392B">US</text>
+        <line x1="80" y1="142" x2="750" y2="142" stroke="#FADBD8" stroke-width="3"/>
+        <circle cx="80" cy="142" r="6" fill="#C0392B"/><circle cx="300" cy="142" r="6" fill="#C0392B"/><circle cx="540" cy="142" r="6" fill="#C0392B"/>
+        <text x="180" y="163" text-anchor="middle" font-size="9" fill="#7A8FA6">무료 침투</text>
+        <text x="420" y="163" text-anchor="middle" font-size="9" fill="#7A8FA6">Integrator 공략</text>
+        <text x="660" y="163" text-anchor="middle" font-size="9" fill="#7A8FA6">시장 점유율 확대</text>
+
+        <text x="40" y="215" font-size="11" font-weight="700" fill="#2E6BC4">EU</text>
+        <line x1="80" y1="212" x2="750" y2="212" stroke="#D6E4F7" stroke-width="3"/>
+        <circle cx="80" cy="212" r="6" fill="#2E6BC4"/><circle cx="300" cy="212" r="6" fill="#2E6BC4"/><circle cx="540" cy="212" r="6" fill="#2E6BC4"/>
+        <text x="180" y="233" text-anchor="middle" font-size="9" fill="#7A8FA6">무료 침투</text>
+        <text x="420" y="233" text-anchor="middle" font-size="9" fill="#7A8FA6">규정 모듈 과금</text>
+        <text x="660" y="233" text-anchor="middle" font-size="9" fill="#7A8FA6">프리미엄 포지션</text>
+      </svg>
+      <div class="diagram-caption">Phase 1은 전 지역 무료 동시 침투. 임계점 도달 후 지역별 차등 유료화.</div>
+    </div>
+
+    <div class="region-grid">
+      <div class="region-card sea">
+        <div class="region-label">SEA</div>
+        <div class="region-name">동남아시아</div>
+        <div class="region-row"><span class="region-key">가격 민감도</span><span class="region-val"><span class="tag tag-red">매우 높음</span></span></div>
+        <div class="region-row"><span class="region-key">Phase 1</span><span class="region-val"><span class="tag tag-green">완전 무료</span></span></div>
+        <div class="region-row"><span class="region-key">유료 전환</span><span class="region-val">임계 농가 수 도달 후</span></div>
+        <div class="region-row"><span class="region-key">목표</span><span class="region-val">침투율 / 데이터 / 레퍼런스</span></div>
+      </div>
+      <div class="region-card eu">
+        <div class="region-label">EU</div>
+        <div class="region-name">유럽</div>
+        <div class="region-row"><span class="region-key">가격 민감도</span><span class="region-val"><span class="tag tag-green">낮음</span></span></div>
+        <div class="region-row"><span class="region-key">Phase 1</span><span class="region-val"><span class="tag tag-green">무료 제공</span></span></div>
+        <div class="region-row"><span class="region-key">유료 전환</span><span class="region-val">임계 농가 수 도달 후</span></div>
+        <div class="region-row"><span class="region-key">과금 방향</span><span class="region-val">규정 준수 ROI 강조</span></div>
+      </div>
+      <div class="region-card us">
+        <div class="region-label">US</div>
+        <div class="region-name">미국</div>
+        <div class="region-row"><span class="region-key">가격 민감도</span><span class="region-val"><span class="tag tag-orange">중간</span></span></div>
+        <div class="region-row"><span class="region-key">Phase 1</span><span class="region-val"><span class="tag tag-green">무료 제공</span></span></div>
+        <div class="region-row"><span class="region-key">유료 전환</span><span class="region-val">임계 농가 수 도달 후</span></div>
+        <div class="region-row"><span class="region-key">과금 방향</span><span class="region-val">Integrator Enterprise</span></div>
+      </div>
+    </div>
+
+    <div class="sub-head">상세 전략</div>
+
+    <div class="sub-sub-head">동남아시아</div>
+    <div class="tbl-wrap"><table><tbody>
+      <tr><td class="td-key">Phase 1</td><td><strong>전면 무료.</strong> 가격 민감도 극히 높은 시장. 사용자 확보가 최우선.</td></tr>
+      <tr><td class="td-key">유료 전환</td><td>임계 농가 수 도달 후 방식·시점 별도 결정. 유입 속도·패턴 데이터 기반 판단.</td></tr>
+      <tr><td class="td-key">목표</td><td>시장 침투율 / 실사용 데이터 / 현지 레퍼런스 / 입소문 확산</td></tr>
+      <tr><td class="td-key">공백</td><td>PigCHAMP·Cloudfarms 지역 맞춤 무료 제품 없음. 오프라인 모바일 + 다국어 + 무료로 공략.</td></tr>
+    </tbody></table></div>
+
+    <div class="sub-sub-head">유럽</div>
+    <div class="tbl-wrap"><table><tbody>
+      <tr><td class="td-key">Phase 1</td><td><strong>무료 제공으로 레퍼런스 확보 우선.</strong> 규정 대응 기능 완성도 먼저 증명.</td></tr>
+      <tr><td class="td-key">유료 전환</td><td>임계 농가 수 도달 후. Per Sow/연 + 규정 모듈 Add-on 유력.</td></tr>
+      <tr><td class="td-key">방향</td><td>국가별 보고 양식 자동화, 동물복지, 항생제 보고 모듈로 프리미엄.</td></tr>
+    </tbody></table></div>
+
+    <div class="sub-sub-head">미국</div>
+    <div class="tbl-wrap"><table><tbody>
+      <tr><td class="td-key">Phase 1</td><td><strong>무료로 PigKnows 이탈 고객 흡수.</strong> Valstone 인수 후 불만 고객층 빠르게 유입.</td></tr>
+      <tr><td class="td-key">유료 전환</td><td>임계 농가 수 도달 후. Integrator 규모 기반 Enterprise 계약 유력.</td></tr>
+      <tr><td class="td-key">목표</td><td>중형 Integrator 레퍼런스 / 오픈 연동 생태계 입증 / 벤치마킹 데이터 축적</td></tr>
+    </tbody></table></div>
+
+    <div class="sub-head">지역별 핵심 관리 포인트 비교 (6개 권역)</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>항목</th><th>한국</th><th>EU(덴마크)</th><th>미국</th><th>브라질</th><th>동남아</th><th>중국</th></tr></thead>
+      <tbody>
+        <tr><td class="td-key">PSY (두)</td><td>21.9</td><td><strong>35.6</strong></td><td>25.1</td><td>29~32</td><td>10~26</td><td>~24</td></tr>
+        <tr><td class="td-key">FCR</td><td>3.26</td><td><strong>2.38</strong></td><td>~3.0</td><td>2.3~2.6</td><td>2.4~4.5</td><td>2.63</td></tr>
+        <tr><td class="td-key">사료비 비중</td><td>55~60%</td><td>~60%</td><td>55~65%</td><td>73~80%</td><td>65~75%</td><td>57%</td></tr>
+        <tr><td class="td-key">ASF 상태</td><td><span class="tag tag-orange">야생 확산</span></td><td><span class="tag tag-orange">일부 국가</span></td><td><span class="tag tag-green">청정</span></td><td><span class="tag tag-green">청정</span></td><td><span class="tag tag-red">상재</span></td><td><span class="tag tag-red">상재</span></td></tr>
+        <tr><td class="td-key">PRRS</td><td>상재</td><td>SPF 관리</td><td>상재 ($6.6억)</td><td><span class="tag tag-green">청정</span></td><td>상재</td><td>상재</td></tr>
+        <tr><td class="td-key">항생제 금지</td><td>2011</td><td>2006</td><td>2017</td><td>제한적</td><td>2018(VN)</td><td>2019</td></tr>
+        <tr><td class="td-key">임신돈 군사</td><td><span class="tag tag-red">2030 의무</span></td><td>2013 의무</td><td>CA 주만</td><td>자발적</td><td>미규정</td><td>미규정</td></tr>
+        <tr><td class="td-key">이력 추적</td><td>mtrace 의무</td><td>TRACES 의무</td><td>자발적</td><td>GTA 의무</td><td>미비</td><td>이표+검역증</td></tr>
+        <tr><td class="td-key">주요 규정</td><td>mtrace, 스톨금지</td><td>ESVAC, Beter Leven</td><td>VFD, PQA Plus, Prop12</td><td>GTA, SIF</td><td>오프라인 필수</td><td>MARA 보고</td></tr>
+        <tr><td class="td-key">SW 현황</td><td>한돈팜스 72%</td><td>PigVision 등</td><td>PigCHAMP</td><td>Agriness 90%</td><td><span class="tag tag-red">소농 미보급</span></td><td>IT기업 주도</td></tr>
+      </tbody>
+    </table></div>
+    <p class="footnote">PSY 격차 최대 26두. 단일 기준 관리 불가. 지역별 맞춤 설계 필수. (출처: DanBred, PigCHAMP 2023, USDA, FAO, 한돈팜스)</p>
+
+    <div class="sub-head">국가별 현지화 명세</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>항목</th><th>한국</th><th>베트남</th><th>EU</th><th>미국</th><th>브라질</th><th>중국</th></tr></thead>
+      <tbody>
+        <tr><td class="td-key">무게</td><td>kg</td><td>kg</td><td>kg</td><td><strong>lbs</strong></td><td>kg</td><td>kg</td></tr>
+        <tr><td class="td-key">통화</td><td>KRW</td><td>VND</td><td>EUR</td><td>USD</td><td>BRL</td><td>CNY</td></tr>
+        <tr><td class="td-key">날짜 형식</td><td>yyyy.MM.dd</td><td>dd/MM/yyyy</td><td>dd/MM/yyyy</td><td>MM/dd/yyyy</td><td>dd/MM/yyyy</td><td>yyyy-MM-dd</td></tr>
+        <tr><td class="td-key">알림 채널</td><td>KakaoTalk</td><td>Zalo / SMS</td><td>Email</td><td>Email / SMS</td><td>WhatsApp</td><td>WeChat</td></tr>
+        <tr><td class="td-key">도체 등급</td><td>1+/1/2/등외</td><td>&mdash;</td><td>SEUROP (정육률)</td><td>Carcass merit</td><td>SIF 기준</td><td>국가 기준</td></tr>
+        <tr><td class="td-key">사료 단위</td><td>kg/ton</td><td>kg/ton</td><td>kg/ton</td><td><strong>cwt(100lb)</strong></td><td>kg/ton</td><td>kg/ton</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="sub-head">지역별 핵심 관리 포인트 요약</div>
+    <div class="region-grid">
+      <div class="region-card sea">
+        <div class="region-label">KR</div>
+        <div class="region-name">한국</div>
+        <div class="region-row"><span class="region-key">최대 과제</span><span class="region-val">ASF 야생 확산 + 군사 전환 2030</span></div>
+        <div class="region-row"><span class="region-key">핵심 규정</span><span class="region-val">mtrace(이력제), 스톨 금지</span></div>
+        <div class="region-row"><span class="region-key">특이사항</span><span class="region-val">52.7% 농가 전환 불가</span></div>
+      </div>
+      <div class="region-card eu">
+        <div class="region-label">EU</div>
+        <div class="region-name">유럽</div>
+        <div class="region-row"><span class="region-key">최대 과제</span><span class="region-val">항생제 세계 최엄격 + 환경 규제</span></div>
+        <div class="region-row"><span class="region-key">핵심 규정</span><span class="region-val">ESVAC, Beter Leven, IED 2.0</span></div>
+        <div class="region-row"><span class="region-key">특이사항</span><span class="region-val">NL 모돈 14% 감소 (질소)</span></div>
+      </div>
+      <div class="region-card us">
+        <div class="region-label">US</div>
+        <div class="region-name">미국</div>
+        <div class="region-row"><span class="region-key">최대 과제</span><span class="region-val">PRRS $6.6억 손실 + Prop 12</span></div>
+        <div class="region-row"><span class="region-key">핵심 규정</span><span class="region-val">VFD, PQA Plus, CSIA</span></div>
+        <div class="region-row"><span class="region-key">특이사항</span><span class="region-val">모돈 폐사율 14.5% (+80%)</span></div>
+      </div>
+    </div>
+
+    <div class="region-grid" style="margin-top:12px;">
+      <div class="region-card sea">
+        <div class="region-label">BR</div>
+        <div class="region-name">브라질</div>
+        <div class="region-row"><span class="region-key">최대 강점</span><span class="region-val">세계 최저 생산비 $1.13/kg</span></div>
+        <div class="region-row"><span class="region-key">핵심 규정</span><span class="region-val">GTA(이동허가), SIF 검사</span></div>
+        <div class="region-row"><span class="region-key">특이사항</span><span class="region-val">ASF+PRRS 이중 청정</span></div>
+      </div>
+      <div class="region-card eu">
+        <div class="region-label">SEA</div>
+        <div class="region-name">동남아</div>
+        <div class="region-row"><span class="region-key">최대 과제</span><span class="region-val">ASF 재조합변이 + 소농 미보급</span></div>
+        <div class="region-row"><span class="region-key">필수 기능</span><span class="region-val">오프라인 모드, ASF 백신 기록</span></div>
+        <div class="region-row"><span class="region-key">특이사항</span><span class="region-val">VN 농가 1000만→200만 급감</span></div>
+      </div>
+      <div class="region-card us">
+        <div class="region-label">CN</div>
+        <div class="region-name">중국</div>
+        <div class="region-row"><span class="region-key">최대 과제</span><span class="region-val">ASF 상재화 + 돈가 변동성</span></div>
+        <div class="region-row"><span class="region-key">핵심 규정</span><span class="region-val">MARA 보고, 탈대두박 계획</span></div>
+        <div class="region-row"><span class="region-key">특이사항</span><span class="region-val">26층 양돈 빌딩, 7억 두/년 도축</span></div>
+      </div>
+    </div>
+
+    <div class="bottom-line">
+      <span class="bl-label">Bottom Line</span>
+      <span class="bl-text">Phase 1은 전 지역 무료 동시 침투. 지역마다 유료 전환 논리는 다르다.</span>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════
+       섹션 7 — 프라이싱 전략
+       ═══════════════════════════════════════════════ -->
+  <section id="s7">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">07</div>
+        <div class="sec-title">프라이싱 전략</div>
+      </div>
+      <div class="sec-message">완전 무료 출시 &rarr; 임계 농가 수 도달 후 유료화 전환.</div>
+    </div>
+
+    <div class="alert alert-green">
+      <strong>핵심 방향: 완전 무료 출시 &rarr; 임계 농가 수 도달 후 유료화 전환.</strong><br>
+      초기에는 모든 기능을 무료로 제공. 시장 침투율과 데이터 확보가 최우선.
+      "첫 번째 글로벌 디지털 양돈 관리 표준을 만드는 것"이 목표다.
+    </div>
+
+    <div class="sub-head">설계 원칙</div>
+    <ul class="blist">
+      <li><strong>Phase 1 &mdash; 완전 무료:</strong> 전 지역, 전 기능 무료. 수익보다 시장 침투율이 먼저.</li>
+      <li><strong>임계점 판단 (미확정):</strong> 유입 농가 수, 활성 사용자 비율, 지역별 레퍼런스를 종합하여 전환 시점 결정.</li>
+      <li><strong>Phase 2 &mdash; 유료 전환 시 Per Sow 기반 과금.</strong> 농장 규모에 비례.</li>
+      <li><strong>지역별 가격 차등:</strong> 동남아 LOW / 미국·유럽 MID~HIGH. PPP 기반 현지화.</li>
+      <li><strong>Module Add-on:</strong> CORE 구독 + 규정·Feed·Genetics·IoT 별도 Add-on.</li>
+    </ul>
+
+    <!-- SVG: PLG 플라이휠 -->
+    <div class="sub-head">무료 &rarr; 유료 전환 플라이휠 (PLG)</div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 500 400" width="60%" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans KR', sans-serif">
+        <circle cx="250" cy="200" r="55" fill="#0F2B50"/>
+        <text x="250" y="193" text-anchor="middle" font-size="9" font-weight="700" fill="#C9A84C">PigPlanCORE</text>
+        <text x="250" y="208" text-anchor="middle" font-size="8" fill="#8EB8E8">PLG Flywheel</text>
+
+        <rect x="195" y="20" width="110" height="44" rx="4" fill="#0F2B50"/>
+        <text x="250" y="40" text-anchor="middle" font-size="9" font-weight="700" fill="#C9A84C">1. 완전 무료 배포</text>
+        <text x="250" y="54" text-anchor="middle" font-size="8" fill="#8EB8E8">전 기능 개방</text>
+
+        <rect x="370" y="115" width="110" height="44" rx="4" fill="#0F2B50"/>
+        <text x="425" y="135" text-anchor="middle" font-size="9" font-weight="700" fill="#C9A84C">2. 글로벌 농가 유입</text>
+        <text x="425" y="149" text-anchor="middle" font-size="8" fill="#8EB8E8">바이럴 확산</text>
+
+        <rect x="370" y="255" width="120" height="44" rx="4" fill="#0F2B50"/>
+        <text x="430" y="275" text-anchor="middle" font-size="9" font-weight="700" fill="#C9A84C">3. 데이터·레퍼런스</text>
+        <text x="430" y="289" text-anchor="middle" font-size="7" fill="#8EB8E8">Pigsignal 자산화 (별도)</text>
+
+        <rect x="20" y="255" width="110" height="44" rx="4" fill="#0F2B50"/>
+        <text x="75" y="275" text-anchor="middle" font-size="9" font-weight="700" fill="#C9A84C">4. 임계점 도달</text>
+        <text x="75" y="289" text-anchor="middle" font-size="8" fill="#8EB8E8">유료 전환 트리거</text>
+
+        <rect x="20" y="115" width="110" height="44" rx="4" fill="#0F2B50"/>
+        <text x="75" y="135" text-anchor="middle" font-size="9" font-weight="700" fill="#C9A84C">5. ARR 성장</text>
+        <text x="75" y="149" text-anchor="middle" font-size="8" fill="#8EB8E8">Per Sow 구독</text>
+
+        <path d="M305,48 Q370,50 375,125" fill="none" stroke="#C9A84C" stroke-width="1.5" marker-end="url(#agold)"/>
+        <path d="M440,159 Q445,220 440,255" fill="none" stroke="#C9A84C" stroke-width="1.5" marker-end="url(#agold)"/>
+        <path d="M370,280 Q250,330 130,280" fill="none" stroke="#C9A84C" stroke-width="1.5" marker-end="url(#agold)"/>
+        <path d="M60,255 Q55,200 60,159" fill="none" stroke="#C9A84C" stroke-width="1.5" marker-end="url(#agold)"/>
+        <path d="M130,125 Q180,70 195,50" fill="none" stroke="#C9A84C" stroke-width="1.5" marker-end="url(#agold)"/>
+
+        <defs><marker id="agold" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#C9A84C"/></marker></defs>
+      </svg>
+      <div class="diagram-caption">무료 배포 &rarr; 농가 유입 &rarr; 데이터 축적 &rarr; 임계점 &rarr; 유료 ARR 순환.</div>
+    </div>
+
+    <div class="sub-head">유료 전환 시 적용 예정 Tier 구조 <span style="font-size:11px;font-weight:400;color:var(--text-light);">&mdash; 미확정</span></div>
+    <div class="alert alert-orange">
+      <strong>Phase 1 동안 모든 Tier 무료 제공.</strong> 아래 구조는 임계 농가 수 도달 후 유료 전환 시 적용할 설계안이다. 시점·금액 미확정.
+    </div>
+
+    <div class="tier-grid">
+      <div class="tier-card basic">
+        <div class="tier-name">Basic</div>
+        <div class="tier-target">소규모 단일 농장 / SEA 입문</div>
+        <ul class="tier-features">
+          <li>번식 사이클 (교배&rarr;분만&rarr;이유)</li>
+          <li>기본 KPI 대시보드</li>
+          <li>모바일 앱 + 오프라인 동기화</li>
+          <li>다국어 (EN/ES/VI)</li>
+        </ul>
+        <span class="tier-price-tag">LOW TIER</span>
+      </div>
+      <div class="tier-card pro">
+        <div class="tier-name">Pro</div>
+        <div class="tier-target">중형 다사이트 / 미국·유럽</div>
+        <ul class="tier-features">
+          <li>Basic 전체 포함</li>
+          <li>사료 관리 + 사료빈 재고</li>
+          <li>다사이트 통합 KPI</li>
+          <li>고급 분석 + 벤치마킹</li>
+          <li>감사 로그 + 외부 연동</li>
+        </ul>
+        <span class="tier-price-tag">MID TIER</span>
+      </div>
+      <div class="tier-card ent">
+        <div class="tier-name">Enterprise</div>
+        <div class="tier-target">대형 Integrator / 계열화</div>
+        <ul class="tier-features">
+          <li>Pro 전체 포함</li>
+          <li>Feed Supply Chain 연동</li>
+          <li>Genetics / Pedigree 모듈</li>
+          <li>Custom 연동 + Webhook</li>
+          <li>전담 CS + SLA</li>
+        </ul>
+        <span class="tier-price-tag">CUSTOM QUOTE</span>
+      </div>
+    </div>
+
+    <div class="sub-head">무료 &rarr; 유료 전환 전략</div>
+    <div class="tbl-wrap"><table><tbody>
+      <tr><td class="td-key">Phase 1<br><span class="tag tag-green" style="margin-top:4px;">현재</span></td><td><strong>전 기능 완전 무료.</strong> 지역·모돈 수·기능 제한 없음. 최대한 많은 농가 유입이 유일한 목표.</td></tr>
+      <tr><td class="td-key">임계점<br><span class="tag tag-orange">미확정</span></td><td>유입 농가 수가 특정 수준 도달 시 유료 전환 방식·시점을 별도 결정. 현재 수치 미확정.</td></tr>
+      <tr><td class="td-key">전환 시 고려</td><td>기존 사용자 반발 최소화 (Grandfather 정책) / 공지&rarr;유예&rarr;과금 순서 / Early Adopter 혜택</td></tr>
+      <tr><td class="td-key">무료 기간 수익 대안</td><td>직접 수익 없음 감수. 레퍼런스 기반 투자 유치 / 파트너십 협상력 확보로 간접 가치.</td></tr>
+      <tr><td class="td-key">Phase 2<br><span class="tag tag-blue">전환 후</span></td><td>Per Sow 구독 + Enterprise Custom Quote + 프리미엄 모듈 Add-on. 지역별 단가 차등.</td></tr>
+    </tbody></table></div>
+
+    <div class="sub-head">지역별 전략 요약</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>지역</th><th>Phase 1</th><th>Phase 2 방향</th><th>핵심 근거</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>동남아</strong></td>
+            <td><span class="tag tag-green">완전 무료</span></td>
+            <td>Per Sow/월 + 프리미엄 모듈 (미확정)</td>
+            <td>침투율 후 ASF·보고 모듈로 ARPU 상향</td>
+          </tr>
+          <tr>
+            <td><strong>미국</strong></td>
+            <td><span class="tag tag-green">완전 무료</span></td>
+            <td>Per Sow x 사이트/연 + Enterprise (미확정)</td>
+            <td>PigKnows 이탈 고객 &rarr; Integrator 계약</td>
+          </tr>
+          <tr>
+            <td><strong>유럽</strong></td>
+            <td><span class="tag tag-green">완전 무료</span></td>
+            <td>Per Sow/연 + 규정 모듈 Add-on (미확정)</td>
+            <td>규정 준수 ROI 근거 프리미엄</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="bottom-line">
+      <span class="bl-label">Bottom Line</span>
+      <span class="bl-text">완전 무료로 시작한다. 임계 농가 수 달성 후 유료 전환 방식을 결정한다.</span>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════
+       섹션 7B — 데이터 수익화 & 프로그램 패키지
+       ═══════════════════════════════════════════════ -->
+  <section id="s7b">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">7B</div>
+        <div class="sec-title">데이터 수익화 전략</div>
+      </div>
+      <div class="sec-message">무료 제공 &rarr; 데이터 수집 &rarr; 수익화 &rarr; 농가 배분의 선순환 구조.</div>
+    </div>
+
+    <div class="sub-head">7B.1 데이터 수익화 4단계 플로우</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Phase</th><th>단계명</th><th>설명</th><th>성격</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tag-green">Phase 1</span></td><td><strong>Free &rarr; Data Collection</strong></td><td>모돈 모듈 무료 배포, 글로벌 농장 원시 데이터 획득</td><td>투자 단계</td></tr>
+        <tr><td><span class="tag tag-blue">Phase 2</span></td><td><strong>Anonymize / Standardize</strong></td><td>원시 데이터 &rarr; 수요처 목적별 커스텀 데이터 상품 가공</td><td>파이프라인 구축</td></tr>
+        <tr><td><span class="tag tag-orange">Phase 3</span></td><td><strong>Customized Data Sales</strong></td><td>사료: FCR 분석, 제약: 질병 패턴, 유전: 번식 성적 등</td><td>핵심 수익</td></tr>
+        <tr><td><span class="tag tag-dark">Phase 4</span></td><td><strong>Farm Revenue Distribution</strong></td><td>데이터 수익 일부 농가 환원 &rarr; 품질 유지 / 참여</td><td>확장 엔진</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="sub-head">7B.2 수요처별 커스텀 데이터 상품</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>수요처</th><th>주요 기관</th><th>데이터 상품</th><th>활용 목적</th></tr></thead>
+      <tbody>
+        <tr><td><strong>사료</strong></td><td>Cargill / ADM / DSM-Firmenich / Nutreco</td><td>지역별 FCR 분석, 급이량 패턴</td><td>정밀 영양 설계</td></tr>
+        <tr><td><strong>제약 / 백신</strong></td><td>Zoetis / BI / MSD / Elanco / Ceva</td><td>질병 발생 패턴, 백신 효과 상관</td><td>백신 수요 예측, R&amp;D</td></tr>
+        <tr><td><strong>유전 / 종돈</strong></td><td>PIC(Genus) / Topigs Norsvin / DanBred</td><td>품종별 번식 성적, 유전형-생산성</td><td>교배 최적화</td></tr>
+        <tr><td><strong>보험 / 재보험</strong></td><td>Swiss Re / Zurich / Allianz</td><td>GPS 기반 지역 리스크, 폐사율 통계</td><td>농업보험 설계</td></tr>
+        <tr><td><strong>국제기구</strong></td><td>FAO / WOAH / World Bank / Gates Foundation</td><td>국가별 양돈 현황, 질병 동향</td><td>정책 수립, 역학</td></tr>
+        <tr><td><strong>시장조사</strong></td><td>Gira / Rabobank / AHDB</td><td>지역별 생산성 벤치마크, 원가 구조</td><td>산업 리포트</td></tr>
+      </tbody>
+    </table></div>
+    <div class="alert alert-orange"><strong>원시 데이터 판매 아님.</strong> 수요처 목적별 익명화 &rarr; 표준화 &rarr; 분석 &rarr; 커스텀 상품화.</div>
+
+    <div class="sub-head">7B.3 TAM &mdash; SAM &mdash; SOM (데이터 수익화 관점)</div>
+    <div class="fact-grid">
+      <div class="fact-card"><div class="fact-num">650B~1.3T</div><div class="fact-label">TAM</div><div class="fact-note">글로벌 축산 데이터 시장</div></div>
+      <div class="fact-card"><div class="fact-num">2,000~4,000억</div><div class="fact-label">SAM</div><div class="fact-note">양돈 특화 생산 데이터</div></div>
+      <div class="fact-card"><div class="fact-num">65~200억</div><div class="fact-label">SOM</div><div class="fact-note">3년 내 달성 목표</div></div>
+    </div>
+
+    <div class="sub-head">7B.4 3대 프로그램 패키지</div>
+    <div class="tier-grid">
+      <div class="tier-card basic"><div class="tier-name">BaaS</div><div class="tier-target">Benchmark-as-a-Service</div><ul class="tier-features"><li>글로벌 표준 KPI 익명 벤치마킹</li><li>PSY / FCR 비교</li><li>데이터 축적 후 활성화</li></ul><span class="tier-price-tag">DATA DRIVEN</span></div>
+      <div class="tier-card pro"><div class="tier-name">ORK</div><div class="tier-target">Outbreak Readiness Kit</div><ul class="tier-features"><li>질병 발생 시 확산 차단 + 보상 가속</li><li>이동이력 / 치료기록 / 생물안전 SOP</li><li>WOAH 연동</li></ul><span class="tier-price-tag">COMPLIANCE</span></div>
+      <div class="tier-card ent"><div class="tier-name">C2C</div><div class="tier-target">Compliance-to-Consumer</div><ul class="tier-features"><li>탄소/환경규제/동물복지 디지털화</li><li>바이어 감사 PDF + 소비자 QR</li><li>EU / 글로벌 규제 대응</li></ul><span class="tier-price-tag">ESG READY</span></div>
+    </div>
+
+    <div class="bottom-line">
+      <span class="bl-label">Bottom Line</span>
+      <span class="bl-text">데이터 판매는 Pigsignal 별도 사업이지만, PigPlanCORE가 수집하는 데이터가 그 자산의 원천이다.</span>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════
+       전환: 어떻게 실행하나
+       ═══════════════════════════════════════════════ -->
+  <div class="narrative-divider">
+    <span class="narrative-tag">어떻게 실행하나</span>
+    <span class="narrative-message">Oracle 분석부터 시작한다. 8주 안에 MVP 방향이 결정된다.</span>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       섹션 8 — Next Steps
+       ═══════════════════════════════════════════════ -->
+  <section id="s8">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">08</div>
+        <div class="sec-title">향후 추진 계획</div>
+      </div>
+      <div class="sec-message">구체적 타임라인과 담당 조직.</div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <span class="tag tag-red">즉시</span>
+        <div class="step-desc"><strong>Oracle MCP</strong>로 기존 테이블 전체 분석 &rarr; 재사용 엔티티 확인 &rarr; PostgreSQL 스키마 초안</div>
+        <div class="step-owner">개발팀 / 2주</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <span class="tag tag-red">즉시</span>
+        <div class="step-desc"><strong>Multi-Site 조직 구조 + 권한 모델</strong> DB 설계 확정</div>
+        <div class="step-owner">아키텍처 / 2주</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <span class="tag tag-orange">1개월</span>
+        <div class="step-desc"><strong>PigKnows 데모/매뉴얼</strong> 입수 후 기능 단위 상세 비교표</div>
+        <div class="step-owner">기획팀 / 1개월</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <span class="tag tag-orange">1개월</span>
+        <div class="step-desc">경쟁사(MetaFarms, PigKnows) <strong>현행 가격 직접 문의</strong> 팩트 확인</div>
+        <div class="step-owner">사업개발 / 1개월</div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <span class="tag tag-blue">2개월</span>
+        <div class="step-desc">동남아 타겟 <strong>MVP UI/UX 프로토타입</strong> (오프라인 모바일 + 가입 플로우)</div>
+        <div class="step-owner">UX팀 / 2개월</div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <span class="tag tag-blue">2개월</span>
+        <div class="step-desc"><strong>오프라인 동기화 기술 확정</strong> (WatermelonDB vs SQLite + Conflict Resolution)</div>
+        <div class="step-owner">모바일 / 2개월</div>
+      </div>
+      <div class="step">
+        <div class="step-num">7</div>
+        <span class="tag tag-green">3개월</span>
+        <div class="step-desc">무료 제공 후 유료 전환 의사결정 &mdash; <strong>동남아 파일럿 농장 3~5개 PoC</strong></div>
+        <div class="step-owner">사업/기획 / 3개월</div>
+      </div>
+    </div>
+
+    <div class="bottom-line">
+      <span class="bl-label">Bottom Line</span>
+      <span class="bl-text">Oracle 분석부터 시작한다. 8주 안에 MVP 방향이 결정된다.</span>
+    </div>
+
+    <div class="disclaimer">
+      <strong>면책 사항 (Disclaimer)</strong><br>
+      본 문서에 포함된 경쟁사 가격 정보는 공개 리뷰 플랫폼(SourceForge, SoftwareWorld 등) 및 업계 언론에서 수집된 것으로,
+      벤더가 직접 공인한 수치가 아닐 수 있습니다. 경영 의사결정에 활용 시 벤더 직접 문의를 통해 재확인하십시오.
+      시장 규모 수치는 다수 리서치 기관 추정값이며 기관별 편차 존재.
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════
+       섹션 9 — 기술 아키텍처
+       ═══════════════════════════════════════════════ -->
+  <section id="s9">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">09</div>
+        <div class="sec-title">기술 아키텍처</div>
+      </div>
+      <div class="sec-message">데이터 수집 &middot; 익명화 &middot; 판매 플랫폼을 위한 설계 방향.</div>
+    </div>
+
+    <div class="sub-head">기술 스택</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>영역</th><th>기술</th><th>비고</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Backend</strong></td><td>Java 21 LTS + Spring Boot 3.4</td><td>장기 지원, 엔터프라이즈 검증</td></tr>
+        <tr><td><strong>Data</strong></td><td>PostgreSQL + Redis + Apache Kafka</td><td>OLTP + 캐시 + 이벤트 스트리밍</td></tr>
+        <tr><td><strong>Infra</strong></td><td>Docker + Kubernetes</td><td>Multi-Region 배포</td></tr>
+        <tr><td><strong>Observability</strong></td><td>OpenTelemetry + Grafana</td><td>분산 추적, 메트릭, 로그 통합</td></tr>
+        <tr><td><strong>Scale</strong></td><td>361 Endpoints / 12+ Services</td><td>마이크로서비스, Multi-Region</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="sub-head">API 카탈로그 요약 &mdash; 22 Domains, 361 Endpoints</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Domain</th><th>EP</th><th>Domain</th><th>EP</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Sow</strong></td><td>16</td><td><strong>Boar</strong></td><td>10</td></tr>
+        <tr><td><strong>Breeding</strong></td><td>14</td><td><strong>Farrowing</strong></td><td>8</td></tr>
+        <tr><td><strong>Weaning</strong></td><td>11</td><td><strong>Fattening</strong></td><td>26</td></tr>
+        <tr><td><strong>Health</strong></td><td>6</td><td><strong>Genetics</strong></td><td>21</td></tr>
+        <tr><td><strong>Analytics</strong></td><td>9</td><td><strong>User/Auth</strong></td><td>20</td></tr>
+        <tr><td><strong>Farm</strong></td><td>19</td><td><strong>Base Config</strong></td><td>26</td></tr>
+        <tr><td><strong>Inventory</strong></td><td>21</td><td><strong>Shipment</strong></td><td>14</td></tr>
+        <tr><td><strong>Distribution</strong></td><td>22</td><td><strong>Ledger</strong></td><td>52</td></tr>
+        <tr><td><strong>Reports</strong></td><td>20</td><td><strong>SPF</strong></td><td>16</td></tr>
+        <tr><td><strong>IoT</strong></td><td>12</td><td><strong>Common</strong></td><td>18</td></tr>
+      </tbody>
+      <tfoot><tr><td colspan="3"><strong>Total</strong></td><td><strong>361</strong></td></tr></tfoot>
+    </table></div>
+
+    <div class="sub-head">7단계 권한 체계</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Role</th><th>명칭</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td><strong>ROLE_ADMIN</strong></td><td>시스템 관리</td><td>전체 시스템 설정, 사용자 관리, 감사 로그</td></tr>
+        <tr><td><strong>ROLE_COMPANY</strong></td><td>회사 관리</td><td>회사 단위 설정, 소속 농장 전체 조회</td></tr>
+        <tr><td><strong>ROLE_FARM_OWNER</strong></td><td>농장주</td><td>소유 농장 전체 권한, 사용자 초대</td></tr>
+        <tr><td><strong>ROLE_FARM_MANAGER</strong></td><td>농장장</td><td>담당 농장 운영 데이터 입력/수정</td></tr>
+        <tr><td><strong>ROLE_FARM_WORKER</strong></td><td>작업자</td><td>일일 작업 기록 입력, 제한된 조회</td></tr>
+        <tr><td><strong>ROLE_VIEWER</strong></td><td>조회 전용</td><td>대시보드 / 리포트 읽기 전용</td></tr>
+        <tr><td><strong>ROLE_API_CLIENT</strong></td><td>외부 API</td><td>외부 시스템 연동, 토큰 기반 인증</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="bottom-line">
+      <span class="bl-label">Bottom Line</span>
+      <span class="bl-text">361개 엔드포인트의 마이크로서비스 아키텍처. Phase 1은 FastAPI로 빠르게, 트래픽 증가 시 Spring Boot 전환.</span>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════
+       섹션 10 — 순차 확장 전략
+       ═══════════════════════════════════════════════ -->
+  <section id="s10">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">10</div>
+        <div class="sec-title">순차 확장 전략</div>
+      </div>
+      <div class="sec-message">모듈 확장 = 데이터 판매 소스 확장. 모듈이 늘수록 데이터 가치 증가.</div>
+    </div>
+
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>순서</th><th>모듈</th><th>출시 시점</th><th>수집 데이터</th><th>데이터 수요처</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tag-green">1st</span></td><td><strong>모돈 (무료)</strong></td><td>글로벌 출시</td><td>PSY, 총산, 수태율, 교배간격</td><td>유전/종돈 (PIC, Topigs)</td></tr>
+        <tr><td><span class="tag tag-blue">2nd</span></td><td><strong>비육돈</strong></td><td>번식 데이터 축적 후</td><td>성장곡선, FCR, ADG, 출하패턴</td><td>사료 (Cargill, ADM, Nutreco)</td></tr>
+        <tr><td><span class="tag tag-blue">3rd</span></td><td><strong>사료 공급망</strong></td><td>비육 모듈 연계</td><td>사료비 구조, 원료가, 급이량</td><td>사료회사 정밀마케팅</td></tr>
+        <tr><td><span class="tag tag-orange">4th</span></td><td><strong>질병 / 생물안전</strong></td><td>규제 시장 대응</td><td>질병패턴, 생물안전비용, 백신효과</td><td>제약 (Zoetis, BI, MSD)</td></tr>
+        <tr><td><span class="tag tag-dark">5th</span></td><td><strong>환경 / 탄소</strong></td><td>EU 탄소감사 대응</td><td>탄소배출, ESG지표, AMR</td><td>보험 (Swiss Re), 국제기구 (FAO)</td></tr>
+      </tbody>
+    </table></div>
+    <div class="alert alert-blue"><strong>모듈 확장 = 데이터 가치 확장.</strong> 각 모듈 추가 시 새로운 수요처가 열리고, 기존 데이터와 결합하여 상품 단가 상승.</div>
+
+    <div class="bottom-line">
+      <span class="bl-label">Bottom Line</span>
+      <span class="bl-text">모듈 확장 순서는 데이터 가치 순서다. 모돈에서 시작해 환경/탄소까지.</span>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════
+       섹션 11 — 실행 로드맵 Phase 0~5
+       ═══════════════════════════════════════════════ -->
+  <section id="s11">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">11</div>
+        <div class="sec-title">실행 로드맵</div>
+      </div>
+      <div class="sec-message">Phase 0 국내 검증부터 Phase 5 글로벌 확장까지.</div>
+    </div>
+
+    <div class="steps">
+      <div class="step"><div class="step-num">0</div><span class="tag tag-orange">P0</span><div class="step-desc"><strong>'26.06~11 &mdash; 국내 데이터 수익화 파일럿.</strong> 14억건 기반 상품 프로토타입, 국내 사료/제약 2~3곳 파일럿.</div><div class="step-owner">6개월</div></div>
+      <div class="step"><div class="step-num">1</div><span class="tag tag-blue">P1</span><div class="step-desc"><strong>'26.12~'27.05 &mdash; 글로벌 환경분석 + 아키텍처 구축.</strong> 규제분석, 마이크로서비스 설계, 데이터 파이프라인, 모돈 글로벌 버전 개발.</div><div class="step-owner">6개월</div></div>
+      <div class="step"><div class="step-num">2</div><span class="tag tag-green">P2</span><div class="step-desc"><strong>'27.06~11 &mdash; 모돈 무료 배포 + 데이터 수집.</strong> 베트남 대형농장 3~5개 PoC, EU 진입, 목표 100+ 농장.</div><div class="step-owner">6개월</div></div>
+      <div class="step"><div class="step-num">3</div><span class="tag tag-green">P3</span><div class="step-desc"><strong>'27.12~'28.05 &mdash; 데이터 가공 + 기관 파일럿 판매.</strong> Zoetis / Cargill 등 1~2곳 파일럿, 목표 300+ 농장.</div><div class="step-owner">6개월</div></div>
+      <div class="step"><div class="step-num">4</div><span class="tag tag-green">P4</span><div class="step-desc"><strong>'28.06~11 &mdash; 수익화 + 농가배분 + 모듈확장.</strong> 데이터판매 본격화 (5+ 기관), 비육모듈 확장, 목표 500+ 농장.</div><div class="step-owner">6개월</div></div>
+      <div class="step"><div class="step-num">5</div><span class="tag tag-dark">P5</span><div class="step-desc"><strong>'29~ &mdash; 시장확장 + 추가모듈.</strong> 북미 진입, 사료/질병/환경 모듈 순차 확장, 목표 1,000+ 농장.</div><div class="step-owner">지속 확장</div></div>
+    </div>
+
+    <div class="bottom-line">
+      <span class="bl-label">Bottom Line</span>
+      <span class="bl-text">Phase 0 국내 파일럿 검증이 글로벌 진출의 전제 조건이다.</span>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════
+       섹션 12 — 리스크 분석 & Go/No-Go
+       ═══════════════════════════════════════════════ -->
+  <section id="s12">
+    <div class="sec-head">
+      <div class="sec-head-top">
+        <div class="sec-num">12</div>
+        <div class="sec-title">리스크 분석 &amp; Go/No-Go</div>
+      </div>
+      <div class="sec-message">조건부 GO &mdash; 국내 파일럿 검증이 전제 조건.</div>
+    </div>
+
+    <div class="sub-head">리스크 매트릭스</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>리스크</th><th>Impact</th><th>Likelihood</th><th>대응 전략</th></tr></thead>
+      <tbody>
+        <tr><td><strong>데이터 수익화 모델 미검증</strong></td><td><span class="tag tag-red">High</span></td><td><span class="tag tag-red">High</span></td><td>Phase 0 국내 14억건 파일럿 검증 &rarr; 글로벌 확장</td></tr>
+        <tr><td><strong>현지화 실패</strong></td><td><span class="tag tag-red">High</span></td><td><span class="tag tag-orange">Medium</span></td><td>로컬 파트너 확보, Country Pack 모듈화, 파일럿 선행</td></tr>
+        <tr><td><strong>농장 데이터 제공 거부</strong></td><td><span class="tag tag-red">High</span></td><td><span class="tag tag-orange">Medium</span></td><td>이중 인센티브: 무료 SW + 수익 배분, 익명화 보장</td></tr>
+        <tr><td><strong>데이터 규제 (GDPR 등)</strong></td><td><span class="tag tag-orange">Medium</span></td><td><span class="tag tag-red">High</span></td><td>Multi-Region 인프라, 데이터 주권 설계 선반영</td></tr>
+        <tr><td><strong>경쟁사 유사 모델 추구</strong></td><td><span class="tag tag-orange">Medium</span></td><td><span class="tag tag-orange">Medium</span></td><td>14억건 시드데이터 + 20년 도메인 선점 효과</td></tr>
+        <tr><td><strong>개발 인력 부족</strong></td><td><span class="tag tag-orange">Medium</span></td><td><span class="tag tag-orange">Medium</span></td><td>핵심 모듈 우선, 외부 개발 파트너 활용</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="sub-head">Go / No-Go 판단 기준</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>판단 항목</th><th>기준</th><th>현재 상태</th></tr></thead>
+      <tbody>
+        <tr><td><strong>데이터 자산 경쟁력</strong></td><td>독립적 데이터 경쟁력</td><td><span class="tag tag-green">&#10003;</span> 14억건+ (업계 최대)</td></tr>
+        <tr><td><strong>시장 갭 존재</strong></td><td>독립 크로스벤더 플랫폼 부재</td><td><span class="tag tag-green">&#10003;</span> 벤더 종속 플랫폼뿐</td></tr>
+        <tr><td><strong>데이터 수익화 검증</strong></td><td>국내 파일럿 수익 검증</td><td><span class="tag tag-orange">&#9651;</span> 미검증 (Phase 0 필요)</td></tr>
+        <tr><td><strong>기술 기반</strong></td><td>클라우드 + API 경험</td><td><span class="tag tag-orange">&#9651;</span> AWS 운영 중 (SaaS 전환 필요)</td></tr>
+        <tr><td><strong>파일럿 시장 접근성</strong></td><td>초기 진입 시장 확보</td><td><span class="tag tag-orange">&#9651;</span> 베트남 파트너 탐색 필요</td></tr>
+        <tr><td><strong>팀 역량</strong></td><td>글로벌 제품 개발</td><td><span class="tag tag-orange">&#9651;</span> 보강 필요</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="alert alert-green">
+      <strong>종합 판단 &rarr; 조건부 GO.</strong> 데이터 자산(14억건) + 시장 갭(독립 크로스벤더 데이터 없음) + 도메인 경험(20년) &mdash; 3대 핵심 조건 충족. 단, 데이터 수익화 모델 미검증 &rarr; Phase 0 국내 파일럿 선행 필수.
+    </div>
+
+    <div class="bottom-line">
+      <span class="bl-label">Bottom Line</span>
+      <span class="bl-text">조건부 GO. Phase 0 국내 파일럿으로 데이터 수익화를 먼저 증명한다.</span>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  PigPlanCORE &nbsp;|&nbsp; 글로벌 전략 기획서 Draft v1.0 &nbsp;|&nbsp; 2026.03 &nbsp;|&nbsp; Confidential &amp; Proprietary
+</footer>
+
+</body>
+</html>
