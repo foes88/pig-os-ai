@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PigPlanCORE — Owner Dashboard</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+/* Signal cards */
+.signals{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px}
+.signal{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all .15s}
+.signal:hover{box-shadow:0 4px 16px rgba(0,0,0,.06);transform:translateY(-2px)}
+.signal-icon{font-size:32px;margin-bottom:8px}
+.signal-status{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px}
+.signal-answer{font-size:15px;font-weight:700;line-height:1.4;margin-bottom:4px}
+.signal-detail{font-size:11px;color:var(--text3);line-height:1.5}
+.signal.green{border-left:4px solid var(--success)}
+.signal.green .signal-status{color:var(--success)}
+.signal.yellow{border-left:4px solid var(--warning)}
+.signal.yellow .signal-status{color:var(--warning)}
+.signal.red{border-left:4px solid var(--danger)}
+.signal.red .signal-status{color:var(--danger)}
+
+/* Question cards */
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:20px;overflow:hidden}
+.q-header{padding:18px 24px;cursor:pointer;display:flex;align-items:center;justify-content:space-between}
+.q-question{font-size:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:10px}
+.q-short{font-family:var(--mono);font-size:18px;font-weight:700}
+.q-body{padding:0 24px 20px;display:none}
+.q-card.open .q-body{display:block}
+.q-card.open .q-arrow{transform:rotate(180deg)}
+.q-arrow{font-size:12px;color:var(--text3);transition:transform .2s}
+
+/* Money row */
+.money-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px}
+.money-box{background:var(--bg);border-radius:8px;padding:14px 16px;text-align:center}
+.money-box .mv{font-family:var(--mono);font-size:20px;font-weight:700}
+.money-box .ml{font-size:10px;color:var(--text3);margin-top:2px}
+
+/* Urgent list */
+.urgent{list-style:none;padding:0}
+.urgent li{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.urgent li:last-child{border-bottom:none}
+.urgent .u-level{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.urgent .u-text{flex:1;font-size:13px}
+.urgent .u-text strong{font-weight:600}
+.urgent .u-action{font-size:11px;font-weight:600;color:var(--primary);white-space:nowrap}
+.urgent .u-time{font-family:var(--mono);font-size:10px;color:var(--text3)}
+
+/* Trend mini */
+.trend-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.trend-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+.trend-item:last-child{border-bottom:none}
+.trend-label{font-size:12px;font-weight:500;color:var(--text2)}
+.trend-val{font-family:var(--mono);font-size:14px;font-weight:700}
+.trend-change{font-family:var(--mono);font-size:10px;padding:2px 6px;border-radius:4px}
+.trend-change.up{background:#ECFDF5;color:var(--success)}
+.trend-change.down{background:var(--danger-light);color:var(--danger)}
+.trend-change.flat{background:#F3F4F6;color:var(--text3)}
+
+/* Chart */
+.chart-box{height:200px;margin-top:12px}
+
+/* Role switch */
+.role-switch{display:flex;gap:4px;background:var(--bg);border-radius:8px;padding:3px}
+.role-btn{padding:6px 14px;border-radius:6px;font-size:11px;font-weight:600;color:var(--text2);transition:all .1s}
+.role-btn.on{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<nav class="side">
+  <div class="side-brand">PigPlan<span>CORE</span></div>
+  <a class="on" href="owner.html"><span class="i">👔</span> Owner View</a>
+  <a href="index.html"><span class="i">📋</span> Operations</a>
+  <a href="sows.html"><span class="i">🐷</span> Sow Mgmt</a>
+  <a href="record.html"><span class="i">✏️</span> Record</a>
+  <a href="kpi.html"><span class="i">📊</span> KPI Detail</a>
+  <div class="side-foot">v1.0 Lite</div>
+</nav>
+
+<div class="main">
+
+  <!-- Header -->
+  <div class="top">
+    <div>
+      <h1>My Farm</h1>
+      <div class="top-meta">안성 1농장 · 680 sows · Mar 2026</div>
+    </div>
+    <div class="role-switch">
+      <span class="role-btn on">Owner</span>
+      <a href="index.html" class="role-btn">Operations</a>
+    </div>
+  </div>
+
+  <!-- ═══ LEVEL 1: Signal Lights ═══ -->
+  <div class="signals">
+    <div class="signal yellow" onclick="toggle('q-money')">
+      <div class="signal-icon">💰</div>
+      <div class="signal-status">Watch</div>
+      <div class="signal-answer">₩298M revenue</div>
+      <div class="signal-detail">+8.2% vs last month<br>Feed cost down 3.2%</div>
+    </div>
+    <div class="signal red" onclick="toggle('q-problem')">
+      <div class="signal-icon">🚨</div>
+      <div class="signal-status">Action Needed</div>
+      <div class="signal-answer">2 urgent items</div>
+      <div class="signal-detail">Farrowing overdue 1<br>PRRS suspected 1</div>
+    </div>
+    <div class="signal green" onclick="toggle('q-trend')">
+      <div class="signal-icon">📈</div>
+      <div class="signal-status">Improving</div>
+      <div class="signal-answer">PSY 24.3 (▲)</div>
+      <div class="signal-detail">12 month uptrend<br>National top 35%</div>
+    </div>
+  </div>
+
+  <!-- ═══ LEVEL 2: Question Cards (click to expand) ═══ -->
+
+  <!-- Q1: 돈 벌고 있어? -->
+  <div class="q-card open" id="q-money">
+    <div class="q-header" onclick="toggle('q-money')">
+      <div class="q-question">💰 이번 달 돈은 벌고 있어? <span class="q-short" style="color:var(--success)">₩298M</span></div>
+      <span class="q-arrow">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="money-grid">
+        <div class="money-box">
+          <div class="mv" style="color:var(--success)">₩298M</div>
+          <div class="ml">이번 달 매출</div>
+        </div>
+        <div class="money-box">
+          <div class="mv">₩48.2M</div>
+          <div class="ml">사료비</div>
+        </div>
+        <div class="money-box">
+          <div class="mv">₩142K</div>
+          <div class="ml">두당 월비용</div>
+        </div>
+        <div class="money-box">
+          <div class="mv" style="color:var(--success)">₩840K</div>
+          <div class="ml">AI 절감액</div>
+        </div>
+      </div>
+      <div class="trend-row">
+        <div>
+          <div class="trend-item">
+            <span class="trend-label">매출 vs 지난달</span>
+            <span><span class="trend-change up">+8.2%</span></span>
+          </div>
+          <div class="trend-item">
+            <span class="trend-label">사료비 vs 지난달</span>
+            <span><span class="trend-change up">-3.2%</span></span>
+          </div>
+          <div class="trend-item">
+            <span class="trend-label">돼지 시세 (kg)</span>
+            <span class="trend-val">₩5,140</span>
+          </div>
+        </div>
+        <div>
+          <div class="trend-item">
+            <span class="trend-label">출하 대기</span>
+            <span class="trend-val">58 head</span>
+          </div>
+          <div class="trend-item">
+            <span class="trend-label">다음 출하</span>
+            <span class="trend-val">Mar 22</span>
+          </div>
+          <div class="trend-item">
+            <span class="trend-label">예상 출하 매출</span>
+            <span class="trend-val" style="color:var(--success)">₩33.4M</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2: 지금 문제 있어? -->
+  <div class="q-card open" id="q-problem">
+    <div class="q-header" onclick="toggle('q-problem')">
+      <div class="q-question">🚨 지금 문제 있어? <span class="q-short" style="color:var(--danger)">2건</span></div>
+      <span class="q-arrow">▼</span>
+    </div>
+    <div class="q-body">
+      <ul class="urgent">
+        <li>
+          <span class="u-level" style="background:var(--danger)"></span>
+          <div class="u-text"><strong>#A-042 분만 지연 (D115)</strong> — 어제 예정. 즉시 확인 필요</div>
+          <span class="u-time">2h ago</span>
+          <a href="record.html?event=farrowing" class="u-action">기록 →</a>
+        </li>
+        <li>
+          <span class="u-level" style="background:var(--danger)"></span>
+          <div class="u-text"><strong>평택 위탁농 PRRS 의심</strong> — AI 신뢰도 87%. 48시간 내 3두 폐사</div>
+          <span class="u-time">2h ago</span>
+          <span class="u-action" style="color:var(--danger)">격리 →</span>
+        </li>
+        <li>
+          <span class="u-level" style="background:var(--warning)"></span>
+          <div class="u-text"><strong>사료빈 #3 잔량 8%</strong> — 오늘 오후 4시 배송 예정</div>
+          <span class="u-time">4h ago</span>
+          <span class="u-action" style="color:var(--text3)">배송 중</span>
+        </li>
+        <li>
+          <span class="u-level" style="background:var(--warning)"></span>
+          <div class="u-text"><strong>NPD 30일 초과 모돈 8두</strong> — 재교배 또는 도태 검토 필요</div>
+          <span class="u-time">today</span>
+          <a href="sows.html" class="u-action">목록 →</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Q3: 농장이 나아지고 있어? -->
+  <div class="q-card" id="q-trend">
+    <div class="q-header" onclick="toggle('q-trend')">
+      <div class="q-question">📈 농장이 나아지고 있어? <span class="q-short" style="color:var(--success)">Yes</span></div>
+      <span class="q-arrow">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="money-grid" style="grid-template-columns:repeat(5,1fr)">
+        <div class="money-box">
+          <div class="mv">24.3</div>
+          <div class="ml">PSY</div>
+          <div style="margin-top:4px"><span class="trend-change up">▲ +1.2</span></div>
+        </div>
+        <div class="money-box">
+          <div class="mv">82.4%</div>
+          <div class="ml">분만율</div>
+          <div style="margin-top:4px"><span class="trend-change down">▼ -1.1%</span></div>
+        </div>
+        <div class="money-box">
+          <div class="mv">38d</div>
+          <div class="ml">NPD</div>
+          <div style="margin-top:4px"><span class="trend-change down">목표 30d</span></div>
+        </div>
+        <div class="money-box">
+          <div class="mv">2.68</div>
+          <div class="ml">FCR</div>
+          <div style="margin-top:4px"><span class="trend-change up">▲ 개선 중</span></div>
+        </div>
+        <div class="money-box">
+          <div class="mv">14.2%</div>
+          <div class="ml">포유 폐사율</div>
+          <div style="margin-top:4px"><span class="trend-change up">▲ 기준 이하</span></div>
+        </div>
+      </div>
+
+      <!-- Benchmark -->
+      <table style="margin-top:16px">
+        <thead><tr><th>지표</th><th class="r">우리 농장</th><th class="r">전국 평균</th><th class="r">상위 10%</th><th>판정</th></tr></thead>
+        <tbody>
+          <tr><td>PSY</td><td class="r mono" style="font-weight:700;color:var(--success)">24.3</td><td class="r mono">21.9</td><td class="r mono">32.5</td><td><span class="tag tag-ok">Good</span></td></tr>
+          <tr><td>FCR</td><td class="r mono" style="font-weight:700;color:var(--success)">2.68</td><td class="r mono">3.26</td><td class="r mono">2.60</td><td><span class="tag tag-ok">Good</span></td></tr>
+          <tr><td>NPD</td><td class="r mono">38d</td><td class="r mono">40d</td><td class="r mono">30d</td><td><span class="tag tag-warn">Watch</span></td></tr>
+          <tr><td>분만율</td><td class="r mono">82.4%</td><td class="r mono">80.0%</td><td class="r mono">92.0%</td><td><span class="tag tag-warn">Watch</span></td></tr>
+        </tbody>
+      </table>
+
+      <!-- Chart -->
+      <div class="chart-box"><canvas id="c1"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Q4: 앞으로 어떻게 될 거야? -->
+  <div class="q-card" id="q-forecast">
+    <div class="q-header" onclick="toggle('q-forecast')">
+      <div class="q-question">🔮 앞으로 어떻게 될 거야? <span class="q-short" style="color:var(--primary)">AI 예측</span></div>
+      <span class="q-arrow">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="money-grid">
+        <div class="money-box">
+          <div class="mv">24.8</div>
+          <div class="ml">다음 달 PSY 예측</div>
+          <div style="margin-top:4px"><span class="trend-change up">▲ +0.5</span></div>
+        </div>
+        <div class="money-box">
+          <div class="mv">23두</div>
+          <div class="ml">14일 내 분만 예정</div>
+        </div>
+        <div class="money-box">
+          <div class="mv">120</div>
+          <div class="ml">다음 달 출하 예측</div>
+          <div style="margin-top:4px;font-size:10px;color:var(--text3)">₩62M 예상</div>
+        </div>
+        <div class="money-box">
+          <div class="mv" style="color:var(--success)">₩47.4M</div>
+          <div class="ml">사료비 예측</div>
+          <div style="margin-top:4px"><span class="trend-change up">▼ AI 절감</span></div>
+        </div>
+      </div>
+
+      <ul class="urgent" style="margin-top:12px">
+        <li>
+          <span class="u-level" style="background:var(--primary)"></span>
+          <div class="u-text"><strong>시세 상승 중</strong> — 5~7일 추가 상승 예측. Pen F-01 3/22까지 출하 권장</div>
+          <span class="u-action">출하 예약 →</span>
+        </li>
+        <li>
+          <span class="u-level" style="background:var(--warning)"></span>
+          <div class="u-text"><strong>사료 조정 권장</strong> — 임신사A 42두 급이량 8% 과다. 200g 감량 시 월 ₩840K 절감</div>
+          <span class="u-action">적용 →</span>
+        </li>
+        <li>
+          <span class="u-level" style="background:var(--success)"></span>
+          <div class="u-text"><strong>PSY 27.1 달성</strong> — 전국 상위 10% 진입. 1월 프로토콜 변경 효과</div>
+          <span class="u-action" style="color:var(--text3)">축하</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Q5: 돈군 현황 -->
+  <div class="q-card" id="q-herd">
+    <div class="q-header" onclick="toggle('q-herd')">
+      <div class="q-question">🐷 돈군 현황은? <span class="q-short">680</span></div>
+      <span class="q-arrow">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="money-grid" style="grid-template-columns:repeat(3,1fr)">
+        <div class="money-box"><div class="mv">218</div><div class="ml">임신 중</div></div>
+        <div class="money-box"><div class="mv">85</div><div class="ml">포유 중</div></div>
+        <div class="money-box"><div class="mv" style="color:var(--warning)">42</div><div class="ml">비생산 (NPD)</div></div>
+        <div class="money-box"><div class="mv">35</div><div class="ml">이유 대기</div></div>
+        <div class="money-box"><div class="mv">340</div><div class="ml">비육 (출하 58)</div></div>
+        <div class="money-box"><div class="mv" style="color:var(--danger)">3</div><div class="ml">긴급</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+function toggle(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+var g = '#0D7C66', gy = '#9CA3AF', bd = '#F0F1F3';
+var months = ['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+new Chart(document.getElementById('c1'), {
+  type: 'line',
+  data: {
+    labels: months,
+    datasets: [{
+      label: 'PSY', data: [21.8,22.1,22.5,22.3,23.0,23.2,23.1,23.5,23.3,23.8,24.0,24.3],
+      borderColor: g, backgroundColor: 'rgba(13,124,102,.06)', fill: true, tension: .4, borderWidth: 2, pointRadius: 3
+    },{
+      label: 'National Avg', data: Array(12).fill(21.9),
+      borderColor: gy, borderDash: [4,4], borderWidth: 1, pointRadius: 0, fill: false
+    }]
+  },
+  options: { responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { font: { size: 10 }, usePointStyle: true } } },
+    scales: { y: { min: 20, max: 26, grid: { color: bd }, ticks: { font: { size: 10, family: 'JetBrains Mono' } } }, x: { grid: { display: false }, ticks: { font: { size: 9 } } } }
+  }
+});
+</script>
+</body>
+</html>
