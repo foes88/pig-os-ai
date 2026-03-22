@@ -425,11 +425,10 @@
     <a href="#s2">Price Intel</a>
     <a href="#s3">Tech Stack</a>
     <a href="#s4">DB 설계</a>
-    <a href="#s5">MVP Check</a>
-    <a href="#s5b">기능 상세</a>
+    <a href="#s5">일정</a>
+    <a href="#s5b">경쟁사 상세</a>
     <a href="#s5c">5권역</a>
     <a href="#s5d">개발 스펙</a>
-    <a href="#s6">Q&amp;A</a>
     <a href="#s8">Summary</a>
   </div>
 </nav>
@@ -479,7 +478,7 @@
     </a>
     <a href="#s5" class="agenda-item" style="text-decoration:none;">
       <div class="agenda-num">05</div>
-      <div class="agenda-text">MVP 현실성 체크</div>
+      <div class="agenda-text">개발 일정</div>
     </a>
     <a href="#s5b" class="agenda-item" style="text-decoration:none;">
       <div class="agenda-num">06</div>
@@ -1028,127 +1027,20 @@
   </section>
 
 
-  <!-- ═══ SECTION 6 ═══ -->
-  <section id="s6">
-    <div class="sec-head">
-      <div class="sec-head-top">
-        <div class="sec-num">06</div>
-        <div class="sec-title">회의 시나리오 &mdash; 예상 질문 &amp; 준비된 답변</div>
-      </div>
-      <div class="sec-message">미리 답변을 준비해두면 회의 흐름을 주도할 수 있다.</div>
-    </div>
-
-    <div class="qa-grid">
-
-      <div class="qa-card">
-        <div class="qa-q"><span class="qa-q-tag">Q1</span>"다 좋은데 돈은 언제 버나?"</div>
-        <div class="qa-a">
-          Phase 1의 목표는 수익이 아닙니다.<br>
-          <strong>활성 농장 300개 확보</strong>가 기준점입니다.<br>
-          그 시점에 유료 전환 방식을 결정합니다.<br>
-          보수적으로 300농장의 30% 전환 시 &rarr; <strong>연 $160K~$450K ARR</strong> 진입 가능합니다.
-        </div>
-      </div>
-
-      <div class="qa-card">
-        <div class="qa-q"><span class="qa-q-tag">Q2</span>"PigKnows는 이미 글로벌 확장한다는데 우리가 이길 수 있나?"</div>
-        <div class="qa-a">
-          PigKnows가 가지지 못한 것이 3가지 있습니다.<br>
-          <strong>1. 아시아어</strong> (베트남어/태국어/인도네시아어) &mdash; 단기간에 추가 불가<br>
-          <strong>2. 무료 진입</strong> &mdash; Valstone 구조상 무료 불가<br>
-          <strong>3. 오픈 API</strong> &mdash; 폐쇄형 수직통합 전략과 모순<br>
-          이 3가지 공백에서 우리가 먼저 자리를 잡으면 됩니다.
-        </div>
-      </div>
-
-      <div class="qa-card">
-        <div class="qa-q"><span class="qa-q-tag">Q3</span>"FastAPI로 시작했다가 Java로 바꾸면 처음부터 다시 짜야 하는 거 아닌가?"</div>
-        <div class="qa-a">
-          비즈니스 로직 재작성은 필요합니다.<br>
-          그러나 <strong>DB 스키마, API 설계, 프론트엔드는 그대로</strong> 씁니다.<br>
-          Java 전환은 트래픽 문제가 예측될 때 시작합니다.<br>
-          그 시점이면 수익도 나고 있을 겁니다.<br>
-          <strong>지금 Java로 시작하면 개발 속도가 2~3배 느려집니다.</strong>
-        </div>
-      </div>
-
-      <div class="qa-card">
-        <div class="qa-q"><span class="qa-q-tag">Q4</span>"DB를 처음부터 새로 만들면 시간이 더 걸리지 않나?"</div>
-        <div class="qa-a">
-          오히려 더 빠릅니다.<br>
-          기존 시스템을 분석하고 맞추느라 드는 시간이 없어집니다.<br>
-          <strong>글로벌 양돈 표준에 맞춰 깨끗하게 설계하면 확장도 쉽습니다.</strong><br>
-          스키마 설계는 이미 49개 테이블, 11개 모듈로 완성된 상태입니다.
-        </div>
-      </div>
-
-      <div class="qa-card">
-        <div class="qa-q"><span class="qa-q-tag">Q5</span>"베트남 농장주가 앱을 실제로 쓸 수 있을까? 너무 어렵지 않을까?"</div>
-        <div class="qa-a">
-          이게 MVP에서 검증해야 할 핵심 질문입니다.<br>
-          피그플랜 앱 기준으로, 현장 작업자는 <strong>3개 화면</strong>만 씁니다:<br>
-          <strong>교배 기록 / 분만 기록 / 이유 기록</strong><br>
-          이 3개 화면을 최대한 단순하게 만드는 것이 MVP UX 목표입니다.
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-
-  <!-- ═══ SECTION 7 ═══ -->
-  <section id="s7">
-    <div class="sec-head">
-      <div class="sec-head-top">
-        <div class="sec-num">07</div>
-        <div class="sec-title">회의 전 준비 자료 체크리스트</div>
-      </div>
-    </div>
-
-    <ul class="checklist">
-      <li>
-        <span>PostgreSQL 스키마 ERD (신규 설계)</span>
-        <span class="owner">개발팀</span>
-        <span class="status"><span class="tag tag-orange">준비 필요</span></span>
-      </li>
-      <li>
-        <span>웹 8주 + 모바일 10주 개발 일정표</span>
-        <span class="owner">기획팀</span>
-        <span class="status"><span class="tag tag-orange">준비 필요</span></span>
-      </li>
-      <li>
-        <span>경쟁사 견적 문의 결과 (MetaFarms, PigKnows)</span>
-        <span class="owner">사업개발</span>
-        <span class="status"><span class="tag tag-orange">준비 필요</span></span>
-      </li>
-      <li>
-        <span>파일럿 농장 후보 리스트 3~5개</span>
-        <span class="owner">사업/기획</span>
-        <span class="status"><span class="tag tag-orange">준비 필요</span></span>
-      </li>
-      <li>
-        <span>기존 기획서 요약 1페이지</span>
-        <span class="owner">기획팀</span>
-        <span class="status"><span class="tag tag-blue">이 문서 활용</span></span>
-      </li>
-    </ul>
-  </section>
-
-
-  <!-- ═══ SECTION 5B: 경쟁사 기능 상세 (신규) ═══ -->
+  <!-- ═══ SECTION 6: 경쟁사 기능 상세 ═══ -->
   <section id="s5b">
     <div class="sec-head">
       <div class="sec-head-top">
         <div class="sec-num">06</div>
-        <div class="sec-title">경쟁사 기능 상세 분석 &mdash; 1차 이후 신규</div>
+        <div class="sec-title">경쟁사 기능 상세 분석</div>
       </div>
       <div class="sec-message">9개 경쟁사 딥다이브 결과. 필수 12개 + 차별화 15개 + 공백 5개.</div>
     </div>
 
     <div class="key-msg">
-      <div class="key-msg-eyebrow">New Since Meeting 1</div>
+      <div class="key-msg-eyebrow">Key Message</div>
       <div class="key-msg-text">
-        1차 기획서에서 6개사 개요만 다뤘으나, 이후 <strong>9개사 기능 딥다이브</strong>를 완료.
+        <strong>9개사 기능 딥다이브</strong>를 완료.
         경쟁사가 절대 못 따라오는 <strong>5개 시장 공백</strong>을 확인했다.
       </div>
     </div>
@@ -1216,7 +1108,7 @@
     <div class="sec-head">
       <div class="sec-head-top">
         <div class="sec-num">07</div>
-        <div class="sec-title">5개 권역 핵심 관리포인트 &mdash; 1차 이후 신규</div>
+        <div class="sec-title">5개 권역 핵심 관리포인트</div>
       </div>
       <div class="sec-message">PSY 격차 최대 26두. 단일 기준 관리 불가. 지역별 맞춤 설계 필수.</div>
     </div>
@@ -1259,7 +1151,7 @@
     <div class="sec-head">
       <div class="sec-head-top">
         <div class="sec-num">08</div>
-        <div class="sec-title">개발 스펙 요약 &mdash; 1차 이후 신규</div>
+        <div class="sec-title">개발 스펙 요약</div>
       </div>
       <div class="sec-message">상세는 개발 스펙 문서 별도 참조. 여기는 핵심 수치만.</div>
     </div>
