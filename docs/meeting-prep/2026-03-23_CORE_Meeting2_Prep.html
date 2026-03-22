@@ -987,16 +987,17 @@
           <li>모돈 교배/분만/이유 기록 (웹)</li>
           <li>PSY/NPD/FCR 대시보드 + 벤치마크</li>
           <li>다국어 UI (영어/베트남어/태국어)</li>
-          <li>역할별 권한 (농장주/기사/수의사)</li>
+          <li>역할별 권한 4단계 (농장주/수의사/업체/종사자 — 읽기·쓰기 분리)</li>
+          <li>핵심 리포트 (월간 KPI, 번식 성적, 폐사 현황, 출하 실적)</li>
         </ul>
       </div>
       <div class="card" style="border-left:4px solid var(--accent-orange);">
         <div class="sub-sub-head" style="margin-top:0;color:var(--accent-orange);">Phase 2 이후</div>
         <ul class="blist">
           <li>모바일 앱 + 오프라인 동기화</li>
-          <li>Feed Mill 연동, Multi-Site</li>
+          <li>Feed Mill 연동</li>
           <li>AI 분석 (질병 경보, 출하 예측)</li>
-          <li>ESG, Genetics, 고급 리포트</li>
+          <li>ESG, Genetics, 커스텀 리포트</li>
         </ul>
       </div>
     </div>
@@ -1164,7 +1165,7 @@
         <tr><td>5</td><td><strong>산업 벤치마킹</strong></td><td>내 농장 수준 판단 유일 기준</td></tr>
         <tr><td>6</td><td><strong>다중 농장 통합</strong></td><td>인테그레이터 필수</td></tr>
         <tr><td>7</td><td><strong>사료빈 재고 + 두당 원가</strong></td><td>북미/EU 비용 관리 핵심</td></tr>
-        <tr><td>8</td><td><strong>역할별 권한</strong></td><td>위탁 농장 데이터 보안</td></tr>
+        <tr><td>8</td><td><strong>역할별 권한 (4단계)</strong></td><td>농장주(전체) / 수의사(건강·처방) / 업체(읽기전용) / 종사자(기록만)</td></tr>
         <tr><td>9</td><td><strong>Android/iOS + RFID 스캔</strong></td><td>현장 = 모바일 전용</td></tr>
         <tr><td>10</td><td><strong>커스텀 보고서</strong></td><td>농장마다 리포트 다름</td></tr>
         <tr><td>11</td><td><strong>도체 등급 연동</strong></td><td>출하 피드백 없이 개선 불가</td></tr>
@@ -1275,7 +1276,7 @@
     <div class="tbl-wrap"><table>
       <thead><tr><th>모듈</th><th>테이블</th><th>Phase</th><th>핵심 내용</th></tr></thead>
       <tbody>
-        <tr><td><strong>Platform</strong></td><td>10</td><td><span class="tag tag-red">P1</span></td><td>멀티테넌시, 7단계 권한, 감사로그, 오프라인 동기화, 월마감 잠금, 코드마스터(i18n), 알림</td></tr>
+        <tr><td><strong>Platform</strong></td><td>10</td><td><span class="tag tag-red">P1</span></td><td>멀티테넌시, 4단계 권한(농장주/수의사/업체/종사자), 감사로그, 오프라인 동기화, 월마감 잠금, 코드마스터(i18n), 알림</td></tr>
         <tr><td><strong>Sow</strong></td><td>8</td><td><span class="tag tag-red">P1</span></td><td>모돈/교배/임신확인/분만/이유/폐사 + 위탁모돈 + RFID</td></tr>
         <tr><td><strong>Growing</strong></td><td>4</td><td><span class="tag tag-blue">P2</span></td><td>배치관리, 비육기록, 출하, 도체등급(EU/US/BR 전부)</td></tr>
         <tr><td><strong>Feed</strong></td><td>4</td><td><span class="tag tag-blue">P2</span></td><td>사료빈, 배합, Feed Mill, 급이(ESF 연동)</td></tr>
