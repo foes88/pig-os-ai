@@ -163,7 +163,8 @@ table { border-collapse: collapse; width: 100%; }
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 12px;
+  padding: 3px 10px;
+  margin-left: 10px;
   background: var(--primary-light);
   color: var(--primary);
   border-radius: 20px;
