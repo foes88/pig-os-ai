@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PigPlanCORE — Strategy Deep Dive (Q1~Q3)</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--brand:#0F2B50;--gold:#C9A84C;--green:#27AE60;--orange:#E67E22;--red:#C0392B;--blue:#2563EB;--bg:#FAFAF8;--surface:#fff;--text:#0F1923;--text2:#3A4A5C;--text3:#7A8FA6;--border:#D8DDE4}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.8}
+.top-bar{position:sticky;top:0;z-index:100;background:var(--brand);color:#fff;padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+.top-bar h1{font-size:14px;font-weight:700}
+.top-bar .meta{font-size:11px;color:#8EB8E8}
+.wrap{max-width:900px;margin:0 auto;padding:20px 16px 60px}
+.toc{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:24px}
+.toc-title{font-size:12px;font-weight:700;color:var(--text3);letter-spacing:1px;margin-bottom:8px}
+.toc a{display:block;padding:6px 0;font-size:13px;color:var(--brand);text-decoration:none;border-bottom:1px solid #F0F0F0;font-weight:500}
+.toc a:last-child{border-bottom:none}
+.section{margin-bottom:40px}
+.sec-label{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);background:var(--brand);padding:4px 12px;border-radius:4px;margin-bottom:10px}
+.sec-title{font-size:20px;font-weight:800;margin-bottom:16px;line-height:1.4}
+h3{font-size:15px;font-weight:700;margin:20px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--border)}
+h4{font-size:13px;font-weight:700;color:var(--brand);margin:16px 0 8px}
+p{margin-bottom:10px;color:var(--text2)}
+table{width:100%;border-collapse:collapse;margin:12px 0 20px;font-size:12px}
+th{background:var(--brand);color:#fff;padding:8px 10px;text-align:left;font-size:11px;font-weight:600}
+td{padding:8px 10px;border-bottom:1px solid var(--border)}
+tr:hover td{background:#F8FAFC}
+.kp{background:var(--brand);color:#fff;border-radius:10px;padding:16px 20px;margin:16px 0}
+.kp-num{font-family:'JetBrains Mono';font-size:10px;color:var(--gold);font-weight:600;letter-spacing:1px}
+.kp-text{font-size:13px;font-weight:500;line-height:1.7;margin-top:4px}
+.kp-text strong{color:var(--gold)}
+.alert{padding:12px 16px;border-radius:8px;font-size:12px;margin:12px 0;font-weight:500}
+.alert-green{background:#F0FDF4;color:var(--green);border-left:4px solid var(--green)}
+.alert-blue{background:#EFF6FF;color:var(--blue);border-left:4px solid var(--blue)}
+.alert-orange{background:#FFFBEB;color:var(--orange);border-left:4px solid var(--orange)}
+.alert-red{background:#FEF2F2;color:var(--red);border-left:4px solid var(--red)}
+.tag{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600}
+.tag-green{background:#ECFDF5;color:var(--green)}
+.tag-blue{background:#EFF6FF;color:var(--blue)}
+.tag-orange{background:#FFFBEB;color:var(--orange)}
+.tag-red{background:#FEF2F2;color:var(--red)}
+.code{background:#1a2332;border-radius:6px;padding:16px 20px;margin:12px 0;font-family:'JetBrains Mono',monospace;font-size:12px;color:#9CC3F0;line-height:1.7}
+.code .hl{color:var(--gold);font-weight:600}
+.code .ok{color:var(--green)}
+.code .warn{color:var(--orange)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:12px 0}
+@media(max-width:768px){.grid-2{grid-template-columns:1fr}}
+footer{background:var(--brand);color:#6A8CAF;text-align:center;padding:20px;font-size:11px;margin-top:40px}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <h1>PigPlanCORE Strategy Deep Dive</h1>
+  <div class="meta">Q1~Q3 심층 분석 · 2026.03.23</div>
+</div>
+
+<div class="wrap">
+
+<div class="toc">
+  <div class="toc-title">목차</div>
+  <a href="#market">시장 개요 — 글로벌 정밀 양돈 시장</a>
+  <a href="#q1">Q1. 데이터 표준 API 아키텍처</a>
+  <a href="#q2">Q2. SaaS + 데이터 수익모델</a>
+  <a href="#q3">Q3. 국가별 진입 우선순위</a>
+  <a href="#diff">경쟁사 대비 차별화 전략</a>
+  <a href="#conclusion">결론 — 실행의 핵심 지렛대</a>
+</div>
+
+<!-- ═══ 시장 개요 ═══ -->
+<div class="section" id="market">
+  <div class="sec-label">MARKET OVERVIEW</div>
+  <div class="sec-title">글로벌 정밀 양돈 시장</div>
+
+  <div class="kp">
+    <div class="kp-num">MARKET SIZE</div>
+    <div class="kp-text">
+      글로벌 정밀 양돈 시장: <strong>2025년 $7.5~13.5억 → 2030년 $11.7~24.6억 (CAGR 9.3~12.8%)</strong><br>
+      아시아태평양이 <strong>16.5% CAGR</strong>로 가장 빠르게 성장. 동남아에 지배적 양돈 SaaS 부재.
+    </div>
+  </div>
+
+  <h3>타겟 농장 규모 — 모돈 500~5,000두</h3>
+
+  <div class="alert alert-blue">
+    <strong>핵심:</strong> 초대형(10만두+)은 자체 시스템 보유, 소형(수십두)은 디지털화 의지 없음. <strong>중대형(500~5,000두)이 가장 비어있는 시장.</strong>
+  </div>
+
+  <table>
+    <thead><tr><th>국가</th><th>핵심 타겟 (모돈)</th><th>특징</th><th>대상 농장 수</th></tr></thead>
+    <tbody>
+      <tr style="background:#FFEEBA"><td><strong>베트남</strong></td><td>300~1,500</td><td>급성장, SW 부재, CAC 최저</td><td>1,000~2,000</td></tr>
+      <tr><td>태국</td><td>500~3,000</td><td>CP 외 독립농 타겟</td><td>150~300</td></tr>
+      <tr><td>미국</td><td>1,000~5,000</td><td>중형 독립농, ARR 최고</td><td>2,000~3,000</td></tr>
+      <tr><td>스페인</td><td>인테그레이터</td><td>EU 최대 양돈국, 20~30개 법인</td><td>20~30</td></tr>
+      <tr><td>멕시코</td><td>500~2,000</td><td>스페인어권 확장 교두보</td><td>500~1,500</td></tr>
+      <tr style="background:#FEF2F2"><td><s>브라질</s></td><td>-</td><td>Agriness 96% 독점, CAC/ARR >2.0x</td><td>제외</td></tr>
+      <tr style="background:#FEF2F2"><td><s>인도네시아</s></td><td>-</td><td>대상 농장 20~50개, 시장 과소</td><td>제외</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Tier 전략</h3>
+  <div class="grid-2">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px">
+      <h4>Tier 1 — Small Pro (300~1,000두)</h4>
+      <p>모바일 중심, 단순 KPI, 무료 진입<br>베트남/태국 초기 시장</p>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px">
+      <h4>Tier 2 — Core Target (1,000~5,000두)</h4>
+      <p>AI 분석 + 자동화, 벤치마크<br>핵심 수익 구간</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Q1 ═══ -->
+<div class="section" id="q1">
+  <div class="sec-label">Q1</div>
+  <div class="sec-title">글로벌 양돈 데이터 표준 API 아키텍처</div>
+
+  <div class="kp">
+    <div class="kp-num">CORE ANSWER</div>
+    <div class="kp-text">
+      <strong>Schema-per-tenant + TimescaleDB + PowerSync</strong> 조합으로<br>
+      500~5,000두 농장 수천 개를 안정적으로 수용한다.<br>
+      외부 API 표준은 <strong>ICAR ADE(국제 축산 데이터 교환)</strong>를 채택한다.
+    </div>
+  </div>
+
+  <h3>멀티테넌시 — Schema-per-tenant</h3>
+  <table>
+    <thead><tr><th>접근법</th><th>확장 한계</th><th>테넌트 격리</th><th>적합성</th></tr></thead>
+    <tbody>
+      <tr><td>Database-per-tenant</td><td>~10개</td><td>최대</td><td><span class="tag tag-red">과잉</span></td></tr>
+      <tr style="background:#FFEEBA"><td><strong>Schema-per-tenant</strong></td><td><strong>수백~10,000개</strong></td><td><strong>강력</strong></td><td><span class="tag tag-green">최적</span></td></tr>
+      <tr><td>Row-level (RLS)</td><td>수백만</td><td>약함</td><td><span class="tag tag-orange">시기상조</span></td></tr>
+    </tbody>
+  </table>
+  <p>PgBouncer Transaction Pooling으로 커넥션 충돌 해소. Crunchy Data 사례: DB 비용 <strong>62% 절감</strong>, 지연시간 <strong>81% 개선</strong>.</p>
+
+  <h3>데이터 수집 채널별 최적 패턴</h3>
+  <table>
+    <thead><tr><th>데이터 소스</th><th>수집 패턴</th><th>근거</th></tr></thead>
+    <tbody>
+      <tr><td>수기 입력 (번식/치료)</td><td>PowerSync 오프라인 동기화</td><td>돈사 내 열악한 연결</td></tr>
+      <tr><td>IoT 센서 (온습도/급이)</td><td>MQTT → Kafka → TimescaleDB</td><td>고빈도 연속 데이터</td></tr>
+      <tr><td>EID/RFID 리더</td><td>Batch 동기화</td><td>세션 기반 일괄 수집</td></tr>
+      <tr><td>외부 연동 (유전체/수의)</td><td>Webhook + REST API</td><td>이벤트 기반, 저빈도</td></tr>
+    </tbody>
+  </table>
+
+  <h3>TimescaleDB — IoT 데이터의 정답</h3>
+  <p>PostgreSQL 확장으로 설치. 관계형 번식 기록과 시계열 센서 데이터가 <strong>동일 DB에 공존</strong>. 시간 기반 집계 쿼리 <strong>일반 PostgreSQL 대비 979배 빠름</strong>, 압축률 <strong>90%+</strong>.</p>
+  <p>결정적 장점: <strong>번식 기록과 환경 데이터를 직접 JOIN</strong> — 분만 중 돈사 온도와 자돈 생존율 상관관계 분석 가능.</p>
+
+  <h3>PowerSync — 오프라인 동기화</h3>
+  <p>CRDT는 구조화된 농장 데이터에 부적합(Cinapse가 CRDT→PowerSync 마이그레이션). <strong>PostgreSQL WAL 기반 논리 복제로 React Native 앱의 로컬 SQLite와 자동 동기화.</strong> 충돌 해결은 LWW 기본 + 서버 측 비즈니스 규칙 검증.</p>
+
+  <div class="alert alert-green">
+    <strong>성능 목표:</strong> API 응답 p95 <200ms(CRUD), <500ms(대시보드), 오프라인 연결 복구 후 <5초, 테넌트 간 데이터 누출 제로.
+  </div>
+</div>
+
+<!-- ═══ Q2 ═══ -->
+<div class="section" id="q2">
+  <div class="sec-label">Q2</div>
+  <div class="sec-title">SaaS + 데이터 API 결합 수익모델</div>
+
+  <div class="kp">
+    <div class="kp-num">CORE ANSWER</div>
+    <div class="kp-text">
+      <strong>SaaS 구독(ARR 60~70%) + B2B 데이터 API(15~25%)</strong> 이중 수익 구조.<br>
+      벤치마크 데이터의 네트워크 효과가 해지율을 절반으로 줄여 <strong>LTV를 2~3배</strong> 끌어올린다.
+    </div>
+  </div>
+
+  <h3>가격 매트릭스 — Per-sow 과금</h3>
+  <table>
+    <thead><tr><th>티어</th><th>가격</th><th>대상</th><th>핵심 기능</th></tr></thead>
+    <tbody>
+      <tr style="background:#F0FDF4"><td><strong>FREE</strong></td><td>$0 영구 무료</td><td>500두 이하, 1사이트</td><td>모돈 카드, 번식 기록, 기본 리포트, 2유저</td></tr>
+      <tr><td><strong>PRO</strong></td><td>$2/모돈/년 (최소 $1,000)</td><td>500~2,000두</td><td>멀티사이트, 고급 분석, 피어 벤치마킹, 무제한 유저</td></tr>
+      <tr><td><strong>ENTERPRISE</strong></td><td>$4/모돈/년 (최소 $5,000)</td><td>2,000~10,000+두</td><td>예측 분석, 질병 경보, 커스텀 API, 전담 CSM</td></tr>
+      <tr><td><strong>INTEGRATOR</strong></td><td>맞춤형 ($10K~$100K+)</td><td>다농장 법인</td><td>화이트라벨, 중앙 대시보드, 현장 교육</td></tr>
+    </tbody>
+  </table>
+
+  <h3>B2B 데이터 API — 고마진 2차 수익</h3>
+  <div class="alert alert-blue">
+    <strong>핵심 증거:</strong> Cargill이 Agriness(브라질, 200만+ 모돈, 90% 점유)에 전략적 지분 투자. 사료회사가 양돈 성과 데이터에 기꺼이 비용을 지불한다는 결정적 증거.
+  </div>
+
+  <table>
+    <thead><tr><th>구매자</th><th>관심 데이터</th><th>추정 연간 WTP</th></tr></thead>
+    <tbody>
+      <tr><td><strong>사료회사</strong> (Cargill, CP, CJ)</td><td>FCR 벤치마크, 급이 패턴</td><td>$50K~$500K/사</td></tr>
+      <tr><td><strong>종돈사</strong> (PIC, Topigs, DanBred)</td><td>품종별 성적, 산자수</td><td>$30K~$200K/사</td></tr>
+      <tr><td><strong>도축·가공</strong> (JBS, Smithfield)</td><td>공급 예측, 체중 예측</td><td>$25K~$150K/사</td></tr>
+      <tr><td><strong>동물약품</strong> (Elanco, BI)</td><td>질병 패턴, 치료 효능</td><td>$30K~$200K/사</td></tr>
+    </tbody>
+  </table>
+  <p>글로벌 50만 모돈 이상 데이터 확보 시 <strong>B2B 데이터 매출 $5M~$25M/년</strong> 가능.</p>
+
+  <h3>네트워크 효과 — LTV 2~3배 증폭</h3>
+  <table>
+    <thead><tr><th>지표</th><th>벤치마크 없이</th><th>네트워크 벤치마크 적용</th></tr></thead>
+    <tbody>
+      <tr><td>연간 해지율</td><td>20%</td><td><strong>10%</strong></td></tr>
+      <tr><td>평균 고객 수명</td><td>5년</td><td><strong>10년</strong></td></tr>
+      <tr><td>단순 LTV</td><td>$15,000</td><td><strong>$30,000</strong></td></tr>
+      <tr><td>NRR(업셀 포함)</td><td>95%</td><td><strong>115%</strong></td></tr>
+      <tr><td>실효 LTV</td><td>$15,000</td><td><strong>$45,000+</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3>5년 수익 로드맵</h3>
+  <table>
+    <thead><tr><th>수익원</th><th>Year 3 (10K 농장)</th><th>Year 5 (30K 농장)</th><th>비중</th></tr></thead>
+    <tbody>
+      <tr><td>SaaS 구독</td><td>$5M~$10M</td><td>$20M~$40M</td><td>60~70%</td></tr>
+      <tr><td>B2B 데이터 API</td><td>$1M~$3M</td><td>$5M~$15M</td><td>15~25%</td></tr>
+      <tr><td>구현/교육 서비스</td><td>$0.5M~$1M</td><td>$1M~$3M</td><td>5~8%</td></tr>
+      <tr><td>애드온/연동</td><td>$0.5M~$1M</td><td>$2M~$5M</td><td>5~10%</td></tr>
+      <tr style="background:#FFEEBA"><td><strong>합계</strong></td><td><strong>$7M~$15M</strong></td><td><strong>$28M~$63M</strong></td><td>100%</td></tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-green">
+    <strong>Exit 시나리오:</strong> $30M+ ARR + 글로벌 수백만 모돈 데이터 확보 시 기업가치 <strong>$3억~$10억+</strong>. Climate Corp($9.3억 인수), Granular($3억 인수) 선례.
+  </div>
+</div>
+
+<!-- ═══ Q3 ═══ -->
+<div class="section" id="q3">
+  <div class="sec-label">Q3</div>
+  <div class="sec-title">CAC 대비 ARR 성장이 가장 빠른 국가 진입 순서</div>
+
+  <div class="kp">
+    <div class="kp-num">CORE ANSWER</div>
+    <div class="kp-text">
+      <strong>베트남 1순위</strong> (CAC/ARR 0.3~0.6x, 경쟁사 부재, 디지털 인프라 우수).<br>
+      브라질(Agriness 96%)과 인도네시아(시장 과소)는 <strong>제외</strong>.
+    </div>
+  </div>
+
+  <h3>10개국 종합 평가</h3>
+  <table>
+    <thead><tr><th>#</th><th>국가</th><th>대상 농장</th><th>추정 ARR/농장</th><th>CAC/ARR</th><th>평가</th></tr></thead>
+    <tbody>
+      <tr style="background:#FFEEBA"><td><strong>1</strong></td><td><strong>베트남</strong></td><td>1,000~2,000</td><td>$1,500~$3,500</td><td><strong>0.3~0.6x</strong></td><td>★★★★★</td></tr>
+      <tr><td>2</td><td>태국</td><td>150~300</td><td>$3,000~$6,000</td><td>0.3~0.5x</td><td>★★★★☆</td></tr>
+      <tr><td>3</td><td>미국</td><td>2,000~3,000</td><td>$25,000~$50,000</td><td>0.2~0.4x</td><td>★★★★☆</td></tr>
+      <tr><td>4</td><td>스페인</td><td>20~30 법인</td><td>$50K~$100K+</td><td>0.2~0.4x</td><td>★★★☆☆</td></tr>
+      <tr><td>5</td><td>멕시코</td><td>500~1,500</td><td>$3,000~$8,000</td><td>0.5~0.8x</td><td>★★★☆☆</td></tr>
+      <tr style="background:#FEF2F2"><td>9</td><td><s>브라질</s></td><td>-</td><td>-</td><td>>2.0x</td><td>★☆☆☆☆</td></tr>
+      <tr style="background:#FEF2F2"><td>10</td><td><s>인도네시아</s></td><td>20~50</td><td>-</td><td>>1.5x</td><td>★☆☆☆☆</td></tr>
+    </tbody>
+  </table>
+
+  <h3>베트남이 1순위인 5가지 이유</h3>
+  <div style="display:flex;flex-direction:column;gap:8px;margin:12px 0">
+    <div class="kp" style="border-left:4px solid var(--green)"><div class="kp-num">1</div><div class="kp-text">양돈 전문 SaaS <strong>경쟁자 부재</strong>. 사실상 그린필드 시장</div></div>
+    <div class="kp" style="border-left:4px solid var(--green)"><div class="kp-num">2</div><div class="kp-text">산업 기업화 가속 — 농장 수 1,000만→200만 통합 중. 2025년 축산법 시행</div></div>
+    <div class="kp" style="border-left:4px solid var(--green)"><div class="kp-num">3</div><div class="kp-text">디지털 인프라 동남아 최고 — 광섬유 <strong>82.3%</strong>, 4G <strong>99.8%</strong>, 모바일 데이터 월 $8</div></div>
+    <div class="kp" style="border-left:4px solid var(--green)"><div class="kp-num">4</div><div class="kp-text">한국 기업 브랜드 신뢰도 높음 (삼성/LG/현대 진출 효과)</div></div>
+    <div class="kp" style="border-left:4px solid var(--green)"><div class="kp-num">5</div><div class="kp-text">파트너십 채널 풍부 — De Heus, Cargill Vietnam, GreenFeed, AVAC</div></div>
+  </div>
+
+  <h3>파트너십 vs 직접 영업</h3>
+  <table>
+    <thead><tr><th>항목</th><th>파트너십 (사료회사 채널)</th><th>직접 영업</th></tr></thead>
+    <tbody>
+      <tr><td>추정 CAC</td><td><strong>$300~$800</strong></td><td>$1,500~$3,000</td></tr>
+      <tr><td>권고 비중</td><td><strong>70%</strong></td><td>30%</td></tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-blue">
+    <strong>Cargill-Agriness 모델을 복제하라.</strong> 사료 영업사원이 농장 방문 시 PigPlanCORE를 공동 소개. CAC를 $300~$800으로 압축 가능.
+  </div>
+
+  <h3>단계별 실행 계획</h3>
+  <table>
+    <thead><tr><th>Phase</th><th>시기</th><th>시장</th><th>핵심 액션</th><th>KPI</th></tr></thead>
+    <tbody>
+      <tr style="background:#FFEEBA"><td><strong>Phase 1</strong></td><td>Year 1~2</td><td>베트남</td><td>현지 파트너십 + 50~100개 농장 온보딩</td><td>활성 농장 수, 주간 사용률 >60%</td></tr>
+      <tr><td>Phase 2</td><td>Year 2~3</td><td>태국 + 필리핀</td><td>유료 전환 시작 + B2B 데이터 베타</td><td>전환율 8~12%, NRR >110%</td></tr>
+      <tr><td>Phase 3</td><td>Year 3~5</td><td>미국 + 스페인</td><td>현지 팀/인수 + 데이터 본격 수익화</td><td>LTV:CAC >5:1, 관리 모돈 100만+</td></tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-orange">
+    <strong>AgriWebb CEO:</strong> "한 번에 한 지역만. 스타트업 묘지는 너무 일찍 너무 멀리 간 회사들의 일화로 넘쳐난다."
+  </div>
+</div>
+
+<!-- ═══ 차별화 ═══ -->
+<div class="section" id="diff">
+  <div class="sec-label">DIFFERENTIATION</div>
+  <div class="sec-title">경쟁사 대비 핵심 차별화</div>
+
+  <div class="grid-2">
+    <div class="kp" style="border-left:4px solid var(--gold)">
+      <div class="kp-num">차별화 1</div>
+      <div class="kp-text"><strong>클라우드 네이티브 + 오프라인 퍼스트</strong><br>경쟁사는 데스크톱→클라우드 전환 중. CORE는 처음부터 클라우드 + PowerSync 완전 오프라인</div>
+    </div>
+    <div class="kp" style="border-left:4px solid var(--gold)">
+      <div class="kp-num">차별화 2</div>
+      <div class="kp-text"><strong>글로벌 크로스보더 벤치마크</strong><br>MetaFarms는 북미, Agriness는 남미에 국한. CORE가 아시아+미국+EU 연결하면 세계 최초</div>
+    </div>
+    <div class="kp" style="border-left:4px solid var(--gold)">
+      <div class="kp-num">차별화 3</div>
+      <div class="kp-text"><strong>27년 도메인 전문성의 제품화</strong><br>피그플랜 모돈 32% 점유에서 축적된 KPI 체계, 번식 최적화, 질병 경보 로직</div>
+    </div>
+    <div class="kp" style="border-left:4px solid var(--gold)">
+      <div class="kp-num">차별화 4</div>
+      <div class="kp-text"><strong>PLG 전략 자체가 차별화</strong><br>경쟁사 모두 Contact-based 세일즈. 전 기능 무료 진입은 양돈 SaaS 시장 최초</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 결론 ═══ -->
+<div class="section" id="conclusion">
+  <div class="sec-label">CONCLUSION</div>
+  <div class="sec-title">실행의 핵심 지렛대</div>
+
+  <div class="kp">
+    <div class="kp-num">ONE LINE</div>
+    <div class="kp-text">
+      승부는 <strong>벤치마크 데이터의 네트워크 효과를 얼마나 빠르게 점화하느냐</strong>에 달려 있다.<br>
+      무료로 농장을 대량 유입 → 50만 모돈 임계점 달성 → 유료 전환 + B2B 데이터 판매 동시 가능.
+    </div>
+  </div>
+
+  <div class="alert alert-green">
+    <strong>베트남이 유일한 1순위.</strong> 경쟁사 부재 + 산업 기업화 + 디지털 인프라 + 한국 브랜드 신뢰. 연 50~100개 농장 온보딩으로 2~3년 내 동남아 양돈 SaaS 표준이 되는 것이 현실적 목표.
+  </div>
+</div>
+
+</div>
+
+<footer>
+  PigPlanCORE &nbsp;|&nbsp; Strategy Deep Dive &nbsp;|&nbsp; Q1~Q3 &nbsp;|&nbsp; 2026.03.23 &nbsp;|&nbsp; Confidential
+</footer>
+
+</body>
+</html>
