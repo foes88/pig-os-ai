@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PigPlanCORE — 조사 결과 (#7, #11, 결제, 경쟁사 테스트)</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--brand:#0F2B50;--gold:#C9A84C;--green:#27AE60;--orange:#E67E22;--red:#C0392B;--blue:#2563EB;--bg:#FAFAF8;--surface:#fff;--text:#0F1923;--text2:#3A4A5C;--text3:#7A8FA6;--border:#D8DDE4}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.8}
+.top-bar{position:sticky;top:0;z-index:100;background:var(--brand);color:#fff;padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+.top-bar h1{font-size:14px;font-weight:700}
+.wrap{max-width:900px;margin:0 auto;padding:20px 16px 60px}
+h2{font-size:20px;font-weight:800;margin:32px 0 16px;padding-bottom:8px;border-bottom:2px solid var(--brand)}
+h3{font-size:15px;font-weight:700;margin:20px 0 10px;color:var(--brand)}
+p{margin-bottom:10px;color:var(--text2)}
+table{width:100%;border-collapse:collapse;margin:12px 0 20px;font-size:12px}
+th{background:var(--brand);color:#fff;padding:8px 10px;text-align:left;font-size:11px}
+td{padding:8px 10px;border-bottom:1px solid var(--border)}
+tr:hover td{background:#F8FAFC}
+.tag{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600}
+.tag-green{background:#ECFDF5;color:var(--green)}
+.tag-orange{background:#FFFBEB;color:var(--orange)}
+.tag-red{background:#FEF2F2;color:var(--red)}
+.tag-blue{background:#EFF6FF;color:var(--blue)}
+.alert{padding:12px 16px;border-radius:8px;font-size:12px;margin:12px 0;font-weight:500}
+.alert-green{background:#F0FDF4;color:var(--green);border-left:4px solid var(--green)}
+.alert-blue{background:#EFF6FF;color:var(--blue);border-left:4px solid var(--blue)}
+.alert-orange{background:#FFFBEB;color:var(--orange);border-left:4px solid var(--orange)}
+.alert-red{background:#FEF2F2;color:var(--red);border-left:4px solid var(--red)}
+.code{background:#1a2332;border-radius:6px;padding:16px 20px;margin:12px 0;font-family:'JetBrains Mono',monospace;font-size:12px;color:#9CC3F0;line-height:1.7}
+footer{background:var(--brand);color:#6A8CAF;text-align:center;padding:20px;font-size:11px;margin-top:40px}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <h1>PigPlanCORE Research Results</h1>
+  <div style="font-size:11px;color:#8EB8E8">2026.03.23</div>
+</div>
+
+<div class="wrap">
+
+<!-- ═══ #7: Schema-per-tenant ═══ -->
+<h2>#7. Schema-per-tenant 조사</h2>
+
+<h3>결론: PigPlanCORE에 최적. 단, 확장 경로를 미리 잡아둬야 한다.</h3>
+
+<table>
+  <thead><tr><th>방식</th><th>격리 수준</th><th>확장 한계</th><th>복잡도</th><th>적합성</th></tr></thead>
+  <tbody>
+    <tr><td>Database-per-tenant</td><td>최대</td><td>~10개</td><td>높음</td><td><span class="tag tag-red">과잉</span></td></tr>
+    <tr style="background:#FFEEBA"><td><strong>Schema-per-tenant</strong></td><td><strong>강력</strong></td><td><strong>수백~수천 개</strong></td><td>중간</td><td><span class="tag tag-green">최적</span></td></tr>
+    <tr><td>Row-level Security (RLS)</td><td>약함</td><td>수백만</td><td>낮음</td><td><span class="tag tag-orange">시기상조</span></td></tr>
+  </tbody>
+</table>
+
+<h3>장점</h3>
+<ul style="margin:8px 0 16px 20px;color:var(--text2)">
+  <li><strong>데이터 완전 격리</strong> — A농장 쿼리가 B농장 데이터에 접근 불가 (구조적으로)</li>
+  <li><strong>백업/복원 농장 단위</strong> — 특정 농장만 백업, 복원, 삭제 가능</li>
+  <li><strong>규정 준수 용이</strong> — 국가별 데이터 보관 요구사항 대응</li>
+  <li><strong>농장별 커스터마이징</strong> — 스키마 단위로 농장별 설정 가능</li>
+  <li><strong>마이그레이션 단순</strong> — 농장 단위로 독립적 스키마 마이그레이션</li>
+</ul>
+
+<h3>단점/리스크</h3>
+<ul style="margin:8px 0 16px 20px;color:var(--text2)">
+  <li><strong>스키마 수 증가 시 성능 저하</strong> — PostgreSQL 카탈로그 크기 증가. 수천 개 이상에서 느려질 수 있음</li>
+  <li><strong>커넥션 풀링 복잡</strong> — PgBouncer Transaction Pooling 필수. 매 트랜잭션마다 search_path 설정 필요</li>
+  <li><strong>스키마 마이그레이션 반복</strong> — 테이블 변경 시 모든 스키마에 반복 적용해야 함</li>
+</ul>
+
+<h3>농장 수 늘어나면?</h3>
+<table>
+  <thead><tr><th>농장 수</th><th>상태</th><th>대응</th></tr></thead>
+  <tbody>
+    <tr><td>~500개</td><td><span class="tag tag-green">문제 없음</span></td><td>기본 PostgreSQL로 충분</td></tr>
+    <tr><td>500~2,000개</td><td><span class="tag tag-green">양호</span></td><td>PgBouncer 필수. 모니터링 시작</td></tr>
+    <tr><td>2,000~5,000개</td><td><span class="tag tag-orange">주의</span></td><td>카탈로그 최적화 + 커넥션 관리 강화</td></tr>
+    <tr><td>5,000개+</td><td><span class="tag tag-red">전환 검토</span></td><td><strong>Citus 12 Schema-based Sharding</strong>으로 수평 확장</td></tr>
+  </tbody>
+</table>
+
+<div class="alert alert-green">
+  <strong>확장 경로:</strong> Schema-per-tenant → Citus 12 Schema-based Sharding. Citus는 PostgreSQL 확장이라 기존 스키마 구조를 유지하면서 분산 처리 가능. 마이그레이션 도구(pgcopydb) 지원.
+</div>
+
+<div class="alert alert-blue">
+  <strong>출처:</strong> Crunchy Data Blog, Citus 12 공식 문서, debugg.ai Multi-tenancy Playbook 2025
+</div>
+
+<hr style="margin:40px 0">
+
+<!-- ═══ #11: AWS vs Azure vs GCP ═══ -->
+<h2>#11. AWS vs Azure vs Google Cloud 가격 비교</h2>
+
+<h3>SaaS 스타트업 기준 월 비용 (on-demand)</h3>
+<p>기준: 2 vCPU, 8GB RAM 앱서버 + 100GB 관리형 DB + 500GB 스토리지 + 1TB 송신</p>
+
+<table>
+  <thead><tr><th>항목</th><th>AWS</th><th>Azure</th><th>Google Cloud</th></tr></thead>
+  <tbody>
+    <tr><td><strong>월 비용 (on-demand)</strong></td><td>~$276</td><td>~$257</td><td style="background:#D5F5E3"><strong>~$245</strong></td></tr>
+    <tr><td>시장 점유율</td><td><strong>32%</strong> (1위)</td><td>23% (2위)</td><td>10% (3위)</td></tr>
+    <tr><td>성장률 (2025)</td><td>18%</td><td>25%</td><td><strong>28%</strong></td></tr>
+    <tr><td>할인</td><td>Savings Plans 최대 72%</td><td>Spot VM 최대 80%</td><td>Sustained Use 자동 30%</td></tr>
+    <tr><td>스타트업 크레딧</td><td>$10K (Activate)</td><td>$150K (Founders Hub)</td><td style="background:#D5F5E3"><strong>$200K (Google for Startups)</strong></td></tr>
+    <tr><td>DB 서비스</td><td>RDS PostgreSQL</td><td>Azure Database for PG</td><td>Cloud SQL / AlloyDB</td></tr>
+    <tr><td>동남아 리전</td><td>싱가포르, 자카르타, 뭄바이 등</td><td>동남아시아, 호주</td><td>싱가포르, 자카르타</td></tr>
+    <tr><td>TimescaleDB</td><td>EC2 자체 설치 또는 Timescale Cloud</td><td>VM 자체 설치</td><td>VM 자체 설치</td></tr>
+  </tbody>
+</table>
+
+<div class="alert alert-green">
+  <strong>권고: Google Cloud 또는 AWS.</strong><br>
+  - GCP: 가격 6~10% 저렴 + 스타트업 크레딧 $200K 최대 + 자동 할인<br>
+  - AWS: 생태계 가장 넓음 + 동남아 리전 다양 + CLAUDE.md에 이미 AWS 명시<br>
+  - 초기에 <strong>GCP 크레딧 $200K로 시작</strong> → 트래픽 증가 시 재평가 권장
+</div>
+
+<hr style="margin:40px 0">
+
+<!-- ═══ 미국 결제 / 한국 수금 ═══ -->
+<h2>미국 결제 방식 / 한국 수금</h2>
+
+<h3>SaaS 글로벌 결제 수단 옵션</h3>
+
+<table>
+  <thead><tr><th>방식</th><th>설명</th><th>한국 수금</th><th>적합성</th></tr></thead>
+  <tbody>
+    <tr style="background:#FFEEBA">
+      <td><strong>Paddle</strong><br>(Merchant of Record)</td>
+      <td>Paddle이 판매자 역할을 대행.<br>세금, 규정, 환불 전부 처리.<br>한국 법인 그대로 사용 가능.</td>
+      <td><strong>Paddle이 한국 계좌로 송금</strong><br>수수료 5%+$0.50</td>
+      <td><span class="tag tag-green">최적</span><br>법인 설립 불필요</td>
+    </tr>
+    <tr>
+      <td><strong>Stripe</strong></td>
+      <td>한국에서 직접 사용 가능 (2024~).<br>카드 결제 + 구독 빌링 지원.</td>
+      <td>한국 계좌 입금 가능<br>수수료 2.9%+$0.30</td>
+      <td><span class="tag tag-green">좋음</span><br>한국 법인 OK</td>
+    </tr>
+    <tr>
+      <td><strong>FastSpring</strong><br>(Merchant of Record)</td>
+      <td>Paddle과 유사. 글로벌 세금 처리.</td>
+      <td>한국 계좌 송금 가능<br>수수료 5.9%+$0.95</td>
+      <td><span class="tag tag-orange">대안</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="alert alert-green">
+  <strong>권고: Paddle 또는 Stripe.</strong><br>
+  - <strong>Paddle</strong>: 세금/규정을 Paddle이 전부 처리. 한국 법인 그대로 글로벌 판매 가능. 가장 간편.<br>
+  - <strong>Stripe</strong>: 수수료 저렴. 한국에서 직접 사용 가능. 커스터마이징 자유도 높음.<br>
+  - 초기에는 <strong>Stripe로 시작</strong> (수수료 저렴 + 개발 연동 쉬움) → 세금 복잡해지면 Paddle 전환
+</div>
+
+<div class="alert alert-blue">
+  <strong>미국 고객 결제 흐름:</strong><br>
+  미국 농장주 → Stripe/Paddle로 카드 결제 → 4일 후 한국 법인 계좌 입금<br>
+  별도 미국 법인 설립 불필요 (Stripe 한국 지원 / Paddle MoR 구조)
+</div>
+
+<hr style="margin:40px 0">
+
+<!-- ═══ 경쟁사 테스트 계정 ═══ -->
+<h2>경쟁사 테스트 계정 확보 방법</h2>
+
+<table>
+  <thead><tr><th>경쟁사</th><th>무료 체험</th><th>방법</th><th>비고</th></tr></thead>
+  <tbody>
+    <tr style="background:#D5F5E3"><td><strong>PigCHAMP</strong></td><td><span class="tag tag-green">가능</span></td><td>pigchamp.com에서 Free Trial 신청<br>신용카드 불필요</td><td>바로 신청 가능</td></tr>
+    <tr style="background:#D5F5E3"><td><strong>PigKnows</strong></td><td><span class="tag tag-green">가능</span></td><td>sales@pigknows.com으로 문의<br>또는 SoftwareSuggest에서 데모 요청</td><td>신용카드 불필요</td></tr>
+    <tr><td><strong>MetaFarms</strong></td><td><span class="tag tag-orange">문의 필요</span></td><td>metafarms.com에서 Contact Sales</td><td>영업 담당자 연결 필요</td></tr>
+    <tr><td><strong>Cloudfarms</strong></td><td><span class="tag tag-orange">문의 필요</span></td><td>cloudfarms.com에서 Demo Request</td><td>BASF 계열 — 영업 프로세스</td></tr>
+    <tr><td><strong>Agriness</strong></td><td><span class="tag tag-orange">문의 필요</span></td><td>agriness.com에서 Contact</td><td>브라질 기반 — 포르투갈어</td></tr>
+  </tbody>
+</table>
+
+<div class="alert alert-green">
+  <strong>액션 아이템:</strong><br>
+  1. <strong>PigCHAMP</strong> — 바로 Free Trial 신청 (pigchamp.com)<br>
+  2. <strong>PigKnows</strong> — sales@pigknows.com에 "소규모 농장 운영 중, 데모 요청" 메일<br>
+  3. <strong>MetaFarms</strong> — Contact Sales 폼 작성<br>
+  4. <strong>Cloudfarms</strong> — Demo Request 폼 작성
+</div>
+
+</div>
+
+<footer>
+  PigPlanCORE &nbsp;|&nbsp; Research Results &nbsp;|&nbsp; 2026.03.23 &nbsp;|&nbsp; #7 Schema / #11 Infra / Payment / Competitor Test
+</footer>
+
+</body>
+</html>
