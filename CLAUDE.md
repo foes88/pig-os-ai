@@ -10,7 +10,7 @@
 - **제품**: PigPlanCORE — 해외 양돈 농장용 Farm Management SaaS
 - **포지셔닝**: 벤더-중립 독립 데이터 플랫폼 + 오픈 연동 생태계
 - **전략**: 무료 제공 → 데이터 수집 → 수익화 → 농가 배분
-- **타겟**: 6개 권역 (KR/EU/US/BR/SEA/CN)
+- **타겟**: 5개 시장 (US/CN/SEA/LatAm/KR)
 
 ---
 
@@ -46,7 +46,7 @@ pigplancore/
 ## 핵심 설계 원칙
 
 1. **모듈형 구조**: 11개 모듈 독립 배포 가능 (49 테이블)
-2. **지역 중립**: 단일 스키마로 6개 권역 커버 (country_configs)
+2. **지역 중립**: 단일 스키마로 5개 시장 커버 (country_configs)
 3. **Schema-per-tenant**: 농장별 데이터 완전 격리
 4. **월마감 잠금**: period_locks로 확정 데이터 수정 차단
 5. **감사 추적**: 모든 CUD → audit_log

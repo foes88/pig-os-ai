@@ -137,25 +137,25 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 <div class="section" id="s1">
   <div class="sec-label">AGENDA 01</div>
   <div class="sec-title">나라마다 원하는 게 다르다</div>
-  <div class="sec-time">약 5분 · 5개 권역 분석 결과</div>
+  <div class="sec-time">약 5분 · 5개 시장 분석 결과</div>
 
   <div class="script">
-    "저희가 타겟으로 잡은 5개 권역 — EU, 미국, 브라질, 동남아, 중국.<br>
+    "저희가 타겟으로 잡은 5개 시장 — 미국, 중국, 동남아(베트남·태국), 남미, 한국.<br>
     이 나라들이 <strong>원하는 기능이 완전히 다릅니다.</strong><br><br>
 
     <strong>미국</strong> — PSY/FCR 벤치마킹이 핵심. 내 농장이 상위 몇 %인지 매일 확인합니다. Feed Mill 연동도 필수.<br>
-    <strong>EU</strong> — 동물복지 점수, 항생제 기록 자동화. 규정 보고가 안 되면 운영 자체가 불가.<br>
+    <strong>한국</strong> — 피그플랜 경험 기반 레퍼런스 시장. 기술 수용도 높음.<br>
     <strong>동남아</strong> — 오프라인이 절대 필수. 인터넷 없는 돈사에서도 기록 가능해야 합니다. 그리고 <span class="highlight">무료가 아니면 안 씁니다.</span><br><br>
 
     <span class="pause">— 잠깐 멈춤 —</span>
 
-    <strong>그래서 하나의 제품으로 5개 권역을 다 커버하려면, 설계 초기부터 이걸 반영해야 합니다.</strong><br><br>
+    <strong>그래서 하나의 제품으로 5개 시장을 다 커버하려면, 설계 초기부터 이걸 반영해야 합니다.</strong><br><br>
 
     다행히 <span class="highlight">공통 분모</span>가 있습니다.<br>
     어느 나라든 모돈 관리의 기본은 같습니다 — <strong>교배, 분만, 이유.</strong><br>
     여기에 <strong>오프라인 모바일</strong>과 <strong>다국어</strong>를 붙이면, Phase 1에서 어디든 쓸 수 있습니다.<br><br>
 
-    지역 특화 기능 — 미국의 Feed Mill 연동, EU의 항생제 보고, 동남아의 ASF 경보 —<br>
+    지역 특화 기능 — 미국의 Feed Mill 연동, 중국의 돈가 대응, 동남아의 ASF 경보 —<br>
     이건 <strong>Phase 2부터 모듈로 분리 개발</strong>합니다."
   </div>
 
@@ -296,7 +296,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
   </div>
   <div class="kp" style="border-left:4px solid #27AE60">
     <div class="kp-num">원칙 3</div>
-    <div class="kp-text"><strong>5개 권역 동시 대응</strong> — 하나의 스키마로 EU/US/BR/SEA/CN 전부 커버. country_configs로 지역별 설정 관리.</div>
+    <div class="kp-text"><strong>5개 시장 동시 대응</strong> — 하나의 스키마로 US/CN/SEA/LatAm/KR 전부 커버. country_configs로 지역별 설정 관리.</div>
   </div>
 
   <div class="script">
@@ -319,12 +319,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
   <table class="data-tbl">
     <thead><tr><th>항목</th><th>수량</th><th>내용</th></tr></thead>
     <tbody>
-      <tr><td><strong>DB 스키마</strong></td><td>49 테이블</td><td>11개 모듈, 5개 권역 대응</td></tr>
+      <tr><td><strong>DB 스키마</strong></td><td>49 테이블</td><td>11개 모듈, 5개 시장 대응</td></tr>
       <tr><td><strong>API</strong></td><td>30 엔드포인트</td><td>MVP 범위 정의 완료</td></tr>
       <tr><td><strong>이벤트 정의</strong></td><td>48종</td><td>7개 카테고리, 3개국어</td></tr>
       <tr><td><strong>질병 코드</strong></td><td>30종</td><td>WOAH 코드, 지역별 현황</td></tr>
       <tr><td><strong>백신 카탈로그</strong></td><td>22종</td><td>PRRS, ASF, PCV2, FMD 등</td></tr>
-      <tr><td><strong>항생제 카탈로그</strong></td><td>22종</td><td>DDDA값, VFD/EU 제한 플래그</td></tr>
+      <tr><td><strong>항생제 카탈로그</strong></td><td>22종</td><td>DDDA값, VFD 제한 플래그</td></tr>
       <tr><td><strong>KPI 공식</strong></td><td>5개</td><td>PSY, NPD, FCR, 분만율, ROI</td></tr>
     </tbody>
   </table>
@@ -457,7 +457,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 
     국가별로 다르게 갑니다:<br>
     <strong>베트남 · 태국</strong> — 제품 중심 확산. 무료 가입 + 커뮤니티에서 정보 제공. <span class="highlight">많이 쓰게 만들기.</span><br>
-    <strong>미국/EU</strong> — 콘텐츠 중심 유입. SEO + 벤치마크 리포트. <span class="highlight">신뢰 만들고 문의 받기.</span><br><br>
+    <strong>미국/중국/남미/한국</strong> — 콘텐츠 중심 유입. SEO + 벤치마크 리포트. <span class="highlight">신뢰 만들고 문의 받기.</span><br><br>
 
     가장 강력한 무기는 <strong>무료 벤치마크</strong>입니다.<br>
     가입하면 '내 PSY가 상위 몇 %인지' 바로 보여줍니다. 이게 가입 동기가 됩니다.<br>
