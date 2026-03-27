@@ -20,7 +20,10 @@
       "Bash(npm:*)",
       "Bash(npx:*)",
       "Glob",
-      "Grep"
+      "Grep",
+      "Bash(claude --version)",
+      "Bash(claude remote:*)",
+      "Bash(claude --remote --help)"
     ]
   }
 }
