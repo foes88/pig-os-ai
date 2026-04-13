@@ -141,8 +141,8 @@
 01 타겟 시장 → 02 경쟁 환경 → 03 수익+GTM → 04 기술 → 05 스펙+일정 → 06 Summary
 
 ### 파일 분리
-- 원본: `2026-03-23_CORE_Meeting2_Prep.html` (2차 미팅 그대로)
-- v2: `2026-03-23_CORE_Meeting2_Prep_v2.html` (피드백 반영 최신)
+- 원본: `2026-03-23_PigOS_AI_Meeting2_Prep.html` (2차 미팅 그대로)
+- v2: `2026-03-23_PigOS_AI_Meeting2_Prep_v2.html` (피드백 반영 최신)
 
 ---
 

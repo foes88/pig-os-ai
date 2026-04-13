@@ -163,7 +163,7 @@ Aggregated, anonymized farm data sold to feed companies, genetics firms, and pha
 
 ## Links
 
-- [Global Strategy Report (v2)](https://foes88.github.io/PigOS AI/docs/meeting-prep/2026-03-23_CORE_Meeting2_Prep_v2.html)
+- [Global Strategy Report (v2)](https://foes88.github.io/PigOS AI/docs/meeting-prep/2026-03-23_PigOS_AI_Meeting2_Prep_v2.html)
 - [MVP Prototype (Full)](https://foes88.github.io/PigOS AI/mvp/)
 - [MVP Prototype (Lite)](https://foes88.github.io/PigOS AI/mvp-lite/)
 - [UI Concepts (5 designs)](https://foes88.github.io/PigOS AI/concepts/index.html)
