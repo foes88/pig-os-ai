@@ -13,7 +13,7 @@
 6월         — 코드 리뷰 / QA / 안정화
 7월 1일     — 베이직 출시 (L1·L2)
 8~11월      — 애드온 #1~3 순차 출시
-9월         — 모바일 Android / iOS 동시 출시
+9월         — 애드온 #2 출시 (건강·방역 + 항생제 추적)
 12월        — KPI 풀라인업 + Gemma4 전환 검토
 ```
 
@@ -198,7 +198,7 @@ response = anthropic.messages.create(
 | 이상 감지 알림 | ✅ |
 | 월간 AI 분석 리포트 (Claude) | ✅ |
 | FCR / Advisor / Autopilot | ❌ (애드온 8월~) |
-| 모바일 앱 | ❌ (9월) |
+| 모바일 앱 | ✅ Android + iOS 동시 출시 |
 
 ### 인프라 (AWS 싱가포르)
 - [ ] ECS + RDS PostgreSQL 16 세팅
@@ -214,13 +214,13 @@ response = anthropic.messages.create(
 | 시점 | 애드온 | 내용 |
 |------|--------|------|
 | 8월 | #1 FCR 최적화 | 사료 입력 + FCR 계산 + 최적화 추천 |
-| 9월 | #2 번식 예측 + 모바일 | What-if 시뮬, Android/iOS 동시 출시 |
+| 9월 | #2 건강·방역 | 항생제 추적, RAG 구축 시작 |
 | 10~11월 | #3 수익 분석 | 두당 수익, 출하 최적화, 시장가 연동 |
 | 12월 | KPI 풀라인업 | 4종 완전 출시 + Gemma4 전환 검토 |
 
 ---
 
-## STEP 6 — 모바일 (9월)
+## STEP 6 — 모바일 (7월 1일, 베이직과 동시)
 
 ### 플랫폼: Android Native + iOS Native
 - **공통 API**: STEP 2에서 구축한 FastAPI 그대로 사용
